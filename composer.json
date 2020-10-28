@@ -1,0 +1,37 @@
+{
+    "name": "mrgoodbytes8667/response-bundle",
+    "type": "symfony-bundle",
+    "license": "CC-BY-NC-4.0",
+    "description": "Symfony bundle that wraps response-common and provides shared enums for child response-bundles",
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "ext-json": "*",
+        "mrgoodbytes8667/enum-serializer-bundle": "^1.1",
+        "mrgoodbytes8667/response-common": "^0.0.1",
+        "symfony/config": "^5.1",
+        "symfony/console": "^5.1",
+        "symfony/dependency-injection": "^5.1",
+        "symfony/framework-bundle": "^5.1",
+        "symfony/serializer": "^5.1",
+        "symfony/string": "^5.1"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^5.1",
+        "symfony/var-dumper": "^5.1"
+    },
+    "authors": [
+        {
+            "name": "MrGoodBytes",
+            "email": "bytes@goodbytes.live"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Bytes\\ResponseBundle\\": "",
+            "Bytes\\ResponseBundle\\Tests\\": "Tests/"
+        }
+    }
+}
