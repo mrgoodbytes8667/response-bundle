@@ -33,5 +33,8 @@
             "Bytes\\ResponseBundle\\": "",
             "Bytes\\ResponseBundle\\Tests\\": "Tests/"
         }
+    },
+    "conflict": {
+        "spatie/enum": "<3.5"
     }
 }
