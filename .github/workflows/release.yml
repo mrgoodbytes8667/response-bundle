@@ -20,21 +20,40 @@ jobs:
         php: [ 7.4 ]
         dependency-version: [ prefer-lowest, prefer-stable ]
         os: [ ubuntu-latest ]
+        phpuniturl: ["https://raw.githubusercontent.com/symfony/recipes/master/symfony/phpunit-bridge/4.3/bin/phpunit"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Sha256 PHPUnit Recipe
+        id: phpunit-sha256
+        run: |
+          echo "::set-output name=sha::$(${{ matrix.phpuniturl }} | openssl dgst -binary -sha1 | openssl base64 | sed -e 's/[^a-zA-Z0-9]/_/g')"
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
       - name: Cache dependencies
-        if: success()
         uses: actions/cache@v2
         with:
-          path: ~/.composer/cache/files
-          key: dependencies-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            dependencies-php-${{ matrix.php }}-composer-
-            dependencies-php-
+            ${{ runner.os }}-php${{ matrix.php }}-composer-
+
+      - name: Cache PHPUnit
+        uses: actions/cache@v2
+        with:
+          path: |
+            bin/phpunit
+            bin/.phpunit
+          key: ${{ runner.os }}-php${{ matrix.php }}-phpunit-${{ steps.phpunit-sha256.outputs.sha }}
+          restore-keys: |
+            ${{ runner.os }}-php${{ matrix.php }}-phpunit-${{ steps.phpunit-sha256.outputs.sha }}
 
       - name: Setup PHP
         if: success()
@@ -48,13 +67,20 @@ jobs:
         if: success()
         run: composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
 
-      - name: Get PHPUnit-Bridge Recipe
+      - name: Check file existence
         if: success()
+        id: check-files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "bin/phpunit"
+
+      - name: Get PHPUnit-Bridge Recipe
+        if: success() && steps.check-files.outputs.files_exists == 'false'
         run: |
           mkdir -p bin
           cd bin
           rm -f phpunit
-          wget https://raw.githubusercontent.com/symfony/recipes/master/symfony/phpunit-bridge/4.3/bin/phpunit
+          wget ${{ matrix.phpuniturl }}
           cd ../
 
       - name: Setup and Run PHPUnit
