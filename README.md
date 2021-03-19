@@ -3,7 +3,8 @@
 [![Packagist Version](https://img.shields.io/packagist/v/mrgoodbytes8667/response-bundle?style=flat)](https://packagist.org/packages/mrgoodbytes8667/response-bundle)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mrgoodbytes8667/response-bundle/release?style=flat&label=stable)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mrgoodbytes8667/response-bundle/tests?style=flat)
-![Packagist License](https://img.shields.io/packagist/l/mrgoodbytes8667/response-bundle?style=flat)    
+![Packagist License](https://img.shields.io/packagist/l/mrgoodbytes8667/response-bundle?style=flat)
+![Symfony Version](https://img.shields.io/badge/symfony-^5.2-lightgrey?style=flat)
 A Symfony bundle that wraps response-common and provides shared enums for child response-bundles
 
 ## Installation
