@@ -16,6 +16,7 @@
         "symfony/string": "^5.2"
     },
     "require-dev": {
+        "mrgoodbytes8667/test-common-faker": "^0.3.3",
         "symfony/phpunit-bridge": "^5.2",
         "symfony/var-dumper": "^5.2"
     },
@@ -30,7 +31,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Bytes\\ResponseBundle\\": "",
+            "Bytes\\ResponseBundle\\": "src/",
             "Bytes\\ResponseBundle\\Tests\\": "Tests/"
         }
     }
