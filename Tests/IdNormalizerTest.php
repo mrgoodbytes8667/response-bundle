@@ -48,6 +48,14 @@ class IdNormalizerTest extends TestCase
     public function provideIdsForDisallowNulls()
     {
         yield [null];
+
+        $object = $this
+            ->getMockBuilder(IdInterface::class)
+            ->getMock();
+        $object->method('getId')
+            ->willReturn(null);
+
+        yield [$object];
     }
 
     /**
@@ -60,6 +68,22 @@ class IdNormalizerTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($message);
         $result = IdNormalizer::normalizeIdArgument($input, $message);
+
+        $this->assertNull($result);
+    }
+
+    /**
+     *
+     */
+    public function testNormalizeIdArgumentMissingMessageObject()
+    {
+        $object = $this
+            ->getMockBuilder(IdInterface::class)
+            ->getMock();
+        $object->method('getId')
+            ->willReturn(null);
+
+        $result = IdNormalizer::normalizeIdArgument($object, '', true);
 
         $this->assertNull($result);
     }
@@ -80,7 +104,7 @@ class IdNormalizerTest extends TestCase
     public function provideValidIds()
     {
         $this->setupFaker();
-        $id = (string) $this->faker->numberBetween(1000, 9999);
+        $id = (string)$this->faker->numberBetween(1000, 9999);
         $object = $this
             ->getMockBuilder(IdInterface::class)
             ->getMock();
