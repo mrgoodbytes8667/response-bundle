@@ -14,6 +14,8 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 /**
  * Interface ClientResponseInterface
  * @package Bytes\ResponseBundle\Interfaces
+ *
+ * @experimental
  */
 interface ClientResponseInterface
 {
@@ -24,6 +26,12 @@ interface ClientResponseInterface
      * @return static
      */
     public static function make(SerializerInterface $serializer);
+
+    /**
+     * @param ClientResponseInterface $clientResponse
+     * @return static
+     */
+    public static function makeFrom(ClientResponseInterface $clientResponse);
 
     /**
      * Method to instantiate the response from the HttpClient
@@ -37,6 +45,11 @@ interface ClientResponseInterface
     //endregion
 
     //region Getters/Setters
+
+    /**
+     * @return SerializerInterface
+     */
+    public function getSerializer(): SerializerInterface;
 
     /**
      * @return string|null
@@ -59,6 +72,28 @@ interface ClientResponseInterface
      * @return $this
      */
     public function setResponse(ResponseInterface $response);
+
+    /**
+     * @return array|null
+     */
+    public function getDeserializeContext(): ?array;
+
+    /**
+     * @param array|null $deserializeContext
+     * @return $this
+     */
+    public function setDeserializeContext(?array $deserializeContext);
+
+    /**
+     * @return callable|null
+     */
+    public function getOnSuccessCallable(): ?callable;
+
+    /**
+     * @param callable|null $onSuccessCallable
+     * @return $this
+     */
+    public function setOnSuccessCallable(?callable $onSuccessCallable);
     //endregion
 
     /**
