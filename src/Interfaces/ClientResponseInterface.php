@@ -31,7 +31,7 @@ interface ClientResponseInterface
      * @param ClientResponseInterface $clientResponse
      * @return static
      */
-    public static function makeFrom(ClientResponseInterface $clientResponse);
+    public static function makeFrom($clientResponse);
 
     /**
      * Method to instantiate the response from the HttpClient

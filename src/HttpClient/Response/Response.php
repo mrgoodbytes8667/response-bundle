@@ -4,6 +4,7 @@
 namespace Bytes\ResponseBundle\HttpClient\Response;
 
 
+use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -19,7 +20,7 @@ use function Symfony\Component\String\u;
  *
  * @experimental
  */
-class Response
+class Response implements ClientResponseInterface
 {
     /**
      * @var ResponseInterface
@@ -72,10 +73,10 @@ class Response
     }
 
     /**
-     * @param Response $clientResponse
+     * @param ClientResponseInterface $clientResponse
      * @return static
      */
-    public static function makeFrom(Response $clientResponse): static
+    public static function makeFrom($clientResponse): static
     {
         return new static($clientResponse->getSerializer());
     }
