@@ -5,7 +5,6 @@ namespace Bytes\ResponseBundle\HttpClient;
 
 
 use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
-use Bytes\ResponseBundle\HttpClient\Response\Response;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use InvalidArgumentException;
 use Symfony\Component\HttpClient\Retry\RetryStrategyInterface;
@@ -99,5 +98,15 @@ class AbstractClient
     protected function buildURL(string $path)
     {
         return $path;
+    }
+
+    /**
+     * @param ClientResponseInterface $response
+     * @return $this
+     */
+    public function setResponse(ClientResponseInterface $response): self
+    {
+        $this->response = $response;
+        return $this;
     }
 }
