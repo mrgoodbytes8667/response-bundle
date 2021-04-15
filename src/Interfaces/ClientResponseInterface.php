@@ -4,6 +4,7 @@
 namespace Bytes\ResponseBundle\Interfaces;
 
 
+use Bytes\ResponseBundle\HttpClient\Response\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -29,9 +30,16 @@ interface ClientResponseInterface
 
     /**
      * @param ClientResponseInterface $clientResponse
+     * @param array $params Extra params handed to setExtraParams()
      * @return static
      */
-    public static function makeFrom($clientResponse);
+    public static function makeFrom($clientResponse, array $params = []);
+
+    /**
+     * @param array $params
+     * @return $this
+     */
+    public function setExtraParams(array $params = []);
 
     /**
      * Method to instantiate the response from the HttpClient

@@ -58,10 +58,11 @@ class AbstractClient
      * @param ClientResponseInterface|string|null $responseClass
      * @param array $context Additional context for deserialize(), can be overloaded by deserialize()
      * @param callable(static, mixed)|null $onSuccessCallable If set, should be triggered by deserialize()/callback() on success
+     * @param array $params Extra params for makeFrom
      * @return ClientResponseInterface
      * @throws TransportExceptionInterface
      */
-    public function request($url, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onSuccessCallable = null)
+    public function request($url, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onSuccessCallable = null, array $params = [])
     {
         if (is_array($url)) {
             $url = implode('/', $url);
@@ -75,12 +76,13 @@ class AbstractClient
         }
         if (!is_null($responseClass)) {
             if (is_string($responseClass) && is_subclass_of($responseClass, ClientResponseInterface::class)) {
-                $response = $responseClass::makeFrom($this->response);
+                $response = $responseClass::makeFrom($this->response, $params);
             } else {
                 $response = $responseClass;
             }
         } else {
-            $response = $this->response;
+            $response = clone $this->response;
+            $response->setExtraParams($params);
         }
         return $response->withResponse($this->httpClient->request($method, $this->buildURL($url), $options), $type, $context, $onSuccessCallable);
     }

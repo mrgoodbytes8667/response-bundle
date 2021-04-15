@@ -52,6 +52,11 @@ class Response implements ClientResponseInterface
      */
     private $results = null;
 
+    /**
+     * @var array|null
+     */
+    private $params = [];
+
     //region Instantiation
 
     /**
@@ -74,11 +79,25 @@ class Response implements ClientResponseInterface
 
     /**
      * @param ClientResponseInterface $clientResponse
+     * @param array $params Extra params handed to setExtraParams()
      * @return static
      */
-    public static function makeFrom($clientResponse): static
+    public static function makeFrom($clientResponse, array $params = []): static
     {
-        return new static($clientResponse->getSerializer());
+        $static = new static($clientResponse->getSerializer());
+        $static->setExtraParams($params);
+        return $static;
+    }
+
+    /**
+     * For any other parameters that are needed. Saved off by default, but this is meant to be overloaded if needed.
+     * @param array $params
+     * @return $this
+     */
+    public function setExtraParams(array $params = []): static
+    {
+        $this->params = $params;
+        return $this;
     }
 
     /**
