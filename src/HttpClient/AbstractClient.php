@@ -57,7 +57,7 @@ class AbstractClient
      * @param array $options = HttpClientInterface::OPTIONS_DEFAULTS
      * @param string $method = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
      * @param ClientResponseInterface|string|null $responseClass
-     * @return Response
+     * @return ClientResponseInterface
      * @throws TransportExceptionInterface
      */
     public function request($url, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null)
