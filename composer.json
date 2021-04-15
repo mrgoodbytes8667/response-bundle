@@ -4,7 +4,7 @@
     "license": "CC-BY-NC-4.0",
     "description": "Symfony bundle that wraps response-common and provides shared enums for child response-bundles",
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.0",
         "ext-json": "*",
         "mrgoodbytes8667/enum-serializer-bundle": "^1.3",
         "mrgoodbytes8667/response-common": "^0.0.1",
@@ -16,6 +16,7 @@
         "symfony/string": "^5.2"
     },
     "require-dev": {
+        "mrgoodbytes8667/test-common": "^0.0.14",
         "mrgoodbytes8667/test-common-faker": "^0.3.3",
         "symfony/phpunit-bridge": "^5.2",
         "symfony/var-dumper": "^5.2"
