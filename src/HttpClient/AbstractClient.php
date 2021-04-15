@@ -6,6 +6,7 @@ namespace Bytes\ResponseBundle\HttpClient;
 
 use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
 use Bytes\ResponseBundle\HttpClient\Response\Response;
+use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use InvalidArgumentException;
 use Symfony\Component\HttpClient\Retry\RetryStrategyInterface;
 use Symfony\Component\HttpClient\RetryableHttpClient;
@@ -16,12 +17,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * Class AbstractClient
  * @package Bytes\ResponseBundle\HttpClient
  *
- * @experimental 
+ * @experimental
  */
 class AbstractClient
 {
     /**
-     * @var Response
+     * @var ClientResponseInterface
      */
     protected $response;
 
@@ -55,11 +56,11 @@ class AbstractClient
      * @param string|null $type
      * @param array $options = HttpClientInterface::OPTIONS_DEFAULTS
      * @param string $method = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
-     * @param Response|string|null $responseClass
+     * @param ClientResponseInterface|string|null $responseClass
      * @return Response
      * @throws TransportExceptionInterface
      */
-    public function request($url, ?string $type = null, array $options = [], $method = 'GET', Response|string|null $responseClass = null)
+    public function request($url, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null)
     {
         if (is_array($url)) {
             $url = implode('/', $url);
@@ -72,7 +73,7 @@ class AbstractClient
             $options = array_merge_recursive($options, $auth);
         }
         if (!is_null($responseClass)) {
-            if (is_string($responseClass) && is_subclass_of($responseClass, Response::class)) {
+            if (is_string($responseClass) && is_subclass_of($responseClass, ClientResponseInterface::class)) {
                 $response = $responseClass::makeFrom($this->response);
             } else {
                 $response = $responseClass;
