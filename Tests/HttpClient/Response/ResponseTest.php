@@ -374,6 +374,15 @@ class ResponseTest extends TestCase
     }
 
     /**
+     * @depends testMake
+     * @param DiscordResponse $clientResponse
+     */
+    public function testGetExtraParams(DiscordResponse $clientResponse)
+    {
+        $this->assertEmpty($clientResponse->getExtraParams());
+    }
+
+    /**
      * @dataProvider provideEmptySuccessfulResponse
      * @param $response
      * @param $headers

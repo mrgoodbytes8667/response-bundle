@@ -55,7 +55,7 @@ class Response implements ClientResponseInterface
     /**
      * @var array|null
      */
-    private $params = [];
+    private $extraParams = [];
 
     //region Instantiation
 
@@ -87,17 +87,6 @@ class Response implements ClientResponseInterface
         $static = new static($clientResponse->getSerializer());
         $static->setExtraParams($params);
         return $static;
-    }
-
-    /**
-     * For any other parameters that are needed. Saved off by default, but this is meant to be overloaded if needed.
-     * @param array $params
-     * @return $this
-     */
-    public function setExtraParams(array $params = []): static
-    {
-        $this->params = $params;
-        return $this;
     }
 
     /**
@@ -208,6 +197,25 @@ class Response implements ClientResponseInterface
     public function getResults()
     {
         return $this->results;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getExtraParams(): ?array
+    {
+        return $this->extraParams;
+    }
+
+    /**
+     * For any other parameters that are needed. Saved off by default, but this is meant to be overloaded if needed.
+     * @param array $extraParams
+     * @return $this
+     */
+    public function setExtraParams(array $extraParams = []): static
+    {
+        $this->extraParams = $extraParams;
+        return $this;
     }
 
     //endregion
