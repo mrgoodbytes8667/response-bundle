@@ -19,8 +19,8 @@ class PushTest extends TestCase
      */
     public function testCreate()
     {
-        $key = $this->faker->word();
-        $value = $this->faker->randomElement([$this->faker->word(), $this->faker->numberBetween()]);
+        $key = $this->faker->unique()->word();
+        $value = $this->faker->unique()->randomElement([$this->faker->unique()->word(), $this->faker->unique()->numberBetween()]);
 
         $arr = Push::create();
         $this->assertInstanceOf(Push::class, $arr);
@@ -43,9 +43,12 @@ class PushTest extends TestCase
         $this->assertIsArray($arr->value());
         $this->assertCount(2, $arr->value());
 
-        $arr->push('', key: $this->faker->word(), empty: false);
-        $this->assertIsArray($arr->value());
-        $this->assertCount(3, $arr->value());
+        foreach(range(3, 10) as $count) {
+
+            $arr->push('', key: $this->faker->unique()->word(), empty: false);
+            $this->assertIsArray($arr->value());
+            $this->assertCount($count, $arr->value());
+        }
     }
 
     /**
@@ -53,14 +56,10 @@ class PushTest extends TestCase
      */
     public function testCreatePush()
     {
-        $key = $this->faker->word();
-        $value = $this->faker->randomElement([$this->faker->word(), $this->faker->numberBetween()]);
+        $key = $this->faker->unique()->word();
+        $value = $this->faker->unique()->randomElement([$this->faker->unique()->word(), $this->faker->unique()->numberBetween()]);
 
-        $array[$this->faker->valid(function($v) use ($key) {
-            return $v !== $key;
-        })->word()] = $this->faker->valid(function($v) use ($value) {
-            return $v !== $value;
-        })->word();
+        $array[$this->faker->unique()->word()] = $this->faker->unique()->word();
 
         $arr = Push::createPush($array, $value, $key);
         $this->assertInstanceOf(Push::class, $arr);
