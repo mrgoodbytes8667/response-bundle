@@ -251,7 +251,7 @@ class Response implements ClientResponseInterface
                 return [$this->serializer->deserialize($content, $single, 'json', $context)];
             }
         }
-        $this->results = $this->serializer->deserialize($content, $type ?? $this->type, 'json', $context ?? $this->deserializeContext);
+        $this->results = $this->serializer->deserialize($content, $type ?? $this->type, 'json', $context ?: $this->deserializeContext);
 
         $this->callback();
 
