@@ -8,6 +8,7 @@ use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
 use Bytes\ResponseBundle\Objects\Push;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
+use Bytes\ResponseBundle\Token\Interfaces\TokenClientInterface;
 use Illuminate\Support\Arr;
 use LogicException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -21,12 +22,16 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  *
  * @experimental
  */
-class AbstractTokenClient extends AbstractClient
+abstract class AbstractTokenClient extends AbstractClient implements TokenClientInterface
 {
     /**
      * @var string|null
      */
     protected static $tokenExchangeBaseUri;
+    /**
+     * @var string
+     */
+    protected static $tokenExchangeEndpoint = 'oauth2/token';
 
     /**
      * @param string $code
@@ -40,22 +45,18 @@ class AbstractTokenClient extends AbstractClient
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function tokenExchange(string $code, string $redirect, array $scopes = [], OAuthGrantTypes $grantType = null)
+    public function tokenExchange(string $code, string $redirect, array $scopes = [], OAuthGrantTypes $grantType = null): ?AccessTokenInterface
     {
         $body = Push::createPush(value: empty($grantType) ? OAuthGrantTypes::authorizationCode()->value : $grantType->value, key: 'grant_type')
             ->push($redirect, 'redirect_uri')
             ->push(static::buildOAuthString($scopes), 'scope');
 
-        switch ($grantType) {
-            case OAuthGrantTypes::authorizationCode():
-                $body = $body->push($code, 'code');
-                break;
-            case OAuthGrantTypes::refreshToken():
-                $body = $body->push($code, 'refresh_token');
-                break;
-        }
+        $body = match ($grantType) {
+            OAuthGrantTypes::authorizationCode() => $body->push($code, 'code'),
+            OAuthGrantTypes::refreshToken() => $body->push($code, 'refresh_token'),
+        };
 
-        return $this->request($this->buildURL(static::getTokenExchangeBaseUri() . 'oauth2/token', ''),
+        return $this->request($this->buildURL(static::getTokenExchangeBaseUri() . static::$tokenExchangeEndpoint),
             AccessTokenInterface::class,
             [
                 'headers' => [
