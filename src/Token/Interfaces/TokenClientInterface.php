@@ -6,12 +6,12 @@ namespace Bytes\ResponseBundle\Token\Interfaces;
 
 use BadMethodCallException;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
+use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * Interface TokenClientInterface
@@ -30,10 +30,10 @@ interface TokenClientInterface
     /**
      * Revokes the provided access token
      * @param AccessTokenInterface|string $token
-     * @return ResponseInterface
+     * @return ClientResponseInterface
      */
-    public function revokeToken(AccessTokenInterface|string $token);
-
+    public function revokeToken(AccessTokenInterface|string $token): ClientResponseInterface;
+    
     /**
      * Validates the provided access token
      * @param AccessTokenInterface $token
