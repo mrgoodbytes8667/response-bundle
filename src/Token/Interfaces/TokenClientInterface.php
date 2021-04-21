@@ -4,7 +4,9 @@
 namespace Bytes\ResponseBundle\Token\Interfaces;
 
 
+use BadMethodCallException;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
+use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -42,7 +44,8 @@ interface TokenClientInterface
     /**
      * Exchanges the provided code for an access token
      * @param string $code
-     * @param string|callable(string, array) $redirect
+     * @param string|null $route Either $route or $url is required, $route takes precedence over $url
+     * @param string|null|callable(string, array) $url Either $route or $url is required, $route takes precedence over $url
      * @param array $scopes
      * @param OAuthGrantTypes|null $grantType
      * @return AccessTokenInterface|null
@@ -51,8 +54,10 @@ interface TokenClientInterface
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
+     * @throws BadMethodCallException
+     * @throws ValidatorException
      */
-    public function tokenExchange(string $code, string|callable $redirect, array $scopes = [], OAuthGrantTypes $grantType = null): ?AccessTokenInterface;
+    public function tokenExchange(string $code, ?string $route = null, string|callable|null $url = null, array $scopes = [], OAuthGrantTypes $grantType = null): ?AccessTokenInterface;
 
     /**
      * Refreshes the provided access token

@@ -4,13 +4,20 @@
 namespace Bytes\ResponseBundle\HttpClient;
 
 
+use BadMethodCallException;
 use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
 use Bytes\ResponseBundle\Objects\Push;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Bytes\ResponseBundle\Token\Interfaces\TokenClientInterface;
+use Bytes\ResponseBundle\UrlGenerator\UrlGeneratorTrait;
+use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
 use LogicException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Url;
+use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -24,18 +31,23 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  */
 abstract class AbstractTokenClient extends AbstractClient implements TokenClientInterface
 {
+    use UrlGeneratorTrait, ValidatorTrait;
+
     /**
      * @var string|null
      */
     protected static $tokenExchangeBaseUri;
+
     /**
      * @var string
      */
     protected static $tokenExchangeEndpoint = 'oauth2/token';
 
     /**
+     * Exchanges the provided code for an access token
      * @param string $code
-     * @param string|callable(string, array) $redirect
+     * @param string|null $route Either $route or $url is required, $route takes precedence over $url
+     * @param string|null|callable(string, array) $url Either $route or $url is required, $route takes precedence over $url
      * @param array $scopes
      * @param OAuthGrantTypes|null $grantType
      * @return AccessTokenInterface|null
@@ -45,10 +57,26 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenClient
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function tokenExchange(string $code, string|callable $redirect, array $scopes = [], OAuthGrantTypes $grantType = null): ?AccessTokenInterface
+    public function tokenExchange(string $code, ?string $route = null, string|callable|null $url = null, array $scopes = [], OAuthGrantTypes $grantType = null): ?AccessTokenInterface
     {
+        $redirect = '';
+        if (!empty($route)) {
+            $redirect = $this->urlGenerator->generate($route, [], UrlGeneratorInterface::ABSOLUTE_URL);
+        } elseif (!empty($url)) {
+            $redirect = is_callable($url) ? call_user_func($url, $code, $scopes) : $url;
+        } else {
+            throw new BadMethodCallException('Either $route or $url must be provided.');
+        }
+        $errors = $this->validator->validate($redirect, [
+            new NotBlank(),
+            new Url()
+        ]);
+        if (count($errors) > 0) {
+            throw new ValidatorException((string)$errors);
+        }
+
         $body = Push::createPush(value: empty($grantType) ? OAuthGrantTypes::authorizationCode()->value : $grantType->value, key: 'grant_type')
-            ->push(is_callable($redirect) ? call_user_func($redirect, $code, $scopes) : $redirect, 'redirect_uri')
+            ->push($redirect, 'redirect_uri')
             ->push(static::buildOAuthString($scopes), 'scope');
 
         $body = match ($grantType) {
