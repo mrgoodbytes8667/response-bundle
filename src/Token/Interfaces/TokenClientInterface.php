@@ -42,7 +42,7 @@ interface TokenClientInterface
     /**
      * Exchanges the provided code for an access token
      * @param string $code
-     * @param string $redirect
+     * @param string|callable(string, array) $redirect
      * @param array $scopes
      * @param OAuthGrantTypes|null $grantType
      * @return AccessTokenInterface|null
@@ -52,7 +52,7 @@ interface TokenClientInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function tokenExchange(string $code, string $redirect, array $scopes = [], OAuthGrantTypes $grantType = null): ?AccessTokenInterface;
+    public function tokenExchange(string $code, string|callable $redirect, array $scopes = [], OAuthGrantTypes $grantType = null): ?AccessTokenInterface;
 
     /**
      * Refreshes the provided access token

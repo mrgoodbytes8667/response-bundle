@@ -35,7 +35,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenClient
 
     /**
      * @param string $code
-     * @param string $redirect
+     * @param string|callable(string, array) $redirect
      * @param array $scopes
      * @param OAuthGrantTypes|null $grantType
      * @return AccessTokenInterface|null
@@ -45,10 +45,10 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenClient
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function tokenExchange(string $code, string $redirect, array $scopes = [], OAuthGrantTypes $grantType = null): ?AccessTokenInterface
+    public function tokenExchange(string $code, string|callable $redirect, array $scopes = [], OAuthGrantTypes $grantType = null): ?AccessTokenInterface
     {
         $body = Push::createPush(value: empty($grantType) ? OAuthGrantTypes::authorizationCode()->value : $grantType->value, key: 'grant_type')
-            ->push($redirect, 'redirect_uri')
+            ->push(is_callable($redirect) ? call_user_func($redirect, $code, $scopes) : $redirect, 'redirect_uri')
             ->push(static::buildOAuthString($scopes), 'scope');
 
         $body = match ($grantType) {
