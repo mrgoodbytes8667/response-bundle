@@ -7,8 +7,6 @@ namespace Bytes\ResponseBundle\HttpClient;
 use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use InvalidArgumentException;
-use Symfony\Component\HttpClient\Retry\RetryStrategyInterface;
-use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -18,7 +16,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  *
  * @experimental
  */
-class AbstractClient
+abstract class AbstractClient
 {
     /**
      * @var ClientResponseInterface
@@ -28,13 +26,11 @@ class AbstractClient
     /**
      * AbstractClient constructor.
      * @param HttpClientInterface $httpClient
-     * @param RetryStrategyInterface|null $strategy
-     * @param string $clientId
      * @param string|null $userAgent
      * @param array $defaultOptionsByRegexp
      * @param string|null $defaultRegexp
      */
-    public function __construct(protected HttpClientInterface $httpClient, ?RetryStrategyInterface $strategy, protected string $clientId, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null)
+    public function __construct(protected HttpClientInterface $httpClient, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null)
     {
         // Add user agent if not already set
         if (!empty($userAgent)) {
@@ -47,7 +43,17 @@ class AbstractClient
                 }
             }
         }
-        $this->httpClient = new RetryableHttpClient(new ConfigurableScopingHttpClient($httpClient, $defaultOptionsByRegexp, ['query', 'body'], $defaultRegexp), $strategy);
+        $this->httpClient = new ConfigurableScopingHttpClient($httpClient, $defaultOptionsByRegexp, ['query', 'body'], $defaultRegexp);
+    }
+
+    /**
+     * @param ClientResponseInterface $response
+     * @return $this
+     */
+    public function setResponse(ClientResponseInterface $response): self
+    {
+        $this->response = $response;
+        return $this;
     }
 
     /**
@@ -97,20 +103,11 @@ class AbstractClient
 
     /**
      * @param string $path
+     * @param string $prepend
      * @return string
      */
-    protected function buildURL(string $path)
+    protected function buildURL(string $path, string $prepend = '')
     {
-        return $path;
-    }
-
-    /**
-     * @param ClientResponseInterface $response
-     * @return $this
-     */
-    public function setResponse(ClientResponseInterface $response): self
-    {
-        $this->response = $response;
-        return $this;
+        return ($prepend ?? '') . $path;
     }
 }
