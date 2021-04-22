@@ -63,6 +63,21 @@ abstract class AbstractClient
     }
 
     /**
+     * @param AccessTokenInterface|string|null $token
+     * @return string|null
+     */
+    protected static function normalizeRefreshToken(AccessTokenInterface|string|null $token)
+    {
+        if (empty($token)) {
+            return null;
+        }
+        if ($token instanceof AccessTokenInterface) {
+            return $token->getRefreshToken() ?? null;
+        }
+        return $token;
+    }
+
+    /**
      * @param ClientResponseInterface $response
      * @return $this
      */
