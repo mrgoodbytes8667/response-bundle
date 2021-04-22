@@ -9,7 +9,7 @@ use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
 use Bytes\ResponseBundle\Objects\Push;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
-use Bytes\ResponseBundle\Token\Interfaces\TokenClientInterface;
+use Bytes\ResponseBundle\Token\Interfaces\TokenExchangeInterface;
 use Bytes\ResponseBundle\UrlGenerator\UrlGeneratorTrait;
 use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
@@ -29,7 +29,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  *
  * @experimental
  */
-abstract class AbstractTokenClient extends AbstractClient implements TokenClientInterface
+abstract class AbstractTokenClient extends AbstractClient implements TokenExchangeInterface
 {
     use UrlGeneratorTrait, ValidatorTrait;
 
