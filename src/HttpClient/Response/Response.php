@@ -7,6 +7,7 @@ namespace Bytes\ResponseBundle\HttpClient\Response;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -62,19 +63,21 @@ class Response implements ClientResponseInterface
     /**
      * Response constructor.
      * @param SerializerInterface $serializer
+     * @param EventDispatcherInterface|null $dispatcher
      */
-    public function __construct(private SerializerInterface $serializer)
+    public function __construct(private SerializerInterface $serializer, private ?EventDispatcherInterface $dispatcher = null)
     {
     }
 
     /**
      * @param SerializerInterface $serializer
+     * @param EventDispatcherInterface|null $dispatcher
      * @return static
      */
     #[Pure]
-    public static function make(SerializerInterface $serializer): static
+    public static function make(SerializerInterface $serializer, ?EventDispatcherInterface $dispatcher = null): static
     {
-        return new static($serializer);
+        return new static($serializer, $dispatcher);
     }
 
     /**
@@ -84,7 +87,7 @@ class Response implements ClientResponseInterface
      */
     public static function makeFrom($clientResponse, array $params = []): static
     {
-        $static = new static($clientResponse->getSerializer());
+        $static = new static($clientResponse->getSerializer(), $clientResponse->getDispatcher());
         $static->setExtraParams($params);
         return $static;
     }
@@ -117,6 +120,14 @@ class Response implements ClientResponseInterface
     public function getSerializer(): SerializerInterface
     {
         return $this->serializer;
+    }
+
+    /**
+     * @return EventDispatcherInterface|null
+     */
+    public function getDispatcher(): ?EventDispatcherInterface
+    {
+        return $this->dispatcher;
     }
 
     /**

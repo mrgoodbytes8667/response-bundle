@@ -6,6 +6,7 @@ namespace Bytes\ResponseBundle\Interfaces;
 
 use Bytes\ResponseBundle\HttpClient\Response\Response;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -24,9 +25,10 @@ interface ClientResponseInterface
 
     /**
      * @param SerializerInterface $serializer
+     * @param EventDispatcherInterface|null $dispatcher
      * @return static
      */
-    public static function make(SerializerInterface $serializer);
+    public static function make(SerializerInterface $serializer, ?EventDispatcherInterface $dispatcher = null);
 
     /**
      * @param ClientResponseInterface $clientResponse
