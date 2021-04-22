@@ -10,7 +10,7 @@ namespace Bytes\ResponseBundle\Token\Interfaces;
  *
  * @experimental
  */
-interface TokenClientInterface extends TokenExchangeInterface, TokenRevokeInterface
+interface TokenClientInterface extends TokenExchangeInterface, TokenRevokeInterface, TokenValidateInterface
 {
     /**
      * Refreshes the provided access token
