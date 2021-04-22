@@ -4,6 +4,8 @@
 namespace Bytes\ResponseBundle\Token\Interfaces;
 
 
+use InvalidArgumentException;
+
 /**
  * Interface TokenValidationResponseInterface
  * @package Bytes\ResponseBundle\Token\Interfaces
@@ -12,6 +14,12 @@ namespace Bytes\ResponseBundle\Token\Interfaces;
  */
 interface TokenValidationResponseInterface
 {
+    /**
+     * @param ...$args
+     * @return static
+     */
+    public static function create(...$args): static;
+
     /**
      * @return string|null
      */
@@ -81,8 +89,10 @@ interface TokenValidationResponseInterface
     public function isMatch(...$args): bool;
 
     /**
-     * @param ...$args
-     * @return static
+     * Is this token an app/bot token?
+     * @return bool
+     *
+     * @throws InvalidArgumentException
      */
-    public static function create(...$args): static;
+    public function isAppToken(): bool;
 }
