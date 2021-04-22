@@ -14,8 +14,8 @@ interface UserTokenClientInterface extends TokenClientInterface
 {
     /**
      * Validates the provided access token
-     * @param AccessTokenInterface $token
+     * @param AccessTokenInterface|string $token
      * @return mixed
      */
-    public function validateToken(AccessTokenInterface $token);
+    public function validateToken(AccessTokenInterface|string $token);
 }

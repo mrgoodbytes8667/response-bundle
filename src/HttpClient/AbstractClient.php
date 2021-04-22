@@ -6,6 +6,7 @@ namespace Bytes\ResponseBundle\HttpClient;
 
 use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
+use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use InvalidArgumentException;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -44,6 +45,21 @@ abstract class AbstractClient
             }
         }
         $this->httpClient = new ConfigurableScopingHttpClient($httpClient, $defaultOptionsByRegexp, ['query', 'body'], $defaultRegexp);
+    }
+
+    /**
+     * @param AccessTokenInterface|string|null $token
+     * @return string|null
+     */
+    protected static function normalizeAccessToken(AccessTokenInterface|string|null $token)
+    {
+        if (empty($token)) {
+            return null;
+        }
+        if ($token instanceof AccessTokenInterface) {
+            return $token->getAccessToken() ?? null;
+        }
+        return $token;
     }
 
     /**
