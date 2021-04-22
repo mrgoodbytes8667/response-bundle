@@ -10,6 +10,7 @@ use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use InvalidArgumentException;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use UnexpectedValueException;
 
 /**
  * Class AbstractClient
@@ -49,32 +50,56 @@ abstract class AbstractClient
 
     /**
      * @param AccessTokenInterface|string|null $token
+     * @param bool $allowNull
+     * @param string $message
      * @return string|null
      */
-    protected static function normalizeAccessToken(AccessTokenInterface|string|null $token)
+    public static function normalizeAccessToken(AccessTokenInterface|string|null $token, bool $allowNull = true, string $message = 'The parameter cannot be null.')
     {
-        if (empty($token)) {
-            return null;
-        }
-        if ($token instanceof AccessTokenInterface) {
-            return $token->getAccessToken() ?? null;
-        }
-        return $token;
+        return self::normalizeToken($token, $allowNull, $message, 'getAccessToken');
     }
 
     /**
      * @param AccessTokenInterface|string|null $token
+     * @param bool $allowNull
+     * @param string $message
+     * @param string $function
      * @return string|null
      */
-    protected static function normalizeRefreshToken(AccessTokenInterface|string|null $token)
+    private static function normalizeToken(AccessTokenInterface|string|null $token, bool $allowNull, string $message, string $function)
     {
         if (empty($token)) {
-            return null;
+            return self::normalizeTokenForNulls(null, $allowNull, $message);
         }
         if ($token instanceof AccessTokenInterface) {
-            return $token->getRefreshToken() ?? null;
+            return self::normalizeTokenForNulls($token->{$function}() ?? null, $allowNull, $message);
         }
-        return $token;
+        return self::normalizeTokenForNulls($token, $allowNull, $message);
+    }
+
+    /**
+     * @param string|null $token
+     * @param bool $allowNull
+     * @param string $message
+     * @return string|null
+     */
+    private static function normalizeTokenForNulls(?string $token, bool $allowNull, string $message)
+    {
+        if (!empty($token) || $allowNull) {
+            return $token;
+        }
+        throw new UnexpectedValueException($message);
+    }
+
+    /**
+     * @param AccessTokenInterface|string|null $token
+     * @param bool $allowNull
+     * @param string $message
+     * @return string|null
+     */
+    public static function normalizeRefreshToken(AccessTokenInterface|string|null $token, bool $allowNull = true, string $message = 'The parameter cannot be null.')
+    {
+        return self::normalizeToken($token, $allowNull, $message, 'getRefreshToken');
     }
 
     /**
