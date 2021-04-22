@@ -15,6 +15,7 @@ use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
 use LogicException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Serializer\SerializerAwareTrait;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Exception\ValidatorException;
@@ -31,7 +32,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  */
 abstract class AbstractTokenClient extends AbstractClient implements TokenExchangeInterface
 {
-    use UrlGeneratorTrait, ValidatorTrait;
+    use SerializerAwareTrait, UrlGeneratorTrait, ValidatorTrait;
 
     /**
      * @var string|null
