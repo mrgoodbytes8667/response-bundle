@@ -12,6 +12,7 @@ use Faker\Factory;
 use Faker\Generator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -95,7 +96,7 @@ class ResponseTest extends TestCase
         $response->method('getStatusCode')
             ->willThrowException(new TransportException());
 
-        $discordResponse = DiscordResponse::make($this->serializer)->withResponse($response, null);
+        $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, null);
 
         $this->expectException(TransportException::class);
         $discordResponse->getStatusCode();
@@ -115,7 +116,7 @@ class ResponseTest extends TestCase
         $response->method('getStatusCode')
             ->willReturn($code);
 
-        $discordResponse = DiscordResponse::make($this->serializer)->withResponse($response, null);
+        $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, null);
 
         $this->assertTrue($discordResponse->isSuccess());
     }
@@ -136,7 +137,7 @@ class ResponseTest extends TestCase
         $response->method('getStatusCode')
             ->willReturn($code);
 
-        $discordResponse = DiscordResponse::make($this->serializer)->withResponse($response, null);
+        $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, null);
 
         $this->assertFalse($discordResponse->isSuccess());
     }
@@ -152,7 +153,7 @@ class ResponseTest extends TestCase
         $response->method('getStatusCode')
             ->willThrowException(new TransportException());
 
-        $discordResponse = DiscordResponse::make($this->serializer)->withResponse($response, null);
+        $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, null);
 
         $this->assertFalse($discordResponse->isSuccess());
     }
@@ -196,7 +197,7 @@ class ResponseTest extends TestCase
                 ]
             ]);
 
-        yield ['response' => DiscordResponse::make($this->serializer)->withResponse($ri, null), 'headers' => $headers];
+        yield ['response' => DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($ri, null), 'headers' => $headers];
     }
 
     /**
@@ -221,7 +222,7 @@ class ResponseTest extends TestCase
         $response = new MockStandaloneResponse(content: '{"bar":"bar","foo":"foo"}', headers: ['Content-Type' => 'application/json']);
 
         /** @var DiscordResponse $discordResponse */
-        $discordResponse = DiscordResponse::make($this->serializer)->withResponse($response, Model::class, onSuccessCallable: function ($self, $results) {
+        $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, Model::class, onSuccessCallable: function ($self, $results) {
             $this->assertInstanceOf(DiscordResponse::class, $self);
             $this->assertInstanceOf(Model::class, $results);
         });
@@ -237,7 +238,7 @@ class ResponseTest extends TestCase
         $response = new MockStandaloneResponse(content: '{"bar":"bar","foo":"foo"}', headers: ['Content-Type' => 'application/json']);
 
         /** @var Model $discordResponse */
-        $discordResponse = DiscordResponse::make($this->serializer)->withResponse($response, Model::class, onSuccessCallable: function ($self, $results) {
+        $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, Model::class, onSuccessCallable: function ($self, $results) {
             $this->assertInstanceOf(DiscordResponse::class, $self);
             $this->assertNull($results);
         })->callback()->callback()->callback(true);
@@ -282,7 +283,7 @@ class ResponseTest extends TestCase
             ->willReturn('{"bar":"bar","foo":"foo"}');
 
         /** @var Model $discordResponse */
-        $discordResponse = DiscordResponse::make($this->serializer)->withResponse($response, Model::class)->deserialize();
+        $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, Model::class)->deserialize();
         $this->assertInstanceOf(Model::class, $discordResponse);
         $this->assertEquals('foo', $discordResponse->foo);
         $this->assertEquals('bar', $discordResponse->getBar());
@@ -299,7 +300,7 @@ class ResponseTest extends TestCase
     {
         $response = new MockStandaloneResponse(statusCode: Response::HTTP_NO_CONTENT);
 
-        $test = DiscordResponse::make($this->serializer)->withResponse($response, null);
+        $test = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, null);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The argument "$type" must be provided');
@@ -319,7 +320,7 @@ class ResponseTest extends TestCase
     {
         $response = new MockStandaloneResponse(statusCode: $code);
 
-        $test = DiscordResponse::make($this->serializer)->withResponse($response, Model::class);
+        $test = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, Model::class);
 
         $this->expectException(ClientExceptionInterface::class);
 
@@ -337,7 +338,7 @@ class ResponseTest extends TestCase
         $response = new MockStandaloneResponse(content: '{"bar":"bar","foo":"foo"}', statusCode: Response::HTTP_BAD_REQUEST, headers: ['Content-Type' => 'application/json']);
 
         /** @var Model $discordResponse */
-        $discordResponse = DiscordResponse::make($this->serializer)->withResponse($response, Model::class)->deserialize(false);
+        $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, Model::class)->deserialize(false);
 
         $this->assertInstanceOf(Model::class, $discordResponse);
         $this->assertEquals('foo', $discordResponse->foo);
@@ -355,7 +356,7 @@ class ResponseTest extends TestCase
         $response = new MockStandaloneResponse(content: '{"bar":"bar","foo":"foo"}', statusCode: Response::HTTP_BAD_REQUEST, headers: ['Content-Type' => 'application/json']);
 
         /** @var Model[] $discordResponses */
-        $discordResponses = DiscordResponse::make($this->serializer)->withResponse($response, '\Bytes\ResponseBundle\Tests\Fixtures\Model[]')->deserialize(false);
+        $discordResponses = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, '\Bytes\ResponseBundle\Tests\Fixtures\Model[]')->deserialize(false);
 
         $discordResponse = array_shift($discordResponses);
 
@@ -404,7 +405,7 @@ class ResponseTest extends TestCase
         $response->method('getStatusCode')
             ->willThrowException(new TransportException());
 
-        $discordResponse = DiscordResponse::make($this->serializer)->withResponse($response, null);
+        $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, null);
 
         $this->assertInstanceOf(DiscordResponse::class, $discordResponse);
 
