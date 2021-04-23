@@ -45,12 +45,13 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     protected static $tokenExchangeEndpoint = 'oauth2/token';
 
     /**
-     * Exchanges the provided code for an access token
+     * Exchanges the provided code (or token) for a (new) access token
      * @param string $code
      * @param string|null $route Either $route or $url is required, $route takes precedence over $url
      * @param string|null|callable(string, array) $url Either $route or $url is required, $route takes precedence over $url
      * @param array $scopes
      * @param OAuthGrantTypes|null $grantType
+     * @param callable(static, mixed)|null $onSuccessCallable If set, will be triggered if it returns successfully
      * @return AccessTokenInterface|null
      *
      * @throws ClientExceptionInterface
@@ -58,7 +59,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function tokenExchange(string $code, ?string $route = null, string|callable|null $url = null, array $scopes = [], OAuthGrantTypes $grantType = null): ?AccessTokenInterface
+    public function tokenExchange(string $code, ?string $route = null, string|callable|null $url = null, array $scopes = [], OAuthGrantTypes $grantType = null, ?callable $onSuccessCallable = null): ?AccessTokenInterface
     {
         $redirect = '';
         if (!empty($route)) {
@@ -92,7 +93,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ],
                 'body' => $body->value(),
-            ], HttpMethods::post())
+            ], HttpMethods::post(), onSuccessCallable: $onSuccessCallable, params: ['code' => $code])
             ->deserialize();
     }
 
