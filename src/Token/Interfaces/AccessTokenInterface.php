@@ -36,4 +36,10 @@ interface AccessTokenInterface
      * @return string|null
      */
     public function getTokenType(): ?string;
+
+    /**
+     * @param string $token
+     * @return static
+     */
+    public static function createFromAccessToken(string $token): static;
 }
