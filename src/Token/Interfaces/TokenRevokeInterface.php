@@ -16,8 +16,8 @@ interface TokenRevokeInterface
 {
     /**
      * Revokes the provided access token
-     * @param AccessTokenInterface|string $token
+     * @param AccessTokenInterface $token
      * @return ClientResponseInterface
      */
-    public function revokeToken(AccessTokenInterface|string $token): ClientResponseInterface;
+    public function revokeToken(AccessTokenInterface $token): ClientResponseInterface;
 }

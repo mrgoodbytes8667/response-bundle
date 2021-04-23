@@ -14,8 +14,8 @@ interface TokenClientInterface extends TokenExchangeInterface, TokenRevokeInterf
 {
     /**
      * Refreshes the provided access token
-     * @param AccessTokenInterface|string|null $token
+     * @param AccessTokenInterface|null $token
      * @return AccessTokenInterface|null
      */
-    public function refreshToken(AccessTokenInterface|string $token = null): ?AccessTokenInterface;
+    public function refreshToken(AccessTokenInterface $token = null): ?AccessTokenInterface;
 }

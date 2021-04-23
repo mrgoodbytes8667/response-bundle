@@ -14,8 +14,8 @@ interface TokenValidateInterface
 {
     /**
      * Validates the provided access token
-     * @param AccessTokenInterface|string $token
+     * @param AccessTokenInterface $token
      * @return TokenValidationResponseInterface|null
      */
-    public function validateToken(AccessTokenInterface|string $token): ?TokenValidationResponseInterface;
+    public function validateToken(AccessTokenInterface $token): ?TokenValidationResponseInterface;
 }
