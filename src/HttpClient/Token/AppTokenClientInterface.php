@@ -1,12 +1,14 @@
 <?php
 
 
-namespace Bytes\ResponseBundle\Token\Interfaces;
+namespace Bytes\ResponseBundle\HttpClient\Token;
 
+
+use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 
 /**
  * Interface AppTokenClientInterface
- * @package Bytes\ResponseBundle\Token\Interfaces
+ * @package Bytes\ResponseBundle\HttpClient\Token
  *
  * @experimental
  */

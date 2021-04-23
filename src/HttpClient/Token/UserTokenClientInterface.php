@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Bytes\ResponseBundle\Token\Interfaces;
+namespace Bytes\ResponseBundle\HttpClient\Token;
 
 
 /**
  * Interface UserTokenClientInterface
- * @package Bytes\ResponseBundle\Token\Interfaces
+ * @package Bytes\ResponseBundle\HttpClient\Token
  *
  * @experimental
  */

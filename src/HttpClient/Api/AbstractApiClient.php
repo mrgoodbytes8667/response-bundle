@@ -1,16 +1,17 @@
 <?php
 
 
-namespace Bytes\ResponseBundle\HttpClient;
+namespace Bytes\ResponseBundle\HttpClient\Api;
 
 
+use Bytes\ResponseBundle\HttpClient\AbstractClient;
 use Symfony\Component\HttpClient\Retry\RetryStrategyInterface;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Class AbstractApiClient
- * @package Bytes\ResponseBundle\HttpClient
+ * @package Bytes\ResponseBundle\HttpClient\Api
  *
  * @experimental
  */

@@ -3,9 +3,9 @@
 namespace Bytes\ResponseBundle\Tests\HttpClient;
 
 use Bytes\Common\Faker\TestFakerTrait;
-use Bytes\ResponseBundle\HttpClient\AbstractApiClient;
 use Bytes\ResponseBundle\HttpClient\AbstractClient;
-use Bytes\ResponseBundle\HttpClient\AbstractTokenClient;
+use Bytes\ResponseBundle\HttpClient\Api\AbstractApiClient;
+use Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,7 +30,7 @@ class AbstractClientTest extends TestCase
     {
         $this->assertEquals($accessToken, AbstractClient::normalizeAccessToken($token));
         $this->assertEquals($accessToken, AbstractApiClient::normalizeAccessToken($token));
-        $this->assertEquals($accessToken, AbstractTokenClient::normalizeAccessToken($token));
+        $this->assertEquals($accessToken, \Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient::normalizeAccessToken($token));
     }
 
     /**

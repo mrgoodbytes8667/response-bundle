@@ -1,15 +1,15 @@
 <?php
 
 
-namespace Bytes\ResponseBundle\HttpClient;
+namespace Bytes\ResponseBundle\HttpClient\Token;
 
 
 use BadMethodCallException;
 use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
+use Bytes\ResponseBundle\HttpClient\AbstractClient;
 use Bytes\ResponseBundle\Objects\Push;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
-use Bytes\ResponseBundle\Token\Interfaces\TokenExchangeInterface;
 use Bytes\ResponseBundle\UrlGenerator\UrlGeneratorTrait;
 use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
@@ -26,7 +26,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * Class AbstractTokenClient
- * @package Bytes\ResponseBundle\HttpClient
+ * @package Bytes\ResponseBundle\HttpClient\Token
  *
  * @experimental
  */

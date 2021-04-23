@@ -1,14 +1,15 @@
 <?php
 
 
-namespace Bytes\ResponseBundle\Token\Interfaces;
+namespace Bytes\ResponseBundle\HttpClient\Token;
 
 
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
+use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 
 /**
  * Interface TokenRevokeInterface
- * @package Bytes\ResponseBundle\Token\Interfaces
+ * @package Bytes\ResponseBundle\HttpClient\Token
  *
  * @experimental
  */

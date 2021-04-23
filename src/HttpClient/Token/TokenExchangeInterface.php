@@ -1,10 +1,11 @@
 <?php
 
 
-namespace Bytes\ResponseBundle\Token\Interfaces;
+namespace Bytes\ResponseBundle\HttpClient\Token;
 
 
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
+use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -12,7 +13,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * Interface TokenExchangeInterface
- * @package Bytes\ResponseBundle\Token\Interfaces
+ * @package Bytes\ResponseBundle\HttpClient\Token
  *
  * @experimental
  */
