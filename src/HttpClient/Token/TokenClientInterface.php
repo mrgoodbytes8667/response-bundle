@@ -4,7 +4,6 @@
 namespace Bytes\ResponseBundle\HttpClient\Token;
 
 
-use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Bytes\ResponseBundle\Token\Interfaces\TokenValidateInterface;
 
 /**
@@ -13,12 +12,7 @@ use Bytes\ResponseBundle\Token\Interfaces\TokenValidateInterface;
  *
  * @experimental
  */
-interface TokenClientInterface extends TokenExchangeInterface, TokenRevokeInterface, TokenValidateInterface
+interface TokenClientInterface extends TokenExchangeInterface, TokenRefreshInterface, TokenRevokeInterface, TokenValidateInterface
 {
-    /**
-     * Refreshes the provided access token
-     * @param AccessTokenInterface|null $token
-     * @return AccessTokenInterface|null
-     */
-    public function refreshToken(AccessTokenInterface $token = null): ?AccessTokenInterface;
+
 }
