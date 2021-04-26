@@ -42,4 +42,10 @@ interface AccessTokenInterface
      * @return static
      */
     public static function createFromAccessToken(string $token): static;
+
+    /**
+     * @param AccessTokenInterface $token
+     * @return $this
+     */
+    public function updateFromAccessToken(AccessTokenInterface $token);
 }
