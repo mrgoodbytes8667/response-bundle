@@ -82,7 +82,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
             ->push(static::buildOAuthString($scopes), 'scope');
 
         $body = match ($grantType) {
-            OAuthGrantTypes::authorizationCode() => $body->push($code, 'code'),
+            OAuthGrantTypes::authorizationCode(), null => $body->push($code, 'code'),
             OAuthGrantTypes::refreshToken() => $body->push($code, 'refresh_token'),
         };
 
