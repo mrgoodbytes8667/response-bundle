@@ -43,7 +43,7 @@ trait AccessTokenTrait
 
     /**
      * Time (in seconds) until the access token expires
-     * @var int|null
+     * @var \DateInterval|null
      * @ORM\Column(type="dateinterval")
      */
     private $expiresIn;
@@ -57,7 +57,7 @@ trait AccessTokenTrait
 
     /**
      * Space separated scopes
-     * @var string|null
+     * @var string|array|null
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull()
      */
@@ -141,9 +141,9 @@ trait AccessTokenTrait
     }
 
     /**
-     * @return int|null
+     * @return \DateInterval|null
      */
-    public function getExpiresIn(): ?int
+    public function getExpiresIn(): ?\DateInterval
     {
         return $this->expiresIn;
     }
@@ -173,7 +173,7 @@ trait AccessTokenTrait
         {
             return $this->expiresAt;
         } else {
-            return \DateTimeImmutable::createFromInterface($this->expiresAt);
+            return empty($this->expiresAt) ? null : \DateTimeImmutable::createFromInterface($this->expiresAt);
         }
     }
 
@@ -232,7 +232,12 @@ trait AccessTokenTrait
      */
     public function getTokenSource(): ?TokenSource
     {
-        return TokenSource::make($this->tokenSource);
+        try {
+            return TokenSource::make($this->tokenSource);
+        } catch (\TypeError $exception)
+        {
+            return null;
+        }
     }
 
     /**
@@ -280,11 +285,11 @@ trait AccessTokenTrait
 
     /**
      * @param string|null $class
-     * @return AccessTokenTrait
+     * @return $this
      */
-    public function setClass(?string $class): self
+    public function setClass(?string $class = null): self
     {
-        $this->class = $class;
+        $this->class = $class ?? static::class;
         return $this;
     }
 }
