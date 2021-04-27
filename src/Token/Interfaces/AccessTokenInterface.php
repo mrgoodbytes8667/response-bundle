@@ -49,10 +49,10 @@ interface AccessTokenInterface
     public function getClass(): ?string;
 
     /**
-     * @param string $token
+     * @param AccessTokenInterface|string $token
      * @return static
      */
-    public static function createFromAccessToken(string $token): static;
+    public static function createFromAccessToken(AccessTokenInterface|string $token): static;
 
     /**
      * @param AccessTokenInterface $token
