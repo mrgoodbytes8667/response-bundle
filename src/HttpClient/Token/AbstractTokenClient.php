@@ -40,6 +40,11 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     protected static $tokenExchangeBaseUri;
 
     /**
+     * @var string|null
+     */
+    protected static $tokenExchangeDeserializationClass;
+
+    /**
      * @var string
      */
     protected static $tokenExchangeEndpoint = 'oauth2/token';
@@ -87,13 +92,13 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
         };
 
         return $this->request($this->buildURL(static::getTokenExchangeBaseUri() . static::$tokenExchangeEndpoint),
-            AccessTokenInterface::class,
-            [
+            type: static::getTokenExchangeDeserializationClass(),
+            options: [
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ],
                 'body' => $body->value(),
-            ], HttpMethods::post(), onSuccessCallable: $onSuccessCallable, params: ['code' => $code])
+            ], method: HttpMethods::post(), onSuccessCallable: $onSuccessCallable, params: ['code' => $code])
             ->deserialize();
     }
 
@@ -115,6 +120,17 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
             throw new LogicException(sprintf('You must instantiate "$tokenExchangeBaseUri" or override the "%s" method.', __METHOD__));
         }
         return static::$tokenExchangeBaseUri;
+    }
+
+    /**
+     * @return string|null
+     */
+    protected static function getTokenExchangeDeserializationClass()
+    {
+        if (empty(static::$tokenExchangeDeserializationClass)) {
+            throw new LogicException(sprintf('You must instantiate "$tokenExchangeDeserializationClass" or override the "%s" method.', __METHOD__));
+        }
+        return static::$tokenExchangeDeserializationClass;
     }
 
     /**
