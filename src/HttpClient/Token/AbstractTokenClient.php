@@ -86,10 +86,15 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
             ->push($redirect, 'redirect_uri')
             ->push(static::buildOAuthString($scopes), 'scope');
 
-        $body = match ($grantType) {
-            OAuthGrantTypes::authorizationCode(), null => $body->push($code, 'code'),
-            OAuthGrantTypes::refreshToken() => $body->push($code, 'refresh_token'),
-        };
+        switch ($grantType ?? OAuthGrantTypes::authorizationCode())
+        {
+            case OAuthGrantTypes::authorizationCode():
+                $body = $body->push($code, 'code');
+                break;
+            case OAuthGrantTypes::refreshToken():
+                $body = $body->push($code, 'refresh_token');
+                break;
+        }
 
         return $this->request($this->buildURL(static::getTokenExchangeBaseUri() . static::$tokenExchangeEndpoint),
             type: static::getTokenExchangeDeserializationClass(),
