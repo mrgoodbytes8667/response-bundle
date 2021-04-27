@@ -7,6 +7,7 @@ namespace Bytes\ResponseBundle\Token;
 use Bytes\ResponseBundle\Entity\CreatedUpdatedTrait;
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,9 +22,10 @@ trait AccessTokenTrait
 
     /**
      * @var Ulid
-     * @ORM\Id()
-     * @ORM\Column(type="ulid")
-     * @ORM\GeneratedValue()
+     * @ORM\Id
+     * @ORM\Column(type="ulid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UlidGenerator::class)
      */
     protected $id;
 
