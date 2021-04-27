@@ -19,6 +19,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class TokenResponse extends Response
 {
     /**
+     * Identifier used for differentiating different token providers
      * @var string
      */
     protected static $identifier;
@@ -46,6 +47,7 @@ class TokenResponse extends Response
     }
 
     /**
+     * Returns the TokenSource for the token
      * @return TokenSource
      *
      * @throws LogicException When this abstract method is not implemented

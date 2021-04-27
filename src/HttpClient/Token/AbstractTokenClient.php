@@ -8,7 +8,6 @@ use BadMethodCallException;
 use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
 use Bytes\ResponseBundle\HttpClient\AbstractClient;
-use Bytes\ResponseBundle\HttpClient\Response\TokenResponse;
 use Bytes\ResponseBundle\Objects\Push;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Bytes\ResponseBundle\UrlGenerator\UrlGeneratorTrait;
@@ -44,11 +43,6 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @var string
      */
     protected static $tokenExchangeEndpoint = 'oauth2/token';
-
-    /**
-     * @var string
-     */
-    protected static $tokenResponseClass = TokenResponse::class;
 
     /**
      * Exchanges the provided code (or token) for a (new) access token
@@ -99,8 +93,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ],
                 'body' => $body->value(),
-            ], method: HttpMethods::post(), responseClass: static::$tokenResponseClass,
-            onSuccessCallable: $onSuccessCallable, params: ['code' => $code])
+            ], HttpMethods::post(), onSuccessCallable: $onSuccessCallable, params: ['code' => $code])
             ->deserialize();
     }
 
