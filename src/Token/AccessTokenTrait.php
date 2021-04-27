@@ -4,6 +4,8 @@
 namespace Bytes\ResponseBundle\Token;
 
 
+use Bytes\ResponseBundle\Entity\CreatedUpdatedTrait;
+use Bytes\ResponseBundle\Enums\TokenSource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Ulid;
@@ -15,6 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 trait AccessTokenTrait
 {
+    use CreatedUpdatedTrait;
+
     /**
      * @var Ulid
      * @ORM\Id()
@@ -66,21 +70,21 @@ trait AccessTokenTrait
     private $tokenType;
 
     /**
+     * @var string|null
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $tokenSource;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $class;
+
+    /**
      * @var UserInterface|null
      */
     private $user;
-
-    /**
-     * @var \DateTimeInterface
-     * @ORM\Column(type="datetime")
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTimeInterface
-     * @ORM\Column(type="datetime")
-     */
-    protected $updatedAt;
 
     /**
      * @return Ulid
@@ -224,6 +228,31 @@ trait AccessTokenTrait
     }
 
     /**
+     * @return TokenSource|null
+     */
+    public function getTokenSource(): ?TokenSource
+    {
+        return TokenSource::make($this->tokenSource);
+    }
+
+    /**
+     * @param TokenSource|string|null $tokenSource
+     * @return $this
+     */
+    public function setTokenSource(TokenSource|string|null $tokenSource): self
+    {
+        if(!empty($tokenSource))
+        {
+            if($tokenSource instanceof TokenSource)
+            {
+                $tokenSource = $tokenSource->value;
+            }
+        }
+        $this->tokenSource = $tokenSource;
+        return $this;
+    }
+
+    /**
      * @return UserInterface|null
      */
     public function getUser(): ?UserInterface
@@ -242,40 +271,20 @@ trait AccessTokenTrait
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return string|null
      */
-    public function getCreatedAt(): \DateTimeInterface
+    public function getClass(): ?string
     {
-        return $this->createdAt;
+        return $this->class;
     }
 
     /**
-     * @param \DateTimeInterface $createdAt
-     * @return $this
+     * @param string|null $class
+     * @return AccessTokenTrait
      */
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setClass(?string $class): self
     {
-        $this->createdAt = $createdAt;
+        $this->class = $class;
         return $this;
     }
-
-    /**
-     * @return \DateTimeInterface
-     */
-    public function getUpdatedAt(): \DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * @param \DateTimeInterface $updatedAt
-     * @return $this
-     */
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-        return $this;
-    }
-
-
 }

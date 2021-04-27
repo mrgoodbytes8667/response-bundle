@@ -4,6 +4,7 @@
 namespace Bytes\ResponseBundle\Token\Interfaces;
 
 
+use Bytes\ResponseBundle\Enums\TokenSource;
 use DateInterval;
 
 /**
@@ -36,6 +37,16 @@ interface AccessTokenInterface
      * @return string|null
      */
     public function getTokenType(): ?string;
+
+    /**
+     * @return TokenSource|null
+     */
+    public function getTokenSource(): ?TokenSource;
+
+    /**
+     * @return string|null
+     */
+    public function getClass(): ?string;
 
     /**
      * @param string $token
