@@ -294,11 +294,11 @@ abstract class AbstractOAuth
     /**
      * Returns the $prompt argument for getAuthorizationCodeGrantURL() after normalization and validation
      * @param OAuthPromptInterface|string|bool|null $prompt
-     * @return string
+     * @return string|bool
      *
      * @throws BadMethodCallException
      */
-    abstract protected function normalizePrompt(OAuthPromptInterface|string|bool|null $prompt): string;
+    abstract protected function normalizePrompt(OAuthPromptInterface|string|bool|null $prompt);
 
     /**
      * @param Push $query
