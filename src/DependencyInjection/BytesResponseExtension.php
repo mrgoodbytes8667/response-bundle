@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
+use Symfony\Component\DependencyInjection\Loader\FileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 /**
@@ -45,13 +46,68 @@ class BytesResponseExtension extends Extension implements ExtensionInterface, Pr
         $resolvingBag = $container->getParameterBag();
         $configs = $resolvingBag->resolveValue($configs);
 
-        // use the Configuration class to generate a config array that will be applied to bytes_twitch_response
-        /** @var array $config = ['twitch' => ['client_id' => '', 'client_secret' => '', 'hub_secret' => '', 'user_agent' => '', 'eventsub_subscribe_callback_route_name' => '']] */
+        // use the Configuration class to generate a config array that will be applied to the child bundles
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-//        if (isset($config['twitch']) && isset($config['twitch']['hub_secret'])) {
-//            $config['twitch'] = ['hub_secret' => $config['twitch']['hub_secret']];
-//            $container->prependExtensionConfig('bytes_twitch_response', $config);
-//        }
+        $twitch = self::processTwitchClientBundle($config);
+        if(!empty($twitch)) {
+            $container->prependExtensionConfig('bytes_twitch_client', $twitch);
+        }
+        $discord = self::processDiscordClientBundle($config);
+        if(!empty($discord)) {
+            //$container->prependExtensionConfig('bytes_discord', $discord);
+        }
+    }
+
+    /**
+     * @param array $values
+     * @return array
+     */
+    private static function processDiscordClientBundle(array $values) {
+        if(!isset($values['connections']['discord'])) {
+            return [];
+        }
+        $config = $values['connections']['discord'];
+
+        $userAgent = self::getUserAgent($values, 'discord');
+        if(!empty($userAgent)) {
+            $config['user_agent'] = $userAgent;
+        }
+
+        return $config;
+    }
+
+    /**
+     * @param array $values
+     * @return array
+     */
+    private static function processTwitchClientBundle(array $values) {
+        if(!isset($values['connections']['twitch'])) {
+            return [];
+        }
+        $config = $values['connections']['twitch'];
+
+        $userAgent = self::getUserAgent($values, 'twitch');
+        if(!empty($userAgent)) {
+            $config['user_agent'] = $userAgent;
+        }
+
+        return $config;
+    }
+
+    /**
+     * @param array $config
+     * @param string $section = ['twitch']['discord'][$any]
+     * @return string
+     */
+    private static function getUserAgent(array $config, string $section)
+    {
+        if(isset($config['connections'][$section]['user_agent'])) {
+            return $config['connections'][$section]['user_agent'];
+        }
+        if(isset($config['defaults']['user_agent'])) {
+            return $config['defaults']['user_agent'];
+        }
+        return '';
     }
 }
