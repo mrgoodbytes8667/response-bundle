@@ -7,6 +7,7 @@ namespace Bytes\ResponseBundle\Services;
 use BadMethodCallException;
 use Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient;
 use Bytes\ResponseBundle\Objects\Push;
+use Bytes\ResponseBundle\UrlGenerator\UrlGeneratorTrait;
 use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
@@ -27,7 +28,7 @@ use function Symfony\Component\String\u;
  */
 abstract class AbstractOAuth implements OAuthInterface
 {
-    use ValidatorTrait;
+    use UrlGeneratorTrait, ValidatorTrait;
 
     const RESPONSE_TYPE = 'code';
 
@@ -81,13 +82,12 @@ abstract class AbstractOAuth implements OAuthInterface
     /**
      * AbstractOAuth constructor.
      * @param Security|null $security
-     * @param UrlGeneratorInterface $urlGenerator
      * @param string|null $clientId
      * @param array $config
      * @param bool $user
      * @param array $options
      */
-    public function __construct(?Security $security, protected UrlGeneratorInterface $urlGenerator, protected ?string $clientId, protected array $config, bool $user, array $options = [])
+    public function __construct(?Security $security, protected ?string $clientId, protected array $config, bool $user, array $options = [])
     {
         if (!isset(static::$endpoint)) {
             throw new LogicException('The static property "$endpoint" must be set by the child class.');
@@ -105,8 +105,6 @@ abstract class AbstractOAuth implements OAuthInterface
             $this->security = $security;
         }
         $this->defaultScopes = $this->getDefaultScopes();
-
-        $this->redirect = $this->setupRedirect();
     }
 
     /**
@@ -141,6 +139,12 @@ abstract class AbstractOAuth implements OAuthInterface
                 break;
         }
 
+        if(is_null($this->validator))
+        {
+            $this->redirect = null;
+            return null;
+        }
+
         $errors = $this->validator->validate($redirect, [
             new NotBlank(),
             new Url()
@@ -148,6 +152,8 @@ abstract class AbstractOAuth implements OAuthInterface
         if (count($errors) > 0) {
             throw new ValidatorException((string)$errors);
         }
+
+        $this->redirect = $redirect;
 
         return $redirect;
     }
@@ -187,7 +193,7 @@ abstract class AbstractOAuth implements OAuthInterface
      */
     public function getAuthorizationUrl(?string $state = null, ...$options): string
     {
-        return $this->getAuthorizationCodeGrantURL($this->redirect, $this->defaultScopes, $state, self::RESPONSE_TYPE, '', ...$options);
+        return $this->getAuthorizationCodeGrantURL($this->redirect ?? $this->setupRedirect(), $this->defaultScopes, $state, self::RESPONSE_TYPE, '', ...$options);
     }
 
     /**
