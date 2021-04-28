@@ -111,7 +111,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @param mixed ...$scopes
      * @return string
      */
-    protected static function buildOAuthString(...$scopes): string
+    public static function buildOAuthString(...$scopes): string
     {
         return implode(' ', Arr::flatten($scopes));
     }
