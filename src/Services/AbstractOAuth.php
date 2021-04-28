@@ -27,7 +27,7 @@ use function Symfony\Component\String\u;
  * Class AbstractOAuth
  * @package Bytes\ResponseBundle\Services
  */
-abstract class AbstractOAuth
+abstract class AbstractOAuth implements OAuthInterface
 {
     use ValidatorTrait, UrlGeneratorTrait;
 
