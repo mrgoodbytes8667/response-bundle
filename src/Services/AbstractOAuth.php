@@ -5,10 +5,8 @@ namespace Bytes\ResponseBundle\Services;
 
 
 use BadMethodCallException;
-use Bytes\EnumSerializerBundle\Enums\Enum;
 use Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient;
 use Bytes\ResponseBundle\Objects\Push;
-use Bytes\ResponseBundle\UrlGenerator\UrlGeneratorTrait;
 use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
@@ -29,7 +27,7 @@ use function Symfony\Component\String\u;
  */
 abstract class AbstractOAuth implements OAuthInterface
 {
-    use ValidatorTrait, UrlGeneratorTrait;
+    use ValidatorTrait;
 
     const RESPONSE_TYPE = 'code';
 
@@ -83,12 +81,13 @@ abstract class AbstractOAuth implements OAuthInterface
     /**
      * AbstractOAuth constructor.
      * @param Security|null $security
+     * @param UrlGeneratorInterface $urlGenerator
      * @param string|null $clientId
      * @param array $config
      * @param bool $user
      * @param array $options
      */
-    public function __construct(?Security $security, protected ?string $clientId, protected array $config, bool $user, array $options = [])
+    public function __construct(?Security $security, protected UrlGeneratorInterface $urlGenerator, protected ?string $clientId, protected array $config, bool $user, array $options = [])
     {
         if (!isset(static::$endpoint)) {
             throw new LogicException('The static property "$endpoint" must be set by the child class.');
