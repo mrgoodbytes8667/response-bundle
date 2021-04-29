@@ -174,7 +174,7 @@ abstract class AbstractOAuth implements OAuthInterface
 
         $query = $this->appendToAuthorizationCodeGrantURLQuery($query, ...$options);
 
-        return static::getBaseAuthorizationCodeGrantURL()->append(http_build_query($query->value()))->toString();
+        return static::getBaseAuthorizationCodeGrantURL()->append(http_build_query($this->getQueryValues($query)))->toString();
     }
 
     /**
@@ -275,6 +275,16 @@ abstract class AbstractOAuth implements OAuthInterface
     protected static function getBaseAuthorizationCodeGrantURL(): UnicodeString
     {
         return u(static::$baseAuthorizationCodeGrantURL)->ensureEnd('?');
+    }
+
+    /**
+     * Converts the Push object to an array for http_build_query().
+     * @param Push $query
+     * @return array
+     */
+    protected function getQueryValues(Push $query): array
+    {
+        return $query->value();
     }
 
     /**
