@@ -9,6 +9,7 @@ use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
 use Bytes\ResponseBundle\HttpClient\AbstractClient;
 use Bytes\ResponseBundle\Objects\Push;
+use Bytes\ResponseBundle\Routing\OAuthInterface;
 use Bytes\ResponseBundle\Routing\UrlGeneratorTrait;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Bytes\ResponseBundle\Validator\ValidatorTrait;
@@ -50,6 +51,11 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     protected static $tokenExchangeEndpoint = 'oauth2/token';
 
     /**
+     * @var OAuthInterface|null
+     */
+    protected $oAuth = null;
+
+    /**
      * Exchanges the provided code (or token) for a (new) access token
      * @param string $code
      * @param string|null $route Either $route or $url is required, $route takes precedence over $url
@@ -86,8 +92,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
             ->push($redirect, 'redirect_uri')
             ->push(static::buildOAuthString($scopes), 'scope');
 
-        switch ($grantType ?? OAuthGrantTypes::authorizationCode())
-        {
+        switch ($grantType ?? OAuthGrantTypes::authorizationCode()) {
             case OAuthGrantTypes::authorizationCode():
                 $body = $body->push($code, 'code');
                 break;
@@ -136,6 +141,16 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
             throw new LogicException(sprintf('You must instantiate "$tokenExchangeDeserializationClass" or override the "%s" method.', __METHOD__));
         }
         return static::$tokenExchangeDeserializationClass;
+    }
+
+    /**
+     * @param OAuthInterface|null $oAuth
+     * @return $this
+     */
+    public function setOAuth(?OAuthInterface $oAuth): self
+    {
+        $this->oAuth = $oAuth;
+        return $this;
     }
 
     /**
