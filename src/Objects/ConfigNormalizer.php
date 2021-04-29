@@ -11,8 +11,9 @@ namespace Bytes\ResponseBundle\Objects;
 class ConfigNormalizer
 {
     /**
-     * Normalizes the endpoint portion of the config, removing any indexes not in $endpoints, and adding any missing
-     * indexes from $endpoints
+     * Normalizes the endpoint portion of the config, removing any indexes not in $endpoints, adding any missing
+     * indexes from $endpoints, then adding any missing $addRemoveParents indexes, and removing any indexes not in
+     * $addRemoveParents (+redirects)
      * @param array $config
      * @param string[] $endpoints = ['app', 'bot', 'eventsub_subscribe', 'login', 'slash', user']
      * @param array $addRemoveParents = ['permissions', 'scopes']
@@ -20,11 +21,13 @@ class ConfigNormalizer
      */
     public static function normalizeEndpoints(array $config, array $endpoints, array $addRemoveParents = ['permissions', 'scopes'])
     {
+        // Remove any $config['endpoints'] not in the $endpoints argument
         foreach ($config['endpoints'] as $index => $endpoint) {
             if (!in_array($index, $endpoints)) {
                 unset($config['endpoints'][$index]);
             }
         }
+
         foreach ($endpoints as $index) {
             if (!isset($config['endpoints'][$index])) {
                 $config['endpoints'][$index] = [];
@@ -39,6 +42,13 @@ class ConfigNormalizer
             foreach (['route_name', 'url'] as $redirects) {
                 if (!isset($config['endpoints'][$index]['redirects'][$redirects])) {
                     $config['endpoints'][$index]['redirects'][$redirects] = '';
+                }
+            }
+
+            // Remove any $config['endpoints'] children not in the $addRemoveParents (+redirects) argument
+            foreach ($config['endpoints'][$index] as $subIndex => $endpoint) {
+                if ($subIndex !== 'redirects' && !in_array($subIndex, $addRemoveParents)) {
+                    unset($config['endpoints'][$index][$subIndex]);
                 }
             }
 
