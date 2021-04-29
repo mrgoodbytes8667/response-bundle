@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Bytes\ResponseBundle\Services;
+namespace Bytes\ResponseBundle\Routing;
 
 
 /**
  * Interface OAuthInterface
- * @package Bytes\ResponseBundle\Services
+ * @package Bytes\ResponseBundle\Routing
  */
 interface OAuthInterface
 {

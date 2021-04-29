@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Bytes\ResponseBundle\Services;
+namespace Bytes\ResponseBundle\Routing;
 
 
 use BadMethodCallException;
@@ -24,7 +24,7 @@ use function Symfony\Component\String\u;
 
 /**
  * Class AbstractOAuth
- * @package Bytes\ResponseBundle\Services
+ * @package Bytes\ResponseBundle\Routing
  */
 abstract class AbstractOAuth implements OAuthInterface
 {
@@ -193,7 +193,12 @@ abstract class AbstractOAuth implements OAuthInterface
      */
     public function getAuthorizationUrl(?string $state = null, ...$options): string
     {
-        return $this->getAuthorizationCodeGrantURL($this->redirect ?? $this->setupRedirect(), $this->defaultScopes, $state, self::RESPONSE_TYPE, '', ...$options);
+        $prompt = null;
+        if(isset($options['prompt'])) {
+            $prompt = $options['prompt'];
+            unset($options['prompt']);
+        }
+        return $this->getAuthorizationCodeGrantURL($this->redirect ?? $this->setupRedirect(), $this->defaultScopes, $state, self::RESPONSE_TYPE, $prompt, ...$options);
     }
 
     /**
@@ -215,7 +220,7 @@ abstract class AbstractOAuth implements OAuthInterface
         $query = Push::createPush(value: $this->clientId, key: 'client_id')
             ->push(value: $redirect, key: 'redirect_uri')
             ->push(value: self::RESPONSE_TYPE, key: 'response_type')
-            ->push(value: AbstractTokenClient::buildOAuthString($scopes), key: 'scope')
+            ->push(value: AbstractTokenClient::buildOAuthString($scopes), key: 'scope', empty: false)
             ->push(value: $state ?? $this->getState(static::$endpoint), key: 'state')
             ->push(value: static::normalizePrompt($prompt), key: static::$promptKey);
 
