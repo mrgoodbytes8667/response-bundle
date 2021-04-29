@@ -144,6 +144,14 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     }
 
     /**
+     * @return OAuthInterface|null
+     */
+    public function getOAuth(): ?OAuthInterface
+    {
+        return $this->oAuth;
+    }
+
+    /**
      * @param OAuthInterface|null $oAuth
      * @return $this
      */
