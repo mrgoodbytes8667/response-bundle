@@ -162,7 +162,7 @@ abstract class AbstractOAuth implements OAuthInterface
      */
     public function getAuthorizationCodeGrantURL(string $redirect, array $scopes, ?string $state, string $responseType = self::RESPONSE_TYPE, OAuthPromptInterface|string|bool|null $prompt = null, ...$options)
     {
-        $scopes = $this->scopes ?? $this->normalizeScopes($scopes);
+        $scopes = $this->scopes ?: $this->normalizeScopes($scopes);
         $this->scopes = $scopes;
 
         $query = Push::createPush(value: $this->clientId, key: 'client_id')
@@ -288,8 +288,6 @@ abstract class AbstractOAuth implements OAuthInterface
 
     /**
      * @return string
-     *
-     * @throws RouteNotFoundException
      */
     protected function setupRedirect()
     {
@@ -306,13 +304,9 @@ abstract class AbstractOAuth implements OAuthInterface
                     throw new InvalidArgumentException('URLGeneratorInterface cannot be null when a route name is passed');
                 }
                 try {
-                    $redirect = $this->urlGenerator->generate($this->config[static::$endpoint]['redirects']['route_name'],
-                        [], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $redirect = $this->urlGenerator->generate($this->config[static::$endpoint]['redirects']['route_name'], [], UrlGeneratorInterface::ABSOLUTE_URL);
                 } catch (RouteNotFoundException $routeNotFoundException) {
-                    throw new RouteNotFoundException(
-                        sprintf('In "%s", the configured route cannot be generated. %s',
-                            static::class, $routeNotFoundException->getMessage()),
-                        $routeNotFoundException->getCode(), $routeNotFoundException);
+                    throw new RouteNotFoundException(sprintf('In "%s", the configured route cannot be generated. %s', static::class, $routeNotFoundException->getMessage()), $routeNotFoundException->getCode(), $routeNotFoundException);
                 }
                 break;
             case 'url':
