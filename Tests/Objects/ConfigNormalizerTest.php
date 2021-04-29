@@ -6,10 +6,17 @@ use Bytes\Common\Faker\TestFakerTrait;
 use Bytes\ResponseBundle\Objects\ConfigNormalizer;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class ConfigNormalizerTest
+ * @package Bytes\ResponseBundle\Tests\Objects
+ */
 class ConfigNormalizerTest extends TestCase
 {
     use TestFakerTrait;
 
+    /**
+     *
+     */
     public function testNormalizeEndpoints()
     {
         $key1 = $this->faker->unique()->word();
