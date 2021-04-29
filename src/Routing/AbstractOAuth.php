@@ -112,52 +112,6 @@ abstract class AbstractOAuth implements OAuthInterface
     abstract protected function getDefaultScopes(): array;
 
     /**
-     * @return string
-     */
-    protected function setupRedirect()
-    {
-        if (!array_key_exists(static::$endpoint, $this->config)) {
-            throw new InvalidArgumentException(sprintf('The key "%s" was not present in the configuration', (string)static::$endpoint));
-        }
-        if (!array_key_exists('redirects', $this->config[static::$endpoint])) {
-            throw new InvalidArgumentException(sprintf('The configuration for key "%s" was not valid', (string)static::$endpoint));
-        }
-
-        switch ($this->config[static::$endpoint]['redirects']['method']) {
-            case 'route_name':
-                if (empty($this->urlGenerator)) {
-                    throw new InvalidArgumentException('URLGeneratorInterface cannot be null when a route name is passed');
-                }
-                $redirect = $this->urlGenerator->generate($this->config[static::$endpoint]['redirects']['route_name'], [], UrlGeneratorInterface::ABSOLUTE_URL);
-                break;
-            case 'url':
-                $redirect = $this->config[static::$endpoint]['redirects']['url'];
-                break;
-            default:
-                throw new InvalidArgumentException("Param 'redirect' must be one of 'route_name' or 'url'");
-                break;
-        }
-
-        if(is_null($this->validator))
-        {
-            $this->redirect = null;
-            return null;
-        }
-
-        $errors = $this->validator->validate($redirect, [
-            new NotBlank(),
-            new Url()
-        ]);
-        if (count($errors) > 0) {
-            throw new ValidatorException((string)$errors);
-        }
-
-        $this->redirect = $redirect;
-
-        return $redirect;
-    }
-
-    /**
      * @param array $permissions
      * @return array
      */
@@ -184,20 +138,19 @@ abstract class AbstractOAuth implements OAuthInterface
     abstract protected static function walkHydrateScopes(&$value, $key);
 
     /**
+     * Get the external URL begin the OAuth token exchange process
      * @param string|null $state
      * @param ...$options
      * @return string
-     *
-     * @todo prompt?
      */
     public function getAuthorizationUrl(?string $state = null, ...$options): string
     {
         $prompt = null;
-        if(isset($options['prompt'])) {
+        if (isset($options['prompt'])) {
             $prompt = $options['prompt'];
             unset($options['prompt']);
         }
-        return $this->getAuthorizationCodeGrantURL($this->redirect ?? $this->setupRedirect(), $this->defaultScopes, $state, self::RESPONSE_TYPE, $prompt, ...$options);
+        return $this->getAuthorizationCodeGrantURL($this->getRedirect(), $this->defaultScopes, $state, self::RESPONSE_TYPE, $prompt, ...$options);
     }
 
     /**
@@ -325,5 +278,59 @@ abstract class AbstractOAuth implements OAuthInterface
     protected static function getBaseAuthorizationCodeGrantURL(): UnicodeString
     {
         return u(static::$baseAuthorizationCodeGrantURL)->ensureEnd('?');
+    }
+
+    /**
+     * Get the internal redirect destination URI for OAuth
+     * @return string
+     */
+    public function getRedirect(): string
+    {
+        return $this->redirect ?? $this->setupRedirect();
+    }
+
+    /**
+     * @return string
+     */
+    protected function setupRedirect()
+    {
+        if (!array_key_exists(static::$endpoint, $this->config)) {
+            throw new InvalidArgumentException(sprintf('The key "%s" was not present in the configuration', (string)static::$endpoint));
+        }
+        if (!array_key_exists('redirects', $this->config[static::$endpoint])) {
+            throw new InvalidArgumentException(sprintf('The configuration for key "%s" was not valid', (string)static::$endpoint));
+        }
+
+        switch ($this->config[static::$endpoint]['redirects']['method']) {
+            case 'route_name':
+                if (empty($this->urlGenerator)) {
+                    throw new InvalidArgumentException('URLGeneratorInterface cannot be null when a route name is passed');
+                }
+                $redirect = $this->urlGenerator->generate($this->config[static::$endpoint]['redirects']['route_name'], [], UrlGeneratorInterface::ABSOLUTE_URL);
+                break;
+            case 'url':
+                $redirect = $this->config[static::$endpoint]['redirects']['url'];
+                break;
+            default:
+                throw new InvalidArgumentException("Param 'redirect' must be one of 'route_name' or 'url'");
+                break;
+        }
+
+        if (is_null($this->validator)) {
+            $this->redirect = null;
+            return null;
+        }
+
+        $errors = $this->validator->validate($redirect, [
+            new NotBlank(),
+            new Url()
+        ]);
+        if (count($errors) > 0) {
+            throw new ValidatorException((string)$errors);
+        }
+
+        $this->redirect = $redirect;
+
+        return $redirect;
     }
 }
