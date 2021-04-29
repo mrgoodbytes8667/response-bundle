@@ -7,7 +7,6 @@ namespace Bytes\ResponseBundle\Routing;
 use BadMethodCallException;
 use Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient;
 use Bytes\ResponseBundle\Objects\Push;
-use Bytes\ResponseBundle\UrlGenerator\UrlGeneratorTrait;
 use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;

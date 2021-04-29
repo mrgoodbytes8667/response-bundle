@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Bytes\ResponseBundle\UrlGenerator;
+namespace Bytes\ResponseBundle\Routing;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Trait UrlGeneratorTrait
- * @package Bytes\ResponseBundle\UrlGenerator
+ * @package Bytes\ResponseBundle\Routing
  */
 trait UrlGeneratorTrait
 {
