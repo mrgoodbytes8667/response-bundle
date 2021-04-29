@@ -19,36 +19,37 @@ class ConfigNormalizerTest extends TestCase
      */
     public function testNormalizeEndpoints()
     {
-        $key1 = $this->faker->unique()->word();
-        $key2 = $this->faker->unique()->word();
-        $extraKey = $this->faker->unique()->word();
-        
+        $endpointKey1 = $this->faker->unique()->word();
+        $endpointKey2 = $this->faker->unique()->word();
+        $endpointExtraKey = $this->faker->unique()->word();
+
         $config = [
             'sample' => [],
             'endpoints' => [
-                $key1 => [],
-                $extraKey => [],
+                $endpointKey1 => [],
+                $endpointExtraKey => [],
             ]
         ];
 
-        $normalized = ConfigNormalizer::normalizeEndpoints($config, [$key1, $key2]);
+        $normalized = ConfigNormalizer::normalizeEndpoints($config, [$endpointKey1, $endpointKey2]);
         $this->assertArrayHasKey('sample', $normalized);
         $this->assertArrayHasKey('endpoints', $normalized);
 
         $normalized = $normalized['endpoints'];
 
-        $this->assertArrayNotHasKey($extraKey, $normalized);
+        $this->assertArrayNotHasKey($endpointExtraKey, $normalized);
 
-        $this->extracted($key1, $normalized);
-        $this->extracted($key2, $normalized);
+        $this->extracted($endpointKey1, $normalized, ['permissions', 'scopes']);
+        $this->extracted($endpointKey2, $normalized, ['permissions', 'scopes']);
 
     }
 
     /**
      * @param string $key
      * @param array $normalized
+     * @param array $addRemoveParentKeys
      */
-    protected function extracted(string $key, mixed $normalized): void
+    protected function extracted(string $key, mixed $normalized, array $addRemoveParentKeys): void
     {
         $this->assertArrayHasKey($key, $normalized);
 
@@ -57,11 +58,41 @@ class ConfigNormalizerTest extends TestCase
         $this->assertArrayHasKey('route_name', $normalized[$key]['redirects']);
         $this->assertArrayHasKey('url', $normalized[$key]['redirects']);
 
-        $this->assertArrayHasKey('permissions', $normalized[$key]);
-        $this->assertArrayHasKey('add', $normalized[$key]['permissions']);
-        $this->assertArrayHasKey('remove', $normalized[$key]['permissions']);
-        $this->assertArrayHasKey('scopes', $normalized[$key]);
-        $this->assertArrayHasKey('add', $normalized[$key]['scopes']);
-        $this->assertArrayHasKey('remove', $normalized[$key]['scopes']);
+        foreach ($addRemoveParentKeys as $addRemoveParentKey) {
+            $this->assertArrayHasKey($addRemoveParentKey, $normalized[$key]);
+            $this->assertArrayHasKey('add', $normalized[$key][$addRemoveParentKey]);
+            $this->assertArrayHasKey('remove', $normalized[$key][$addRemoveParentKey]);
+        }
+    }
+
+    /**
+     *
+     */
+    public function testNormalizeEndpointsWithAddRemove()
+    {
+        $endpointKey1 = $this->faker->unique()->word();
+        $endpointKey2 = $this->faker->unique()->word();
+        $endpointExtraKey = $this->faker->unique()->word();
+        $addRemoveParentKeys = $this->faker->unique()->words();
+
+        $config = [
+            'sample' => [],
+            'endpoints' => [
+                $endpointKey1 => [],
+                $endpointExtraKey => [],
+            ]
+        ];
+
+        $normalized = ConfigNormalizer::normalizeEndpoints($config, [$endpointKey1, $endpointKey2], $addRemoveParentKeys);
+        $this->assertArrayHasKey('sample', $normalized);
+        $this->assertArrayHasKey('endpoints', $normalized);
+
+        $normalized = $normalized['endpoints'];
+
+        $this->assertArrayNotHasKey($endpointExtraKey, $normalized);
+
+        $this->extracted($endpointKey1, $normalized, $addRemoveParentKeys);
+        $this->extracted($endpointKey2, $normalized, $addRemoveParentKeys);
+
     }
 }
