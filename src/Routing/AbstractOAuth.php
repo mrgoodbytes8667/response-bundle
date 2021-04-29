@@ -169,7 +169,7 @@ abstract class AbstractOAuth implements OAuthInterface
             ->push(value: self::RESPONSE_TYPE, key: 'response_type')
             ->push(value: AbstractTokenClient::buildOAuthString($scopes), key: 'scope', empty: false)
             ->push(value: $state ?? $this->getState(static::$endpoint), key: 'state')
-            ->push(value: static::normalizePrompt($prompt), key: static::$promptKey);
+            ->push(value: static::normalizePrompt($prompt, $options), key: static::$promptKey);
 
         $query = $this->appendToAuthorizationCodeGrantURLQuery($query, ...$options);
 
@@ -251,11 +251,12 @@ abstract class AbstractOAuth implements OAuthInterface
     /**
      * Returns the $prompt argument for getAuthorizationCodeGrantURL() after normalization and validation
      * @param OAuthPromptInterface|string|bool|null $prompt
+     * @param mixed ...$options
      * @return string|bool
      *
      * @throws BadMethodCallException
      */
-    abstract protected function normalizePrompt(OAuthPromptInterface|string|bool|null $prompt);
+    abstract protected function normalizePrompt(OAuthPromptInterface|string|bool|null $prompt, ...$options);
 
     /**
      * @param Push $query
