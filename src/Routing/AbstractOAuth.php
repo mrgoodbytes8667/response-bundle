@@ -11,6 +11,7 @@ use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use LogicException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -287,6 +288,8 @@ abstract class AbstractOAuth implements OAuthInterface
 
     /**
      * @return string
+     *
+     * @throws RouteNotFoundException
      */
     protected function setupRedirect()
     {
@@ -302,7 +305,15 @@ abstract class AbstractOAuth implements OAuthInterface
                 if (empty($this->urlGenerator)) {
                     throw new InvalidArgumentException('URLGeneratorInterface cannot be null when a route name is passed');
                 }
-                $redirect = $this->urlGenerator->generate($this->config[static::$endpoint]['redirects']['route_name'], [], UrlGeneratorInterface::ABSOLUTE_URL);
+                try {
+                    $redirect = $this->urlGenerator->generate($this->config[static::$endpoint]['redirects']['route_name'],
+                        [], UrlGeneratorInterface::ABSOLUTE_URL);
+                } catch (RouteNotFoundException $routeNotFoundException) {
+                    throw new RouteNotFoundException(
+                        sprintf('In "%s", the configured route cannot be generated. %s',
+                            static::class, $routeNotFoundException->getMessage()),
+                        $routeNotFoundException->getCode(), $routeNotFoundException);
+                }
                 break;
             case 'url':
                 $redirect = $this->config[static::$endpoint]['redirects']['url'];
