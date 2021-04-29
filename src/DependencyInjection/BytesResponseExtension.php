@@ -4,6 +4,7 @@
 namespace Bytes\ResponseBundle\DependencyInjection;
 
 
+use Bytes\ResponseBundle\Objects\ConfigNormalizer;
 use Exception;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -48,50 +49,44 @@ class BytesResponseExtension extends Extension implements ExtensionInterface, Pr
         // use the Configuration class to generate a config array that will be applied to the child bundles
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        $twitch = self::processTwitchClientBundle($config);
-        if(!empty($twitch)) {
-            $container->prependExtensionConfig('bytes_twitch_client', $twitch);
-        }
-        $discord = self::processDiscordClientBundle($config);
-        if(!empty($discord)) {
-            $container->prependExtensionConfig('bytes_discord', $discord);
+        $bundles = $container->getParameter('kernel.bundles');
+        // determine if BytesDiscordBundle or BytesTwitchClientBundle is registered
+        if (isset($bundles['BytesDiscordBundle']) || isset($bundles['BytesTwitchClientBundle'])) {
+            // Normalize, process, and prepend extension config if found
+            foreach ($container->getExtensions() as $name => $extension) {
+                if($extension instanceof ResponseExtensionInterface) {
+                    switch ($name) {
+                        case 'bytes_discord':
+                        case 'bytes_twitch_client':
+                            $clientConfig = self::processResponseClientBundle($name === 'bytes_discord' ? 'discord' : 'twitch', $config, $extension);
+                            if (!empty($clientConfig)) {
+                                $container->prependExtensionConfig($name, $clientConfig);
+                            }
+                            break;
+                    }
+                }
+            }
         }
     }
 
     /**
+     * @param string $key
      * @param array $values
+     * @param ResponseExtensionInterface $extension
      * @return array
      */
-    private static function processDiscordClientBundle(array $values) {
-        if(!isset($values['connections']['discord'])) {
+    private static function processResponseClientBundle(string $key, array $values, ResponseExtensionInterface $extension) {
+        if(!isset($values['connections'][$key])) {
             return [];
         }
-        $config = $values['connections']['discord'];
+        $config = $values['connections'][$key];
 
-        $userAgent = self::getUserAgent($values, 'discord');
+        $userAgent = self::getUserAgent($values, $key);
         if(!empty($userAgent)) {
             $config['user_agent'] = $userAgent;
         }
 
-        return $config;
-    }
-
-    /**
-     * @param array $values
-     * @return array
-     */
-    private static function processTwitchClientBundle(array $values) {
-        if(!isset($values['connections']['twitch'])) {
-            return [];
-        }
-        $config = $values['connections']['twitch'];
-
-        $userAgent = self::getUserAgent($values, 'twitch');
-        if(!empty($userAgent)) {
-            $config['user_agent'] = $userAgent;
-        }
-
-        return $config;
+        return ConfigNormalizer::normalizeEndpoints($config, $extension::getEndpoints(), $extension::getAddRemoveParents());
     }
 
     /**
