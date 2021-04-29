@@ -4,12 +4,28 @@
 namespace Bytes\ResponseBundle\Objects;
 
 
+use function Symfony\Component\String\u;
+
 /**
  * Class Push
  * @package Bytes\ResponseBundle\Objects
  */
 class Push
 {
+    /**
+     * Holds the (cached) camel key version of the array
+     * Cleared upon every call to push() that adds/updates a row
+     * @var array
+     */
+    private $camelArray = [];
+
+    /**
+     * Holds the (cached) snake key version of the array
+     * Cleared upon every call to push() that adds/updates a row
+     * @var array
+     */
+    private $snakeArray = [];
+
     /**
      * Push constructor.
      * @param array $array
@@ -53,23 +69,38 @@ class Push
     {
         if ($empty) {
             if (!empty($value)) {
-                if (!is_null($key)) {
-                    $this->array[$key] = $value;
-                } else {
-                    $this->array[] = $value;
-                }
+                $this->update($value, $key);
             }
         } else {
             if (!is_null($value)) {
-                if (!is_null($key)) {
-                    $this->array[$key] = $value;
-                } else {
-                    $this->array[] = $value;
-                }
+                $this->update($value, $key);
             }
         }
 
         return $this;
+    }
+
+    /**
+     * @param null $value
+     * @param int|string|null $key
+     */
+    private function update($value = null, int|string|null $key = null)
+    {
+        if (!is_null($key)) {
+            $this->array[$key] = $value;
+            $this->resetCachedArrays();
+        } else {
+            $this->array[] = $value;
+        }
+    }
+
+    /**
+     * Reset all cached arrays
+     */
+    private function resetCachedArrays(): void
+    {
+        $this->camelArray = [];
+        $this->snakeArray = [];
     }
 
     /**
@@ -79,5 +110,41 @@ class Push
     public function value()
     {
         return $this->array;
+    }
+
+    /**
+     * Get the array with each key transformed into camel case
+     * @return array
+     */
+    public function camel()
+    {
+        if (!empty($this->camelArray)) {
+            return $this->camelArray;
+        }
+
+        foreach ($this->array as $index => $value) {
+            $key = u($index)->camel()->toString();
+            $this->camelArray[$key] = $value;
+        }
+
+        return $this->camelArray;
+    }
+
+    /**
+     * Get the array with each key transformed into snake case
+     * @return array
+     */
+    public function snake()
+    {
+        if (!empty($this->snakeArray)) {
+            return $this->snakeArray;
+        }
+
+        foreach ($this->array as $index => $value) {
+            $key = u($index)->snake()->toString();
+            $this->snakeArray[$key] = $value;
+        }
+
+        return $this->snakeArray;
     }
 }

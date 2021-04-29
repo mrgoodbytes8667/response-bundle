@@ -68,4 +68,64 @@ class PushTest extends TestCase
         $this->assertCount(2, $arr->value());
         $this->assertArrayHasKey($key, $arr->value());
     }
+
+    /**
+     *
+     */
+    public function testCachedReset()
+    {
+        $options = Push::createPush(value: $this->faker->word(), key: 'hi there');
+
+        $values = $options->value();
+        $camels = $options->camel();
+        $snakes = $options->snake();
+
+        $this->assertCount(1, $values);
+        $this->assertCount(1, $camels);
+        $this->assertCount(1, $snakes);
+
+        $this->assertArrayHasKey('hi there', $values);
+        $this->assertArrayNotHasKey('hi_there', $values);
+        $this->assertArrayNotHasKey('hiThere', $values);
+
+        $this->assertArrayNotHasKey('hi there', $camels);
+        $this->assertArrayNotHasKey('hi_there', $camels);
+        $this->assertArrayHasKey('hiThere', $camels);
+
+        $this->assertArrayNotHasKey('hi there', $snakes);
+        $this->assertArrayHasKey('hi_there', $snakes);
+        $this->assertArrayNotHasKey('hiThere', $snakes);
+
+        $options = $options->push(value: $this->faker->word())
+            ->push(value: $this->faker->word(), key: 'hello there');
+
+        $values = $options->value();
+        $camels = $options->camel();
+        $snakes = $options->snake();
+
+        $this->assertCount(3, $values);
+        $this->assertCount(3, $camels);
+        $this->assertCount(3, $snakes);
+
+        $this->assertArrayHasKey('hello there', $values);
+        $this->assertArrayNotHasKey('hello_there', $values);
+        $this->assertArrayNotHasKey('helloThere', $values);
+
+        $this->assertArrayNotHasKey('hello there', $camels);
+        $this->assertArrayNotHasKey('hello_there', $camels);
+        $this->assertArrayHasKey('helloThere', $camels);
+
+        $this->assertArrayNotHasKey('hello there', $snakes);
+        $this->assertArrayHasKey('hello_there', $snakes);
+        $this->assertArrayNotHasKey('helloThere', $snakes);
+
+        // Get them again with no changes to test/cover the caching
+        $values = $options->value();
+        $camels = $options->camel();
+        $snakes = $options->snake();
+
+        $this->assertCount(3, $values);
+        $this->assertCount(3, $camels);
+        $this->assertCount(3, $snakes);
+    }
 }
