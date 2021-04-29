@@ -80,13 +80,11 @@ abstract class AbstractOAuth implements OAuthInterface
 
     /**
      * AbstractOAuth constructor.
-     * @param Security|null $security
      * @param string|null $clientId
      * @param array $config
-     * @param bool $user
      * @param array $options
      */
-    public function __construct(?Security $security, protected ?string $clientId, protected array $config, bool $user, array $options = [])
+    public function __construct(protected ?string $clientId, protected array $config, array $options = [])
     {
         if (!isset(static::$endpoint)) {
             throw new LogicException('The static property "$endpoint" must be set by the child class.');
@@ -99,9 +97,6 @@ abstract class AbstractOAuth implements OAuthInterface
         }
         if (!isset($this->config[static::$endpoint])) {
             throw new LogicException('The config parameter must include the key for "$endpoint".');
-        }
-        if ($user) {
-            $this->security = $security;
         }
         $this->defaultScopes = $this->getDefaultScopes();
     }
@@ -332,5 +327,15 @@ abstract class AbstractOAuth implements OAuthInterface
         $this->redirect = $redirect;
 
         return $redirect;
+    }
+
+    /**
+     * @param Security|null $security
+     * @return $this
+     */
+    public function setSecurity(?Security $security): self
+    {
+        $this->security = $security;
+        return $this;
     }
 }
