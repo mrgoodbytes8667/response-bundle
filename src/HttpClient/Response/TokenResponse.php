@@ -23,8 +23,8 @@ class TokenResponse extends Response
      * @return string|null
      */
     protected static function getIdentifier(): ?string {
-        if(property_exists(static::class, 'identifer')) {
-            return static::$identifer;
+        if(property_exists(static::class, 'identifier')) {
+            return static::$identifier;
         }
         return null;
     }
