@@ -51,18 +51,18 @@ class AccessTokenTraitTest extends TestCase
     /**
      *
      */
-    public function testGetSetClass()
+    public function testGetSetIdentifier()
     {
         $token = $this->getMockForTrait(AccessTokenTrait::class);
-        $this->assertNull($token->getClass());
+        $this->assertNull($token->getIdentifier());
 
         $class = $token::class;
 
-        $token->setClass(null);
-        $this->assertEquals($class, $token->getClass());
+        $token->setIdentifier(null);
+        $this->assertEquals($class, $token->getIdentifier());
 
-        $token->setClass($class);
-        $this->assertEquals($class, $token->getClass());
+        $token->setIdentifier($class);
+        $this->assertEquals($class, $token->getIdentifier());
     }
 
     /**

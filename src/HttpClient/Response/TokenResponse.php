@@ -42,8 +42,8 @@ class TokenResponse extends Response
     public function deserialize(bool $throw = true, array $context = [], ?string $type = null)
     {
         $results = parent::deserialize($throw, $context, $type);
-        if ($results instanceof AccessTokenInterface && method_exists($results, 'setClass') && !empty(static::getIdentifier())) {
-            $results->setClass(static::getIdentifier());
+        if ($results instanceof AccessTokenInterface && method_exists($results, 'setIdentifier') && !empty(static::getIdentifier())) {
+            $results->setIdentifier(static::getIdentifier());
         }
         if ($results instanceof AccessTokenInterface && method_exists($results, 'setTokenSource') && !empty(static::getTokenSource())) {
             $results->setTokenSource(static::getTokenSource());

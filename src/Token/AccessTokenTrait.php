@@ -280,7 +280,7 @@ trait AccessTokenTrait
     /**
      * @return string|null
      */
-    public function getClass(): ?string
+    public function getIdentifier(): ?string
     {
         return $this->class;
     }
@@ -289,7 +289,7 @@ trait AccessTokenTrait
      * @param string|null $class
      * @return $this
      */
-    public function setClass(?string $class = null): self
+    public function setIdentifier(?string $class = null): self
     {
         $this->class = $class ?? static::class;
         return $this;

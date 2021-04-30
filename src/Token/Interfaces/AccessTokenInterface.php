@@ -46,7 +46,7 @@ interface AccessTokenInterface
     /**
      * @return string|null
      */
-    public function getClass(): ?string;
+    public function getIdentifier(): ?string;
 
     /**
      * @param AccessTokenInterface|string $token
