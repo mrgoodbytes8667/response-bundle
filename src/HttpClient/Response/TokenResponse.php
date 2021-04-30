@@ -20,9 +20,14 @@ class TokenResponse extends Response
 {
     /**
      * Identifier used for differentiating different token providers
-     * @var string
+     * @return string|null
      */
-    protected static $identifier;
+    protected static function getIdentifier(): ?string {
+        if(property_exists(static::class, 'identifer')) {
+            return static::$identifer;
+        }
+        return null;
+    }
 
     /**
      * @param bool $throw
@@ -37,8 +42,8 @@ class TokenResponse extends Response
     public function deserialize(bool $throw = true, array $context = [], ?string $type = null)
     {
         $results = parent::deserialize($throw, $context, $type);
-        if ($results instanceof AccessTokenInterface && method_exists($results, 'setClass') && !empty(static::$identifier)) {
-            $results->setClass(static::$identifier);
+        if ($results instanceof AccessTokenInterface && method_exists($results, 'setClass') && !empty(static::getIdentifier())) {
+            $results->setClass(static::getIdentifier());
         }
         if ($results instanceof AccessTokenInterface && method_exists($results, 'setTokenSource') && !empty(static::getTokenSource())) {
             $results->setTokenSource(static::getTokenSource());
