@@ -70,9 +70,9 @@ trait CreatedUpdatedTrait
      * @param DateTimeInterface|null $updatedAt
      * @return $this
      */
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?DateTimeInterface $updatedAt = null): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = $updatedAt ?? new DateTime();
 
         return $this;
     }
