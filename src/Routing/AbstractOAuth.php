@@ -162,8 +162,7 @@ abstract class AbstractOAuth implements OAuthInterface
      */
     public function getAuthorizationCodeGrantURL(string $redirect, array $scopes, ?string $state, string $responseType = self::RESPONSE_TYPE, OAuthPromptInterface|string|bool|null $prompt = null, ...$options)
     {
-        $scopes = $this->scopes ?: $this->normalizeScopes($scopes);
-        $this->scopes = $scopes;
+        $scopes = $this->getScopes($scopes);
 
         $query = Push::createPush(value: $this->clientId, key: 'client_id')
             ->push(value: $redirect, key: 'redirect_uri')
@@ -175,6 +174,20 @@ abstract class AbstractOAuth implements OAuthInterface
         $query = $this->appendToAuthorizationCodeGrantURLQuery($query, ...$options);
 
         return static::getBaseAuthorizationCodeGrantURL()->append(http_build_query($this->getQueryValues($query)))->toString();
+    }
+
+    /**
+     * @param array|null $scopes
+     * @return array
+     */
+    public function getScopes(array $scopes = null): array
+    {
+        if(!empty($this->scopes))
+        {
+            return $this->scopes;
+        }
+        $this->scopes = $this->normalizeScopes(!empty($scopes) ? $scopes : $this->defaultScopes);
+        return $this->scopes;
     }
 
     /**

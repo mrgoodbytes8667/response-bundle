@@ -17,6 +17,12 @@ interface OAuthInterface
     public function getRedirect(): string;
 
     /**
+     * @param array|null $scopes
+     * @return array
+     */
+    public function getScopes(array $scopes = null): array;
+
+    /**
      * Get the external URL begin the OAuth token exchange process
      * @param string|null $state
      * @param ...$options

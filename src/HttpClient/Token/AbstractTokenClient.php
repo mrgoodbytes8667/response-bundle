@@ -58,8 +58,8 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     /**
      * Exchanges the provided code (or token) for a (new) access token
      * @param string $code
-     * @param string|null $route Either $route or $url is required, $route takes precedence over $url
-     * @param string|null|callable(string, array) $url Either $route or $url is required, $route takes precedence over $url
+     * @param string|null $route Either $route or $url (or setOAuth(()) is required, $route takes precedence over $url
+     * @param string|null|callable(string, array) $url Either $route or $url (or setOAuth(()) is required, $route takes precedence over $url
      * @param array $scopes
      * @param OAuthGrantTypes|null $grantType
      * @param callable(static, mixed)|null $onSuccessCallable If set, will be triggered if it returns successfully
@@ -77,6 +77,8 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
             $redirect = $this->urlGenerator->generate($route, [], UrlGeneratorInterface::ABSOLUTE_URL);
         } elseif (!empty($url)) {
             $redirect = is_callable($url) ? call_user_func($url, $code, $scopes) : $url;
+        } elseif(!is_null($this->oAuth)) {
+            $redirect = $this->oAuth->getRedirect();
         } else {
             throw new BadMethodCallException('Either $route or $url must be provided.');
         }
@@ -86,6 +88,11 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
         ]);
         if (count($errors) > 0) {
             throw new ValidatorException((string)$errors);
+        }
+
+        if(empty($scopes) && !is_null($this->oAuth))
+        {
+            $scopes = $this->oAuth->getScopes();
         }
 
         $body = Push::createPush(value: empty($grantType) ? OAuthGrantTypes::authorizationCode()->value : $grantType->value, key: 'grant_type')
