@@ -11,7 +11,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 /**
  * Class TokenRevokedEvent
  * Fired after a token is successfully revoked.
- * @package App\Event
+ * @package Bytes\ResponseBundle\Event
  *
  * @experimental
  */
