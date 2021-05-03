@@ -227,7 +227,7 @@ class ResponseTest extends TestCase
             $this->assertInstanceOf(Model::class, $results);
         });
         $discordResponse->deserialize();
-        $discordResponse->callback()->callback(true);
+        $discordResponse->onSuccessCallback()->onSuccessCallback(true);
     }
 
     /**
@@ -241,7 +241,7 @@ class ResponseTest extends TestCase
         $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, Model::class, onSuccessCallable: function ($self, $results) {
             $this->assertInstanceOf(DiscordResponse::class, $self);
             $this->assertNull($results);
-        })->callback()->callback()->callback(true);
+        })->onSuccessCallback()->onSuccessCallback()->onSuccessCallback(true);
     }
 
     /**

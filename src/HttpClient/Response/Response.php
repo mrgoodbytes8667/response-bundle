@@ -44,6 +44,11 @@ class Response implements ClientResponseInterface
     private $onSuccessCallable;
 
     /**
+     * @var callable(static, mixed)|null
+     */
+    protected $onDeserializeCallable;
+
+    /**
      * @var bool
      */
     private bool $callbackExecuted = false;
@@ -262,9 +267,9 @@ class Response implements ClientResponseInterface
                 return [$this->serializer->deserialize($content, $single, 'json', $context)];
             }
         }
-        $this->results = $this->serializer->deserialize($content, $type ?? $this->type, 'json', $context ?: $this->deserializeContext);
+        $this->results = $this->onDeserializeCallback($this->serializer->deserialize($content, $type ?? $this->type, 'json', $context ?: $this->deserializeContext));
 
-        $this->callback();
+        $this->onSuccessCallback();
 
         return $this->results;
     }
@@ -285,13 +290,25 @@ class Response implements ClientResponseInterface
      * @param bool $rerunIfAlreadyRun
      * @return $this
      */
-    public function callback(bool $rerunIfAlreadyRun = false): self
+    public function onSuccessCallback(bool $rerunIfAlreadyRun = false): self
     {
         if ((!$this->callbackExecuted || ($this->callbackExecuted && $rerunIfAlreadyRun)) && !is_null($this->onSuccessCallable) && is_callable($this->onSuccessCallable) && $this->isSuccess()) {
             $this->callbackExecuted = true;
             call_user_func($this->onSuccessCallable, $this, $this->results);
         }
         return $this;
+    }
+
+    /**
+     * @param $results
+     * @return mixed|null
+     */
+    protected function onDeserializeCallback($results)
+    {
+        if(!is_null($this->onDeserializeCallable) && is_callable($this->onDeserializeCallable)) {
+            return call_user_func($this->onDeserializeCallable, $this, $results);
+        }
+        return $results;
     }
     //endregion
 
