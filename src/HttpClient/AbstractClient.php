@@ -119,12 +119,13 @@ abstract class AbstractClient
      * @param string $method = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
      * @param ClientResponseInterface|string|null $responseClass
      * @param array $context Additional context for deserialize(), can be overloaded by deserialize()
-     * @param callable(static, mixed)|null $onSuccessCallable If set, should be triggered by deserialize()/callback() on success
+     * @param callable|null $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
+     * @param callable|null $onSuccessCallable If set, should be triggered by deserialize() on success
      * @param array $params Extra params for makeFrom
      * @return ClientResponseInterface
      * @throws TransportExceptionInterface
      */
-    public function request($url, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onSuccessCallable = null, array $params = [])
+    public function request($url, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
     {
         if (is_array($url)) {
             $url = implode('/', $url);
@@ -146,7 +147,7 @@ abstract class AbstractClient
             $response = clone $this->response;
             $response->setExtraParams($params);
         }
-        return $response->withResponse($this->httpClient->request($method, $this->buildURL($url), $options), $type, $context, $onSuccessCallable);
+        return $response->withResponse($this->httpClient->request($method, $this->buildURL($url), $options), $type, $context, $onDeserializeCallable, $onSuccessCallable);
     }
 
     /**

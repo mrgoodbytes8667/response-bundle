@@ -64,7 +64,8 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @param array $scopes
      * @param OAuthGrantTypes|null $grantType
      * @param ClientResponseInterface|string|null $responseClass
-     * @param callable(static, mixed)|null $onSuccessCallable If set, will be triggered if it returns successfully
+     * @param callable|null $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
+     * @param callable|null $onSuccessCallable If set, should be triggered by deserialize() on success
      * @return ClientResponseInterface|null
      *
      * @throws ClientExceptionInterface
@@ -72,7 +73,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    protected function tokenExchange(string $code, ?string $route = null, string|callable|null $url = null, array $scopes = [], OAuthGrantTypes $grantType = null, ClientResponseInterface|string|null $responseClass = null, ?callable $onSuccessCallable = null): ?ClientResponseInterface
+    protected function tokenExchange(string $code, ?string $route = null, string|callable|null $url = null, array $scopes = [], OAuthGrantTypes $grantType = null, ClientResponseInterface|string|null $responseClass = null, ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null): ?ClientResponseInterface
     {
         $redirect = '';
         if (!empty($route)) {
@@ -117,8 +118,8 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ],
                 'body' => $body->value(),
-            ], method: HttpMethods::post(), responseClass: $responseClass, onSuccessCallable: $onSuccessCallable,
-            params: ['code' => $code]);
+            ], method: HttpMethods::post(), responseClass: $responseClass, onDeserializeCallable: $onDeserializeCallable,
+            onSuccessCallable: $onSuccessCallable, params: ['code' => $code]);
     }
 
     /**

@@ -48,10 +48,11 @@ interface ClientResponseInterface
      * @param ResponseInterface $response
      * @param string|null $type Type to deserialize into for deserialize(), can be overloaded by deserialize()
      * @param array $context Additional context for deserialize(), can be overloaded by deserialize()
+     * @param callable|null $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
      * @param callable|null $onSuccessCallable If set, should be triggered by deserialize() on success
      * @return static
      */
-    public function withResponse(ResponseInterface $response, ?string $type, array $context = [], ?callable $onSuccessCallable = null);
+    public function withResponse(ResponseInterface $response, ?string $type, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null);
     //endregion
 
     //region Getters/Setters

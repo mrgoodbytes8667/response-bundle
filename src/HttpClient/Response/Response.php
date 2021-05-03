@@ -102,15 +102,17 @@ class Response implements ClientResponseInterface
      * @param ResponseInterface $response
      * @param string|null $type Type to deserialize into for deserialize(), can be overloaded by deserialize()
      * @param array $context Additional context for deserialize(), can be overloaded by deserialize()
+     * @param callable(static, mixed)|null $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
      * @param callable(static, mixed)|null $onSuccessCallable If set, should be triggered by deserialize()/callback() on success
      * @return static
      */
-    public function withResponse(ResponseInterface $response, ?string $type, array $context = [], ?callable $onSuccessCallable = null): static
+    public function withResponse(ResponseInterface $response, ?string $type, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null): static
     {
         $new = clone $this;
         $new->setResponse($response);
         $new->setType($type);
         $new->setDeserializeContext($context);
+        $new->setOnDeserializeCallable($onDeserializeCallable);
         $new->setOnSuccessCallable($onSuccessCallable);
 
         return $new;
@@ -208,6 +210,24 @@ class Response implements ClientResponseInterface
     }
 
     /**
+     * @return callable
+     */
+    public function getOnDeserializeCallable(): callable
+    {
+        return $this->onDeserializeCallable;
+    }
+
+    /**
+     * @param callable|null $onDeserializeCallable
+     * @return $this
+     */
+    public function setOnDeserializeCallable(?callable $onDeserializeCallable): self
+    {
+        $this->onDeserializeCallable = $onDeserializeCallable;
+        return $this;
+    }
+
+    /**
      * @return mixed|null
      */
     public function getResults()
@@ -284,6 +304,18 @@ class Response implements ClientResponseInterface
         } catch (TransportExceptionInterface) {
             return false;
         }
+    }
+
+    /**
+     * @param bool $rerunIfAlreadyRun
+     * @return $this
+     *
+     * @deprecated Since 2.0.0, use onSuccessCallback() instead
+     */
+    public function callback(bool $rerunIfAlreadyRun = false): self
+    {
+        trigger_deprecation('mrgoodbytes8667/response-bundle', '2.0.0', 'The "%s" method is deprecated, use "onSuccessCallback" instead.', __METHOD__);
+        return $this->onSuccessCallback($rerunIfAlreadyRun);
     }
 
     /**
