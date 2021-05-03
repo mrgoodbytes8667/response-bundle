@@ -8,6 +8,7 @@ use BadMethodCallException;
 use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
 use Bytes\ResponseBundle\HttpClient\AbstractClient;
+use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use Bytes\ResponseBundle\Objects\Push;
 use Bytes\ResponseBundle\Routing\OAuthInterface;
 use Bytes\ResponseBundle\Routing\UrlGeneratorTrait;
@@ -62,6 +63,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @param string|null|callable(string, array) $url Either $route or $url (or setOAuth(()) is required, $route takes precedence over $url
      * @param array $scopes
      * @param OAuthGrantTypes|null $grantType
+     * @param ClientResponseInterface|string|null $responseClass
      * @param callable(static, mixed)|null $onSuccessCallable If set, will be triggered if it returns successfully
      * @return AccessTokenInterface|null
      *
@@ -70,7 +72,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function tokenExchange(string $code, ?string $route = null, string|callable|null $url = null, array $scopes = [], OAuthGrantTypes $grantType = null, ?callable $onSuccessCallable = null): ?AccessTokenInterface
+    protected function tokenExchange(string $code, ?string $route = null, string|callable|null $url = null, array $scopes = [], OAuthGrantTypes $grantType = null, ClientResponseInterface|string|null $responseClass = null, ?callable $onSuccessCallable = null): ?AccessTokenInterface
     {
         $redirect = '';
         if (!empty($route)) {
@@ -115,7 +117,8 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ],
                 'body' => $body->value(),
-            ], method: HttpMethods::post(), onSuccessCallable: $onSuccessCallable, params: ['code' => $code])
+            ], method: HttpMethods::post(), responseClass: $responseClass, onSuccessCallable: $onSuccessCallable,
+            params: ['code' => $code])
             ->deserialize();
     }
 
