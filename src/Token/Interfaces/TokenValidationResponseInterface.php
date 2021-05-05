@@ -26,21 +26,9 @@ interface TokenValidationResponseInterface
     public function getClientId(): ?string;
 
     /**
-     * @param string|null $clientId
-     * @return $this
-     */
-    public function setClientId(?string $clientId);
-
-    /**
      * @return string|null
      */
     public function getUserName(): ?string;
-
-    /**
-     * @param string|null $userName
-     * @return $this
-     */
-    public function setUserName(?string $userName);
 
     /**
      * @return string[]|null
@@ -48,21 +36,9 @@ interface TokenValidationResponseInterface
     public function getScopes(): ?array;
 
     /**
-     * @param string[]|null $scopes
-     * @return $this
-     */
-    public function setScopes(?array $scopes);
-
-    /**
      * @return string|null
      */
     public function getUserId(): ?string;
-
-    /**
-     * @param string|null $userId
-     * @return $this
-     */
-    public function setUserId(?string $userId);
 
     /**
      * @param string|null $clientId
