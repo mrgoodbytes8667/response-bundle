@@ -53,6 +53,12 @@ interface ClientResponseInterface
      * @return static
      */
     public function withResponse(ResponseInterface $response, ?string $type, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null);
+
+    /**
+     * @param bool $rerunIfAlreadyRun
+     * @return $this
+     */
+    public function onSuccessCallback(bool $rerunIfAlreadyRun = false);
     //endregion
 
     //region Getters/Setters
