@@ -6,6 +6,7 @@ namespace Bytes\ResponseBundle\Token;
 
 use Bytes\ResponseBundle\Entity\CreatedUpdatedTrait;
 use Bytes\ResponseBundle\Enums\TokenSource;
+use Bytes\ResponseBundle\Objects\ComparableDateInterval;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -158,7 +159,7 @@ trait AccessTokenTrait
     public function setExpiresIn(int|\DateInterval|null $expiresIn): self
     {
         if (!empty($expiresIn) && is_numeric($expiresIn)) {
-            $expiresIn = new \DateInterval(sprintf('PT%dS', $expiresIn));
+            $expiresIn = ComparableDateInterval::secondsToInterval($expiresIn);
             $now = new \DateTimeImmutable();
             $this->setExpiresAt($now->add($expiresIn));
         }

@@ -4,6 +4,7 @@ namespace Bytes\ResponseBundle\Tests\Token;
 
 use Bytes\Common\Faker\TestFakerTrait;
 use Bytes\ResponseBundle\Enums\TokenSource;
+use Bytes\ResponseBundle\Objects\ComparableDateInterval;
 use Bytes\ResponseBundle\Token\AccessTokenTrait;
 use DateInterval;
 use Exception;
@@ -191,7 +192,6 @@ class AccessTokenTraitTest extends TestCase
      */
     public function testGetSetExpiresInSeconds($interval, $seconds)
     {
-        $expiresIn = $seconds;
 
         $token = $this->getMockForTrait(AccessTokenTrait::class);
         $this->assertNull($token->getExpiresIn());
@@ -199,8 +199,10 @@ class AccessTokenTraitTest extends TestCase
         $token->setExpiresIn(null);
         $this->assertNull($token->getExpiresIn());
 
-        $token->setExpiresIn($expiresIn);
-        $this->assertEquals($interval, $token->getExpiresIn());
+        $token->setExpiresIn($seconds);
+        $this->assertEquals(ComparableDateInterval::getTotalSeconds($interval), ComparableDateInterval::getTotalSeconds($token->getExpiresIn()));
+        $this->assertEquals($seconds, ComparableDateInterval::getTotalSeconds($token->getExpiresIn()));
+        $this->assertEquals(ComparableDateInterval::secondsToInterval($seconds), $token->getExpiresIn());
     }
 
     /**
