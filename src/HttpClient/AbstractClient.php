@@ -8,6 +8,8 @@ use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use InvalidArgumentException;
+use Psr\EventDispatcher\StoppableEventInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
@@ -24,6 +26,11 @@ abstract class AbstractClient
      * @var ClientResponseInterface
      */
     protected $response;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
 
     /**
      * AbstractClient constructor.
@@ -166,5 +173,33 @@ abstract class AbstractClient
     protected function buildURL(string $path, string $prepend = '')
     {
         return ($prepend ?? '') . $path;
+    }
+
+    /**
+     * @param StoppableEventInterface $event
+     * @param string|null $eventName
+     * @return object
+     */
+    protected function dispatch(StoppableEventInterface $event, string $eventName = null)
+    {
+        if(empty($eventName)) {
+            $class = $event::class;
+            if (defined("$class::NAME")){
+                $eventName = $event::NAME;
+            } else {
+                $eventName = get_class($event);
+            }
+        }
+        return $this->dispatcher->dispatch($event, $eventName);
+    }
+
+    /**
+     * @param EventDispatcherInterface $dispatcher
+     * @return $this
+     */
+    public function setDispatcher(EventDispatcherInterface $dispatcher): self
+    {
+        $this->dispatcher = $dispatcher;
+        return $this;
     }
 }
