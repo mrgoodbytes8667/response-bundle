@@ -17,11 +17,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 class TokenRefreshedEvent extends AbstractTokenEvent
 {
     /**
-     * @Event("Bytes\ResponseBundle\Event\TokenRefreshedEvent")
-     */
-    public const NAME = 'bytes_response.token.changed';
-
-    /**
      * TokenRefreshedEvent constructor.
      * @param AccessTokenInterface $token
      * @param AccessTokenInterface $oldToken

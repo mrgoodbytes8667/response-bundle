@@ -15,8 +15,5 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class TokenRevokedEvent extends AbstractTokenEvent
 {
-    /**
-     * @Event("Bytes\ResponseBundle\Event\TokenRevokedEvent")
-     */
-    public const NAME = 'bytes_response.token.revoked';
+
 }

@@ -15,8 +15,4 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class TokenGrantedEvent extends AbstractTokenEvent
 {
-    /**
-     * @Event("Bytes\ResponseBundle\Event\TokenGrantedEvent")
-     */
-    public const NAME = 'bytes_response.token.granted';
 }

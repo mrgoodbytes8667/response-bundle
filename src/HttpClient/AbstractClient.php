@@ -183,12 +183,7 @@ abstract class AbstractClient
     protected function dispatch(StoppableEventInterface $event, string $eventName = null)
     {
         if(empty($eventName)) {
-            $class = $event::class;
-            if (defined("$class::NAME")){
-                $eventName = $event::NAME;
-            } else {
-                $eventName = get_class($event);
-            }
+            $eventName = get_class($event);
         }
         return $this->dispatcher->dispatch($event, $eventName);
     }

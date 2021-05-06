@@ -19,11 +19,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 class TokenValidatedEvent extends Event
 {
     /**
-     * @Event("Bytes\ResponseBundle\Event\TokenValidatedEvent")
-     */
-    public const NAME = 'bytes_response.token.validated';
-
-    /**
      * TokenValidatedEvent constructor.
      * @param AccessTokenInterface $token
      * @param TokenValidationResponseInterface $validation

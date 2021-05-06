@@ -18,10 +18,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 class RevokeTokenEvent extends Event
 {
     /**
-     * @Event("Bytes\ResponseBundle\Event\RevokeTokenEvent")
+     * RevokeTokenEvent constructor.
+     * @param AccessTokenInterface $token
      */
-    public const NAME = 'bytes_response.token.revoke';
-
     public function __construct(private AccessTokenInterface $token)
     {
     }
