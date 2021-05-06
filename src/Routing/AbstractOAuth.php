@@ -103,6 +103,16 @@ abstract class AbstractOAuth implements OAuthInterface
     }
 
     /**
+     * @param array $defaultScopes
+     * @return $this
+     */
+    public function setDefaultScopes(array $defaultScopes): self
+    {
+        $this->defaultScopes = $defaultScopes;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     abstract protected function getDefaultScopes(): array;
@@ -197,10 +207,14 @@ abstract class AbstractOAuth implements OAuthInterface
      */
     protected function normalizeScopes(array $scopes)
     {
+        if(!isset($this->config[static::$endpoint]['scopes']))
+        {
+            $this->config[static::$endpoint]['scopes'] = [];
+        }
         if (array_key_exists('add', $this->config[static::$endpoint]['scopes'])) {
             $add = $this->config[static::$endpoint]['scopes']['add'];
             if (count($add) > 0) {
-                array_walk($add, array('self', 'walkHydrateScopes'));
+                array_walk($add, array('static', 'walkHydrateScopes'));
                 $scopes = array_unique(array_merge($scopes, $add));
             }
         }
@@ -208,7 +222,7 @@ abstract class AbstractOAuth implements OAuthInterface
         if (array_key_exists('remove', $this->config[static::$endpoint]['scopes'])) {
             $remove = $this->config[static::$endpoint]['scopes']['remove'];
             if (count($remove) > 0) {
-                array_walk($remove, array('self', 'walkHydrateScopes'));
+                array_walk($remove, array('static', 'walkHydrateScopes'));
 
                 $scopes = Arr::where($scopes, function ($value, $key) use ($remove) {
                     return !in_array($value, $remove);
@@ -306,7 +320,12 @@ abstract class AbstractOAuth implements OAuthInterface
      */
     public function getRedirect(): string
     {
-        return $this->redirect ?? $this->setupRedirect();
+        $redirect = $this->redirect ?? $this->setupRedirect();
+        if(is_null($redirect))
+        {
+            throw new LogicException('ValidatorInterface cannot be null when getting redirects');
+        }
+        return $redirect;
     }
 
     /**
