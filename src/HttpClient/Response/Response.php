@@ -4,6 +4,7 @@
 namespace Bytes\ResponseBundle\HttpClient\Response;
 
 
+use Bytes\ResponseBundle\Exception\Response\EmptyContentException;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -69,8 +70,9 @@ class Response implements ClientResponseInterface
      * Response constructor.
      * @param SerializerInterface $serializer
      * @param EventDispatcherInterface|null $dispatcher
+     * @param bool $throwOnDeserializationWhenContentEmpty
      */
-    public function __construct(private SerializerInterface $serializer, private ?EventDispatcherInterface $dispatcher = null)
+    public function __construct(private SerializerInterface $serializer, private ?EventDispatcherInterface $dispatcher = null, protected bool $throwOnDeserializationWhenContentEmpty = false)
     {
     }
 
@@ -254,6 +256,24 @@ class Response implements ClientResponseInterface
         return $this;
     }
 
+    /**
+     * @return bool
+     */
+    public function isThrowOnDeserializationWhenContentEmpty(): bool
+    {
+        return $this->throwOnDeserializationWhenContentEmpty;
+    }
+
+    /**
+     * @param bool $throwOnDeserializationWhenContentEmpty
+     * @return $this
+     */
+    public function setThrowOnDeserializationWhenContentEmpty(bool $throwOnDeserializationWhenContentEmpty): self
+    {
+        $this->throwOnDeserializationWhenContentEmpty = $throwOnDeserializationWhenContentEmpty;
+        return $this;
+    }
+
     //endregion
 
     //region Methods
@@ -266,6 +286,8 @@ class Response implements ClientResponseInterface
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
+     * @throws \InvalidArgumentException
+     * @throws EmptyContentException
      */
     public function deserialize(bool $throw = true, array $context = [], ?string $type = null)
     {
@@ -286,6 +308,10 @@ class Response implements ClientResponseInterface
 
                 return [$this->serializer->deserialize($content, $single, 'json', $context)];
             }
+        }
+        if($this->throwOnDeserializationWhenContentEmpty && empty($content))
+        {
+            throw new EmptyContentException($this->response);
         }
         $this->results = $this->onDeserializeCallback($this->serializer->deserialize($content, $type ?? $this->type, 'json', $context ?: $this->deserializeContext));
 

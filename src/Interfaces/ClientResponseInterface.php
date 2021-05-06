@@ -4,7 +4,9 @@
 namespace Bytes\ResponseBundle\Interfaces;
 
 
+use Bytes\ResponseBundle\Exception\Response\EmptyContentException;
 use Bytes\ResponseBundle\HttpClient\Response\Response;
+use InvalidArgumentException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -117,11 +119,15 @@ interface ClientResponseInterface
      * @param bool $throw
      * @param array $context
      * @param string|null $type
+     *
      * @return mixed
+
      * @throws ClientExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
+     * @throws InvalidArgumentException
+     * @throws EmptyContentException
      */
     public function deserialize(bool $throw = true, array $context = [], ?string $type = null);
 

@@ -5,8 +5,13 @@ namespace Bytes\ResponseBundle\HttpClient\Response;
 
 
 use Bytes\ResponseBundle\Enums\TokenSource;
+use Bytes\ResponseBundle\Exception\Response\EmptyContentException;
+use Bytes\ResponseBundle\Interfaces\ClientTokenResponseInterface;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
+use InvalidArgumentException;
 use LogicException;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -16,8 +21,19 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  * Class TokenResponse
  * @package Bytes\ResponseBundle\HttpClient\Response
  */
-class TokenResponse extends Response
+class TokenResponse extends Response implements ClientTokenResponseInterface
 {
+    /**
+     * TokenResponse constructor.
+     * @param SerializerInterface $serializer
+     * @param EventDispatcherInterface|null $dispatcher
+     * @param bool $throwOnDeserializationWhenContentEmpty
+     */
+    public function __construct(SerializerInterface $serializer, ?EventDispatcherInterface $dispatcher = null, bool $throwOnDeserializationWhenContentEmpty = true)
+    {
+        parent::__construct($serializer, $dispatcher, $throwOnDeserializationWhenContentEmpty);
+    }
+
     /**
      * Identifier used for differentiating different token providers
      * @return string|null
@@ -38,6 +54,8 @@ class TokenResponse extends Response
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
+     * @throws InvalidArgumentException
+     * @throws EmptyContentException
      */
     public function deserialize(bool $throw = true, array $context = [], ?string $type = null)
     {
