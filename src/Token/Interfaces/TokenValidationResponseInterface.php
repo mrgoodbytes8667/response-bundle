@@ -65,6 +65,11 @@ interface TokenValidationResponseInterface
     public function isMatch(...$args): bool;
 
     /**
+     * @return bool
+     */
+    public function hasExpired(): bool;
+
+    /**
      * Is this token an app/bot token?
      * @return bool
      *
