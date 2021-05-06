@@ -5,6 +5,9 @@ namespace Bytes\ResponseBundle\Tests\Objects;
 use Bytes\ResponseBundle\Objects\ComparableDateInterval;
 use DateInterval;
 use Exception;
+use Faker\Factory;
+use Generator;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -32,19 +35,55 @@ class ComparableDateIntervalTest extends TestCase
     }
 
     /**
+     * @dataProvider provideIntervalCreateArgs
+     * @param $spec
      * @throws Exception
      */
-    public function testCompare()
+    public function testCompare($spec)
     {
-        $interval = ComparableDateInterval::create('PT900S');
+        $interval = ComparableDateInterval::create($spec);
 
-        $this->assertEquals(1, $interval->compare(new DateInterval('PT30S')));
-        $this->assertEquals(0, $interval->compare(new DateInterval('PT900S')));
-        $this->assertEquals(0, $interval->compare(new DateInterval('PT15M')));
-        $this->assertEquals(-1, $interval->compare(new DateInterval('PT30M')));
+        $this->assertEquals(ComparableDateInterval::INSTANCE_GREATER_THAN, $interval->compare(new DateInterval('PT30S')));
+        $this->assertEquals(ComparableDateInterval::INSTANCE_GREATER_THAN, $interval->compare(DateInterval::createFromDateString('yesterday')));
+        $this->assertEquals(ComparableDateInterval::INSTANCE_EQUALS, $interval->compare(new DateInterval('PT900S')));
+        $this->assertEquals(ComparableDateInterval::INSTANCE_EQUALS, $interval->compare(new DateInterval('PT15M')));
+        $this->assertEquals(ComparableDateInterval::INSTANCE_LESS_THAN, $interval->compare(new DateInterval('PT30M')));
 
         $testInterval = new DateInterval('PT900S');
         $testInterval->f = 500;
-        $this->assertEquals(-1, $interval->compare($testInterval));
+        $this->assertEquals(ComparableDateInterval::INSTANCE_LESS_THAN, $interval->compare($testInterval));
+    }
+
+    /**
+     * @return Generator
+     */
+    public function provideIntervalCreateArgs()
+    {
+        yield ['PT900S'];
+        yield [900];
+    }
+
+    /**
+     *
+     */
+    public function testLargeIntervals()
+    {
+        $this->expectException(LogicException::class);
+
+        ComparableDateInterval::getTotalSeconds(new DateInterval("P5YT50S"));
+    }
+
+    /**
+     *
+     */
+    public function testInvertedInterval()
+    {
+        $faker = Factory::create();
+        $d1 = $faker->dateTimeBetween('-6 days');
+        $d2 = $faker->dateTimeBetween('tomorrow', '3 days');
+        $interval = $d2->diff($d1);
+
+        $seconds = ComparableDateInterval::getTotalSeconds($interval);
+        $this->assertLessThan(0, $seconds);
     }
 }

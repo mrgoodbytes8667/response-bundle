@@ -34,12 +34,16 @@ class ComparableDateInterval extends DateInterval
     }
 
     /**
-     * @param string $intervalSpec
+     * Creates a ComparableDateInterval object
+     * @param string|int $intervalSpec A string interval spec or a number of seconds
      * @return static
      * @throws Exception
      */
-    public static function create(string $intervalSpec)
+    public static function create(string|int $intervalSpec)
     {
+        if (is_int($intervalSpec)) {
+            $intervalSpec = sprintf('PT%dS', $intervalSpec);
+        }
         return new static($intervalSpec);
     }
 
@@ -93,8 +97,8 @@ class ComparableDateInterval extends DateInterval
             }
             $iSeconds = $interval->s + ($interval->i * 60) + ($interval->h * 3600);
 
-            if ($interval->days > 0) {
-                $iSeconds += ($interval->days * 86400);
+            if ($interval->d > 0) {
+                $iSeconds += ($interval->d * 86400);
             }
 
             if ($interval->f > 0) {
