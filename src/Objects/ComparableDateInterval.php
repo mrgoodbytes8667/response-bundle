@@ -35,12 +35,16 @@ class ComparableDateInterval extends DateInterval
 
     /**
      * Creates a ComparableDateInterval object
-     * @param string|int $intervalSpec A string interval spec or a number of seconds
+     * @param DateInterval|string|int $intervalSpec A DateInterval, a string interval spec or a number of seconds
      * @return static
      * @throws Exception
      */
-    public static function create(string|int $intervalSpec)
+    public static function create(DateInterval|string|int $intervalSpec)
     {
+        if($intervalSpec instanceof DateInterval)
+        {
+            $intervalSpec = ComparableDateInterval::getTotalSeconds($intervalSpec);
+        }
         if (is_int($intervalSpec)) {
             $intervalSpec = sprintf('PT%dS', $intervalSpec);
         }
@@ -73,6 +77,15 @@ class ComparableDateInterval extends DateInterval
         elseif ($oMyTotalSeconds == $oYourTotalSeconds)
             return self::INSTANCE_EQUALS;
         return self::INSTANCE_GREATER_THAN;
+    }
+
+    /**
+     * @param DateInterval $interval
+     * @return bool
+     */
+    public function equals(DateInterval $interval): bool
+    {
+        return $this->compare($interval) === self::INSTANCE_EQUALS;
     }
 
     /**

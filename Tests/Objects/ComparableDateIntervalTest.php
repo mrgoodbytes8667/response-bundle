@@ -55,12 +55,35 @@ class ComparableDateIntervalTest extends TestCase
     }
 
     /**
+     * @dataProvider provideIntervalCreateArgs
+     * @param $spec
+     * @throws Exception
+     */
+    public function testEquals($spec)
+    {
+        $interval = ComparableDateInterval::create($spec);
+
+        $this->assertFalse($interval->equals(new DateInterval('PT30S')));
+        $this->assertFalse($interval->equals(DateInterval::createFromDateString('yesterday')));
+        $this->assertTrue($interval->equals(new DateInterval('PT900S')));
+        $this->assertTrue($interval->equals(new DateInterval('PT15M')));
+        $this->assertFalse($interval->equals(new DateInterval('PT30M')));
+
+        $testInterval = new DateInterval('PT900S');
+        $testInterval->f = 500;
+        $this->assertFalse($interval->equals($testInterval));
+    }
+
+    /**
      * @return Generator
+     * @throws Exception
      */
     public function provideIntervalCreateArgs()
     {
         yield ['PT900S'];
         yield [900];
+        yield [new DateInterval('PT900S')];
+        yield [ComparableDateInterval::create(900)];
     }
 
     /**
@@ -85,5 +108,12 @@ class ComparableDateIntervalTest extends TestCase
 
         $seconds = ComparableDateInterval::getTotalSeconds($interval);
         $this->assertLessThan(0, $seconds);
+    }
+
+    public function testInvalidConstructor()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('DateInterval::__construct(): Unknown or bad format');
+        new ComparableDateInterval('abc123');
     }
 }
