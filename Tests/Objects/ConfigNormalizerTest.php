@@ -74,7 +74,9 @@ class ConfigNormalizerTest extends TestCase
         $endpointKey2 = $this->faker->unique()->word();
         $endpointExtraKey = $this->faker->unique()->word();
         $addRemoveParentKeys = $this->faker->unique()->words();
-        $addRemoveParentExtraKey = $this->faker->unique()->word();
+        $addRemoveParentExtraKey = $this->faker->valid(function ($value) use ($addRemoveParentKeys, $endpointExtraKey, $endpointKey2, $endpointKey1) {
+            return !in_array($value, [$endpointKey1, $endpointKey2, $endpointExtraKey]) && !in_array($value, $addRemoveParentKeys);
+        })->word();
 
         $config = [
             'sample' => [],
@@ -99,6 +101,5 @@ class ConfigNormalizerTest extends TestCase
 
         // Verify extra addRemove key is gone
         $this->assertArrayNotHasKey($addRemoveParentExtraKey, $normalized[$endpointKey1]);
-
     }
 }
