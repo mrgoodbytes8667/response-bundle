@@ -45,9 +45,9 @@ class Response implements ClientResponseInterface
     private $onSuccessCallable;
 
     /**
-     * @var callable(static, mixed)|null
+     * @var callable(static, mixed)[]|null
      */
-    protected $onDeserializeCallable;
+    protected $onDeserializeCallables = [];
 
     /**
      * @var bool
@@ -114,7 +114,7 @@ class Response implements ClientResponseInterface
         $new->setResponse($response);
         $new->setType($type);
         $new->setDeserializeContext($context);
-        $new->setOnDeserializeCallable($onDeserializeCallable);
+        $new->setOnDeserializeCallables($onDeserializeCallable);
         $new->setOnSuccessCallable($onSuccessCallable);
 
         return $new;
@@ -212,20 +212,48 @@ class Response implements ClientResponseInterface
     }
 
     /**
-     * @return callable
+     * @return callable[]|null
      */
-    public function getOnDeserializeCallable(): callable
+    public function getOnDeserializeCallables(): ?array
     {
-        return $this->onDeserializeCallable;
+        return $this->onDeserializeCallables;
     }
 
     /**
-     * @param callable|null $onDeserializeCallable
+     * @param callable[]|null $onDeserializeCallables
      * @return $this
      */
-    public function setOnDeserializeCallable(?callable $onDeserializeCallable): self
+    public function setOnDeserializeCallables(callable|array|null $onDeserializeCallables): self
     {
-        $this->onDeserializeCallable = $onDeserializeCallable;
+        if(!is_null($onDeserializeCallables) && !is_array($onDeserializeCallables))
+        {
+            $onDeserializeCallables = [$onDeserializeCallables];
+        }
+        $this->onDeserializeCallables = $onDeserializeCallables ?: [];
+        return $this;
+    }
+
+    /**
+     * @param callable $onDeserializeCallable
+     * @return $this
+     */
+    public function addOnDeserializeCallable(callable $onDeserializeCallable): self
+    {
+        if (!in_array($onDeserializeCallable, $this->onDeserializeCallables ?: [])) {
+            $this->onDeserializeCallables[] = $onDeserializeCallable;
+        }
+        return $this;
+    }
+
+    /**
+     * @param callable $onDeserializeCallable
+     * @return $this
+     */
+    public function prependOnDeserializeCallable(callable $onDeserializeCallable): self
+    {
+        if (!in_array($onDeserializeCallable, $this->onDeserializeCallables ?: [])) {
+            array_unshift($this->onDeserializeCallables, $onDeserializeCallable);
+        }
         return $this;
     }
 
@@ -363,8 +391,10 @@ class Response implements ClientResponseInterface
      */
     protected function onDeserializeCallback($results)
     {
-        if(!is_null($this->onDeserializeCallable) && is_callable($this->onDeserializeCallable)) {
-            return call_user_func($this->onDeserializeCallable, $this, $results);
+        foreach($this->onDeserializeCallables as $onDeserializeCallable) {
+            if (!is_null($onDeserializeCallable) && is_callable($onDeserializeCallable)) {
+                $results = call_user_func($onDeserializeCallable, $this, $results);
+            }
         }
         return $results;
     }
