@@ -17,6 +17,7 @@
             <directory>./Resources</directory>
             <directory>./Tests</directory>
             <directory>./vendor</directory>
+            <directory>./src/Test</directory>
         </exclude>
     </coverage>
 
