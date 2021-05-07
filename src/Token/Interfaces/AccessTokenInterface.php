@@ -55,6 +55,12 @@ interface AccessTokenInterface
     public static function createFromAccessToken(AccessTokenInterface|string $token): static;
 
     /**
+     * @param ...$args
+     * @return static
+     */
+    public static function createFromParts(...$args): static;
+
+    /**
      * @param AccessTokenInterface $token
      * @return $this
      */
