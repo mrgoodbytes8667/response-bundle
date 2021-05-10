@@ -94,6 +94,18 @@ class Push
     }
 
     /**
+     * @param int|string $key
+     * @return mixed
+     */
+    public function getValue(int|string $key)
+    {
+        if(isset($this->array[$key])) {
+            return $this->array[$key];
+        }
+        throw new \InvalidArgumentException(sprintf('The key "%s" does not exist.', $key));
+    }
+
+    /**
      * @param null $value
      * @param int|string|null $key
      */

@@ -33,6 +33,7 @@ class PushTest extends TestCase
         $this->assertIsArray($arr->value());
         $this->assertCount(1, $arr->value());
         $this->assertArrayHasKey($key, $arr->value());
+        $this->assertEquals($value, $arr->getValue($key));
 
         $arr->push(null);
 
@@ -131,5 +132,19 @@ class PushTest extends TestCase
         $this->assertCount(3, $values);
         $this->assertCount(3, $camels);
         $this->assertCount(3, $snakes);
+    }    /**
+ *
+ */
+    public function testGetValueInvalidKey()
+    {
+        $key = $this->faker->unique()->word();
+        $value = $this->faker->unique()->randomElement([$this->faker->unique()->word(), $this->faker->unique()->numberBetween()]);
+
+        $arr = Push::create();
+
+        $arr->push($value, $key);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $arr->getValue($this->faker->unique()->word());
     }
 }
