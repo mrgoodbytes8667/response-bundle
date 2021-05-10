@@ -10,14 +10,14 @@ class OAuthHandlerCollection
      * OAuthHandlerCollection constructor.
      * @param array $list
      */
-    public function __construct(private array $list = [])
+    public function __construct(private $list = [])
     {
     }
 
     /**
      * @return array
      */
-    public function getList(): array
+    public function getList()
     {
         return $this->list;
     }
@@ -26,7 +26,7 @@ class OAuthHandlerCollection
      * @param array $list
      * @return $this
      */
-    public function setList(array $list): self
+    public function setList($list): self
     {
         $this->list = $list;
         return $this;
