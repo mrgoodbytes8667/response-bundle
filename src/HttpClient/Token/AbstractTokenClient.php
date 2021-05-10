@@ -97,7 +97,9 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
             $scopes = $this->oAuth->getScopes();
         }
 
-        $body = Push::createPush(value: empty($grantType) ? OAuthGrantTypes::authorizationCode()->value : $grantType->value, key: 'grant_type')
+        $grantType = empty($grantType) ? OAuthGrantTypes::authorizationCode()->value : $grantType->value;
+
+        $body = Push::createPush(value: $grantType, key: 'grant_type')
             ->push($redirect, 'redirect_uri')
             ->push(static::buildOAuthString($scopes), 'scope');
 
@@ -110,6 +112,8 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
                 break;
         }
 
+        $body = $this->normalizeTokenExchangeBody($body);
+
         return $this->request($this->buildURL(static::getTokenExchangeBaseUri() . static::$tokenExchangeEndpoint),
             type: static::getTokenExchangeDeserializationClass(),
             options: [
@@ -119,6 +123,15 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
                 'body' => $body->value(),
             ], method: HttpMethods::post(), responseClass: $responseClass, onDeserializeCallable: $onDeserializeCallable,
             onSuccessCallable: $onSuccessCallable, params: ['code' => $code]);
+    }
+
+    /**
+     * @param Push $body
+     * @return Push
+     */
+    protected function normalizeTokenExchangeBody(Push $body): Push
+    {
+        return $body;
     }
 
     /**
