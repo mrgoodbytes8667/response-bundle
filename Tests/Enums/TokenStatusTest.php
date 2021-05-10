@@ -2,6 +2,7 @@
 
 namespace Bytes\ResponseBundle\Tests\Enums;
 
+use BadMethodCallException;
 use Bytes\ResponseBundle\Enums\TokenStatus;
 use Bytes\Tests\Common\TestEnumTrait;
 use Bytes\Tests\Common\TestSerializerTrait;
@@ -121,7 +122,7 @@ class TokenStatusTest extends TestCase
      */
     public function testMakeInvalidLabel($label, $value)
     {
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->assertFalse(TokenStatus::isActive(TokenStatus::make($label)));
     }
 
@@ -132,7 +133,7 @@ class TokenStatusTest extends TestCase
      */
     public function testMakeInvalidValue($label, $value)
     {
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->assertFalse(TokenStatus::isActive(TokenStatus::make($value)));
     }
 }
