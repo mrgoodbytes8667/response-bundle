@@ -15,13 +15,14 @@
         "symfony/dependency-injection": "^5.2",
         "symfony/framework-bundle": "^5.2",
         "symfony/security-core": "^5.2",
+        "symfony/security-http": "^5.2",
         "symfony/serializer": "^5.2",
         "symfony/string": "^5.2",
         "symfony/uid": "^5.2"
     },
     "require-dev": {
         "mrgoodbytes8667/string-mask-bundle": "^0.0.1",
-        "mrgoodbytes8667/test-common": "^0.0.14",
+        "mrgoodbytes8667/test-common": ">=0.0.14",
         "mrgoodbytes8667/test-common-faker": "^0.3.3",
         "symfony/phpunit-bridge": "^5.2",
         "symfony/var-dumper": "^5.2"
