@@ -68,11 +68,23 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     public function __construct(HttpClientInterface $httpClient, ?string $userAgent, protected bool $revokeOnRefresh, protected bool $fireRevokeOnRefresh, array $defaultOptionsByRegexp = [], string $defaultRegexp = null)
     {
         parent::__construct($httpClient, $userAgent, $defaultOptionsByRegexp, $defaultRegexp);
-        if($revokeOnRefresh) {
-            $this->fireRevokeOnRefresh = true;
-        }
+        $this->setupRevokeOnRefresh($revokeOnRefresh, $fireRevokeOnRefresh);
     }
-    
+
+    /**
+     * Overloadable method to setup the revoke/fire on refresh variables
+     * @param bool $revokeOnRefresh
+     * @param bool $fireRevokeOnRefresh
+     * @return $this
+     */
+    public function setupRevokeOnRefresh(bool $revokeOnRefresh, bool $fireRevokeOnRefresh): self {
+        if($revokeOnRefresh) {
+            $this->fireRevokeOnRefresh = false; // Will be fired by the revoke regardless
+        }
+
+        return $this;
+    }
+
     /**
      * Exchanges the provided code (or token) for a (new) access token
      * @param string $code
