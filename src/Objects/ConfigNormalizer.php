@@ -46,7 +46,7 @@ class ConfigNormalizer
             }
 
             // Remove any $config['endpoints'] children not in the $addRemoveParents (+redirects, revoke) arguments
-            $ignore = array_merge(['redirects', 'revokeOnRefresh', 'fireRevokeOnRefresh'], $addRemoveParents);
+            $ignore = array_merge(['redirects', 'revoke_on_refresh', 'fire_revoke_on_refresh'], $addRemoveParents);
             foreach ($config['endpoints'][$index] as $subIndex => $endpoint) {
                 if (!in_array($subIndex, $ignore)) {
                     unset($config['endpoints'][$index][$subIndex]);
