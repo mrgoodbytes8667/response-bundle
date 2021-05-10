@@ -24,6 +24,7 @@ use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Class AbstractTokenClient
@@ -55,6 +56,23 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      */
     protected $oAuth = null;
 
+    /**
+     * AbstractTokenClient constructor.
+     * @param HttpClientInterface $httpClient
+     * @param string|null $userAgent
+     * @param bool $revokeOnRefresh
+     * @param bool $fireRevokeOnRefresh
+     * @param array $defaultOptionsByRegexp
+     * @param string|null $defaultRegexp
+     */
+    public function __construct(HttpClientInterface $httpClient, ?string $userAgent, protected bool $revokeOnRefresh, protected bool $fireRevokeOnRefresh, array $defaultOptionsByRegexp = [], string $defaultRegexp = null)
+    {
+        parent::__construct($httpClient, $userAgent, $defaultOptionsByRegexp, $defaultRegexp);
+        if($revokeOnRefresh) {
+            $this->fireRevokeOnRefresh = true;
+        }
+    }
+    
     /**
      * Exchanges the provided code (or token) for a (new) access token
      * @param string $code
