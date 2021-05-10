@@ -11,7 +11,6 @@ use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,8 +42,10 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator
      * @param UrlGeneratorInterface $urlGenerator
      * @param OAuthInterface $oAuth
      * @param TokenClientInterface $client
+     * @param string $loginRoute
+     * @param string $loginSuccessRoute
      */
-    public function __construct(protected EntityManagerInterface $em, protected Security $security, protected UrlGeneratorInterface $urlGenerator, protected OAuthInterface $oAuth, protected TokenClientInterface $client)
+    public function __construct(protected EntityManagerInterface $em, protected Security $security, protected UrlGeneratorInterface $urlGenerator, protected OAuthInterface $oAuth, protected TokenClientInterface $client, protected string $loginRoute, protected string $loginSuccessRoute)
     {
     }
 
@@ -65,25 +66,14 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator
         }
         // the user is not logged in, so the authenticator should continue
 
-        switch ($request->attributes->get('_route')) {
-            case static::getServiceTagFromClass() . '_oauth_login_authenticate':
-                if (!$request->query->has('code') || !$request->query->has('state')) {
-                    return false;
-                }
-                return true;
-                break;
-            default:
+        if ($request->attributes->get('_route') == $this->loginRoute) {
+            if (!$request->query->has('code') || !$request->query->has('state')) {
                 return false;
-                break;
+            }
+            return true;
         }
-    }
 
-    /**
-     * @return string
-     */
-    public static function getServiceTagFromClass(): string
-    {
-        return Str::of(static::class)->after('App\\Security\\')->before('Authenticator')->camel();
+        return false;
     }
 
     /**
