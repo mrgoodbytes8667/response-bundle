@@ -43,7 +43,11 @@ class PushTest extends TestCase
         $this->assertIsArray($arr->value());
         $this->assertCount(2, $arr->value());
 
-        foreach(range(3, 10) as $count) {
+        $arr->removeKey(0);
+        $this->assertIsArray($arr->value());
+        $this->assertCount(1, $arr->value());
+
+        foreach(range(2, 10) as $count) {
 
             $arr->push('', key: $this->faker->unique()->word(), empty: false);
             $this->assertIsArray($arr->value());

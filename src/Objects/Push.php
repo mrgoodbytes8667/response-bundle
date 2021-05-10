@@ -81,6 +81,19 @@ class Push
     }
 
     /**
+     * @param int|string $key
+     * @return $this
+     */
+    public function removeKey(int|string $key): self
+    {
+        if(isset($this->array[$key])) {
+            unset($this->array[$key]);
+            $this->resetCachedArrays();
+        }
+        return $this;
+    }
+
+    /**
      * @param null $value
      * @param int|string|null $key
      */
