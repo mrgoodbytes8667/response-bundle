@@ -8,6 +8,7 @@ use Bytes\ResponseBundle\HttpClient\Token\TokenClientInterface;
 use Bytes\ResponseBundle\Routing\OAuthInterface;
 use Bytes\ResponseBundle\Security\Traits\AuthenticationSuccessTrait;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -25,6 +26,7 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
@@ -38,15 +40,18 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator
     /**
      * AbstractOAuthAuthenticator constructor.
      * @param EntityManagerInterface $em
+     * @param ServiceEntityRepository $userRepository
      * @param Security $security
      * @param UrlGeneratorInterface $urlGenerator
      * @param OAuthInterface $oAuth
      * @param TokenClientInterface $client
      * @param string $loginRoute
      * @param string $loginSuccessRoute
+     * @param string $userIdField
      */
-    public function __construct(protected EntityManagerInterface $em, protected Security $security, protected UrlGeneratorInterface $urlGenerator, protected OAuthInterface $oAuth, protected TokenClientInterface $client, protected string $loginRoute, protected string $loginSuccessRoute)
+    public function __construct(protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security, protected UrlGeneratorInterface $urlGenerator, protected OAuthInterface $oAuth, protected TokenClientInterface $client, protected string $loginRoute, protected string $loginSuccessRoute, protected string $userIdField)
     {
+        $client->setOAuth($oAuth);
     }
 
     /**
@@ -125,7 +130,17 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    abstract protected function getUser(AccessTokenInterface $tokenResponse);
+    protected function getUser(AccessTokenInterface $tokenResponse) {
+        $validate = $this->client->validateToken($tokenResponse);
+
+        $user = $this->userRepository->findOneBy([self::$userIdField => $validate->getUserId()]);
+
+        if (empty($user)) {
+            throw new UsernameNotFoundException();
+        }
+
+        return $user;
+    }
 
     /**
      * Called when authentication executed, but failed (e.g. wrong username password).
