@@ -4,7 +4,12 @@
 namespace Bytes\ResponseBundle\HttpClient\Api;
 
 
+use Bytes\ResponseBundle\Enums\TokenSource;
+use Bytes\ResponseBundle\Event\ObtainValidTokenEvent;
 use Bytes\ResponseBundle\HttpClient\AbstractClient;
+use Bytes\ResponseBundle\HttpClient\TokenSourceIdentifierTrait;
+use Bytes\ResponseBundle\Security\SecurityTrait;
+use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Symfony\Component\HttpClient\Retry\RetryStrategyInterface;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -17,6 +22,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 abstract class AbstractApiClient extends AbstractClient
 {
+    use SecurityTrait, TokenSourceIdentifierTrait;
+
     /**
      * AbstractApiClient constructor.
      * @param HttpClientInterface $httpClient
@@ -30,5 +37,15 @@ abstract class AbstractApiClient extends AbstractClient
     {
         parent::__construct($httpClient, $userAgent, $defaultOptionsByRegexp, $defaultRegexp);
         $this->httpClient = new RetryableHttpClient($this->httpClient, $strategy);
+    }
+
+    /**
+     * @return AccessTokenInterface|null
+     */
+    protected function getToken(): ?AccessTokenInterface
+    {
+        /** @var ObtainValidTokenEvent $event */
+        $event = $this->dispatch(ObtainValidTokenEvent::new(static::getIdentifier(), static::getTokenSource(), $this->getUser()));
+        return $event->getToken();
     }
 }

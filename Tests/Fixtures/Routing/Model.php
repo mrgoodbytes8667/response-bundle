@@ -98,4 +98,12 @@ class Model extends \Bytes\ResponseBundle\Routing\AbstractOAuth
      */
     private $defaultScopes;
 
+    /**
+     * Return the OAuth name
+     * @return string
+     */
+    public static function getDefaultIndexName(): string
+    {
+        return '';
+    }
 }

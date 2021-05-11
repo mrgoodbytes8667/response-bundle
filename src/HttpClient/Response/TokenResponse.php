@@ -6,6 +6,7 @@ namespace Bytes\ResponseBundle\HttpClient\Response;
 
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\Exception\Response\EmptyContentException;
+use Bytes\ResponseBundle\HttpClient\TokenSourceIdentifierTrait;
 use Bytes\ResponseBundle\Interfaces\ClientTokenResponseInterface;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use InvalidArgumentException;
@@ -23,6 +24,8 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  */
 class TokenResponse extends Response implements ClientTokenResponseInterface
 {
+    use TokenSourceIdentifierTrait;
+
     /**
      * TokenResponse constructor.
      * @param SerializerInterface $serializer
@@ -32,17 +35,6 @@ class TokenResponse extends Response implements ClientTokenResponseInterface
     public function __construct(SerializerInterface $serializer, ?EventDispatcherInterface $dispatcher = null, bool $throwOnDeserializationWhenContentEmpty = true)
     {
         parent::__construct($serializer, $dispatcher, $throwOnDeserializationWhenContentEmpty);
-    }
-
-    /**
-     * Identifier used for differentiating different token providers
-     * @return string|null
-     */
-    protected static function getIdentifier(): ?string {
-        if(property_exists(static::class, 'identifier')) {
-            return static::$identifier;
-        }
-        return null;
     }
 
     /**
