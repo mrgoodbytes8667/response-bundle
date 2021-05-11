@@ -133,7 +133,7 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator
     protected function getUser(AccessTokenInterface $tokenResponse) {
         $validate = $this->client->validateToken($tokenResponse);
 
-        $user = $this->userRepository->findOneBy([self::$userIdField => $validate->getUserId()]);
+        $user = $this->userRepository->findOneBy([$this->userIdField => $validate->getUserId()]);
 
         if (empty($user)) {
             throw new UsernameNotFoundException();

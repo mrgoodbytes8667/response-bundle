@@ -7,14 +7,13 @@ namespace Bytes\ResponseBundle\Routing;
 use BadMethodCallException;
 use Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient;
 use Bytes\ResponseBundle\Objects\Push;
+use Bytes\ResponseBundle\Security\SecurityTrait;
 use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use LogicException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -28,7 +27,7 @@ use function Symfony\Component\String\u;
  */
 abstract class AbstractOAuth implements OAuthInterface
 {
-    use UrlGeneratorTrait, ValidatorTrait;
+    use SecurityTrait, UrlGeneratorTrait, ValidatorTrait;
 
     const RESPONSE_TYPE = 'code';
 
@@ -46,11 +45,6 @@ abstract class AbstractOAuth implements OAuthInterface
      * @var string
      */
     protected static $baseAuthorizationCodeGrantURL;
-
-    /**
-     * @var Security
-     */
-    private $security;
 
     /**
      * Cached normalized permissions list
@@ -250,33 +244,6 @@ abstract class AbstractOAuth implements OAuthInterface
     }
 
     /**
-     * Get a user from the Security Token Storage.
-     *
-     * @return UserInterface|null
-     *
-     * @throws LogicException If SecurityBundle is not available
-     *
-     * @see TokenInterface::getUser()
-     */
-    protected function getUser(): ?UserInterface
-    {
-        if (empty($this->security)) {
-            return null;
-        }
-
-        if (null === $token = $this->security->getToken()) {
-            return null;
-        }
-
-        if (!is_object($user = $token->getUser())) {
-            // e.g. anonymous authentication
-            return null;
-        }
-
-        return $user;
-    }
-
-    /**
      * Returns the $prompt argument for getAuthorizationCodeGrantURL() after normalization and validation
      * @param OAuthPromptInterface|string|bool|null $prompt
      * @param mixed ...$options
@@ -375,16 +342,6 @@ abstract class AbstractOAuth implements OAuthInterface
         $this->redirect = $redirect;
 
         return $redirect;
-    }
-
-    /**
-     * @param Security|null $security
-     * @return $this
-     */
-    public function setSecurity(?Security $security): self
-    {
-        $this->security = $security;
-        return $this;
     }
 
     /**
