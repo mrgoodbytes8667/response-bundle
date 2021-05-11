@@ -386,4 +386,10 @@ abstract class AbstractOAuth implements OAuthInterface
         $this->security = $security;
         return $this;
     }
+
+    /**
+     * Return the OAuth name
+     * @return string
+     */
+    abstract public static function getDefaultIndexName(): string;
 }

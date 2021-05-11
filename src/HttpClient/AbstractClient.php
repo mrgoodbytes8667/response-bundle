@@ -166,6 +166,12 @@ abstract class AbstractClient
     }
 
     /**
+     * Return the client name
+     * @return string
+     */
+    abstract public static function getDefaultIndexName(): string;
+
+    /**
      * @param string $path
      * @param string $prepend
      * @return string

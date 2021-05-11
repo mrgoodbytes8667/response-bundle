@@ -29,4 +29,10 @@ interface OAuthInterface
      * @return string
      */
     public function getAuthorizationUrl(?string $state = null, ...$options): string;
+
+    /**
+     * Return the OAuth name
+     * @return string
+     */
+    public static function getDefaultIndexName(): string;
 }
