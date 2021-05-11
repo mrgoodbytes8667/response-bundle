@@ -22,7 +22,9 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 abstract class AbstractApiClient extends AbstractClient
 {
-    use SecurityTrait, TokenSourceIdentifierTrait;
+    use TokenSourceIdentifierTrait, SecurityTrait {
+        SecurityTrait::getUser as getSecurityUser;
+    }
 
     /**
      * AbstractApiClient constructor.
@@ -45,7 +47,7 @@ abstract class AbstractApiClient extends AbstractClient
     protected function getToken(): ?AccessTokenInterface
     {
         /** @var ObtainValidTokenEvent $event */
-        $event = $this->dispatch(ObtainValidTokenEvent::new(static::getIdentifier(), static::getTokenSource(), $this->getUser()));
+        $event = $this->dispatch(ObtainValidTokenEvent::new(static::getIdentifier(), static::getTokenSource(), $this->getSecurityUser()));
         return $event->getToken();
     }
 }
