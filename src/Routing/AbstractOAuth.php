@@ -235,7 +235,7 @@ abstract class AbstractOAuth implements OAuthInterface
     {
         $user = null;
         if (!empty($this->security)) {
-            $u = $this->getUser();
+            $u = $this->getTokenUser();
             if (!empty($u) && method_exists($u, 'getId')) {
                 $user = $u?->getId();
             }

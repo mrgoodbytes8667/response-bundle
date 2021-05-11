@@ -38,7 +38,7 @@ trait SecurityTrait
      *
      * @see TokenInterface::getUser()
      */
-    protected function getUser(): ?UserInterface
+    protected function getTokenUser(): ?UserInterface
     {
         if (empty($this->security)) {
             return null;
