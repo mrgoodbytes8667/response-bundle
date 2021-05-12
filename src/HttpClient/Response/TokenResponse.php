@@ -4,13 +4,11 @@
 namespace Bytes\ResponseBundle\HttpClient\Response;
 
 
-use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\Exception\Response\EmptyContentException;
-use Bytes\ResponseBundle\HttpClient\TokenSourceIdentifierTrait;
+use Bytes\ResponseBundle\HttpClient\ClientTrait;
 use Bytes\ResponseBundle\Interfaces\ClientTokenResponseInterface;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use InvalidArgumentException;
-use LogicException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -24,7 +22,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  */
 class TokenResponse extends Response implements ClientTokenResponseInterface
 {
-    use TokenSourceIdentifierTrait;
+    use ClientTrait;
 
     /**
      * TokenResponse constructor.
@@ -52,25 +50,14 @@ class TokenResponse extends Response implements ClientTokenResponseInterface
     public function deserialize(bool $throw = true, array $context = [], ?string $type = null)
     {
         $this->prependOnDeserializeCallable(function ($self, $results) {
-            if ($results instanceof AccessTokenInterface && method_exists($results, 'setIdentifier') && !empty(static::getIdentifier())) {
-                $results->setIdentifier(static::getIdentifier());
+            if ($results instanceof AccessTokenInterface && method_exists($results, 'setIdentifier') && !empty($this->getIdentifier())) {
+                $results->setIdentifier($this->getIdentifier());
             }
-            if ($results instanceof AccessTokenInterface && method_exists($results, 'setTokenSource') && !empty(static::getTokenSource())) {
-                $results->setTokenSource(static::getTokenSource());
+            if ($results instanceof AccessTokenInterface && method_exists($results, 'setTokenSource') && !empty($this->getTokenSource())) {
+                $results->setTokenSource($this->getTokenSource());
             }
             return $results;
         });
         return parent::deserialize($throw, $context, $type);
-    }
-
-    /**
-     * Returns the TokenSource for the token
-     * @return TokenSource
-     *
-     * @throws LogicException When this abstract method is not implemented
-     */
-    protected static function getTokenSource(): TokenSource
-    {
-        throw new LogicException('You must override the getTokenSource() method in the concrete response class.');
     }
 }

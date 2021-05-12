@@ -29,13 +29,6 @@ class HttpClientPass implements CompilerPassInterface
             $definition->addMethodCall('setSerializer', [new Reference('serializer')]);
             $definition->addMethodCall('setValidator', [new Reference('validator')]);
             $definition->addMethodCall('setDispatcher', [new Reference('event_dispatcher')]);
-        }
-
-        // find all service IDs with the bytes_response.http_client.api tag
-        $taggedServices = $container->findTaggedServiceIds('bytes_response.http_client.api');
-
-        foreach ($taggedServices as $id => $tags) {
-            $definition = $container->findDefinition($id);
             $definition->addMethodCall('setReader', [new Reference('annotations.cached_reader')]);
         }
 

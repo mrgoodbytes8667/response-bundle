@@ -6,6 +6,8 @@ namespace Bytes\ResponseBundle\HttpClient;
 
 use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
 use Bytes\ResponseBundle\Annotations\Auth;
+use Bytes\ResponseBundle\Annotations\Client;
+use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Doctrine\Common\Annotations\Reader;
@@ -25,6 +27,8 @@ use UnexpectedValueException;
  */
 abstract class AbstractClient
 {
+    use ClientTrait;
+
     /**
      * @var ClientResponseInterface
      */
@@ -34,11 +38,6 @@ abstract class AbstractClient
      * @var EventDispatcherInterface
      */
     private $dispatcher;
-
-    /**
-     * @var Reader
-     */
-    protected $reader;
 
     /**
      * AbstractClient constructor.
@@ -229,13 +228,5 @@ abstract class AbstractClient
         return $this;
     }
 
-    /**
-     * @param Reader $reader
-     * @return $this
-     */
-    public function setReader(Reader $reader): self
-    {
-        $this->reader = $reader;
-        return $this;
-    }
+
 }
