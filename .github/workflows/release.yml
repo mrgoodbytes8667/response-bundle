@@ -87,6 +87,23 @@ jobs:
         if: success()
         run: php bin/phpunit
 
+  trigger_child_tests:
+    needs: build
+    # The type of runner that the job will run on
+    timeout-minutes: 15
+    runs-on: 'ubuntu-latest'
+    strategy:
+      matrix:
+        repo: [ "discord-bundle", "discord-response-bundle", "twitch-client-bundle", "twitch-response-bundle" ]
+    steps:
+      - name: Trigger Dispatch
+        run: |
+          curl -X POST --location "https://api.github.com/repos/mrgoodbytes8667/${{ matrix.repo }}/dispatches" \
+              -H "Accept: application/vnd.github.v3+json" \
+              -H "Content-Type: application/x-www-form-urlencoded" \
+              -H "Authorization: token ${{ secrets.MY_PAT }}" \
+              -d "{\"event_type\":\"parent-repo-push\"}"
+
   release:
     needs: build
     # The type of runner that the job will run on
