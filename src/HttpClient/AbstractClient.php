@@ -179,6 +179,7 @@ abstract class AbstractClient
     }
 
     /**
+     * @param Auth|null $auth
      * @return array
      */
     protected function getAuthenticationOption(?Auth $auth = null)

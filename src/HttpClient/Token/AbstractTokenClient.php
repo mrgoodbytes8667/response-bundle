@@ -5,6 +5,7 @@ namespace Bytes\ResponseBundle\HttpClient\Token;
 
 
 use BadMethodCallException;
+use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
 use Bytes\ResponseBundle\HttpClient\AbstractClient;
@@ -214,9 +215,10 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     }
 
     /**
+     * @param Auth|null $auth
      * @return array
      */
-    final protected function getAuthenticationOption()
+    final protected function getAuthenticationOption(?Auth $auth = null)
     {
         return [];
     }
