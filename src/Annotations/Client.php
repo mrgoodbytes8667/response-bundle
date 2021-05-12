@@ -69,9 +69,9 @@ class Client
     }
 
     /**
-     * @return TokenSource
+     * @return TokenSource|null
      */
-    public function getTokenSource(): TokenSource
+    public function getTokenSource(): ?TokenSource
     {
         return $this->tokenSource;
     }
@@ -82,7 +82,7 @@ class Client
      */
     public function setTokenSource(TokenSource|string|null $tokenSource): self
     {
-        if(!($tokenSource instanceof TokenSource))
+        if(!is_null($tokenSource) && !($tokenSource instanceof TokenSource))
         {
             $tokenSource = TokenSource::from($tokenSource);
         }
