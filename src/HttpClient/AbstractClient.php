@@ -5,8 +5,10 @@ namespace Bytes\ResponseBundle\HttpClient;
 
 
 use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
+use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
+use Doctrine\Common\Annotations\AnnotationReader;
 use InvalidArgumentException;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -31,6 +33,11 @@ abstract class AbstractClient
      * @var EventDispatcherInterface
      */
     private $dispatcher;
+
+    /**
+     * @var AnnotationReader
+     */
+    protected $reader;
 
     /**
      * AbstractClient constructor.
@@ -121,6 +128,7 @@ abstract class AbstractClient
 
     /**
      * @param string|string[] $url
+     * @param \ReflectionMethod|string|null $caller
      * @param string|null $type
      * @param array $options = HttpClientInterface::OPTIONS_DEFAULTS
      * @param string $method = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
@@ -132,8 +140,21 @@ abstract class AbstractClient
      * @return ClientResponseInterface
      * @throws TransportExceptionInterface
      */
-    public function request($url, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
+    public function request($url, \ReflectionMethod|string $caller = null, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
     {
+        $auth = null;
+        if(!empty($this->reader)) {
+            $classAuth = $this->reader->getClassAnnotation(new \ReflectionClass(static::class), Auth::class);
+            if (!is_null($caller)) {
+                try {
+                    if (is_string($caller)) {
+                        $caller = new \ReflectionMethod(static::class, $caller);
+                    }
+                } catch (\ReflectionException) {
+
+                }
+            }
+        }
         if (is_array($url)) {
             $url = implode('/', $url);
         }
@@ -201,6 +222,16 @@ abstract class AbstractClient
     public function setDispatcher(EventDispatcherInterface $dispatcher): self
     {
         $this->dispatcher = $dispatcher;
+        return $this;
+    }
+
+    /**
+     * @param AnnotationReader $reader
+     * @return $this
+     */
+    public function setReader(AnnotationReader $reader): self
+    {
+        $this->reader = $reader;
         return $this;
     }
 }
