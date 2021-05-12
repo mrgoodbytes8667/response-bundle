@@ -9,6 +9,7 @@ use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
 use Bytes\ResponseBundle\HttpClient\AbstractClient;
+use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use Bytes\ResponseBundle\Interfaces\ClientTokenResponseInterface;
 use Bytes\ResponseBundle\Objects\Push;
 use Bytes\ResponseBundle\Routing\OAuthInterface;
@@ -221,5 +222,25 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     final protected function getAuthenticationOption(?Auth $auth = null)
     {
         return [];
+    }
+
+    /**
+     * Overload to prevent caller deprecations (for now)
+     * @param string|string[] $url
+     * @param \ReflectionMethod|string|null $caller
+     * @param string|null $type
+     * @param array $options = HttpClientInterface::OPTIONS_DEFAULTS
+     * @param string $method = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
+     * @param ClientResponseInterface|string|null $responseClass
+     * @param array $context Additional context for deserialize(), can be overloaded by deserialize()
+     * @param callable|null $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
+     * @param callable|null $onSuccessCallable If set, should be triggered by deserialize() on success
+     * @param array $params Extra params for makeFrom
+     * @return ClientResponseInterface
+     * @throws TransportExceptionInterface
+     */
+    public function request($url, \ReflectionMethod|string $caller = null, ?string $type = null, array $options = [], $method = 'GET', string|ClientResponseInterface|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
+    {
+        return parent::request($url, $caller ?? __METHOD__, $type, $options, $method, $responseClass, $context, $onDeserializeCallable, $onSuccessCallable, $params);
     }
 }
