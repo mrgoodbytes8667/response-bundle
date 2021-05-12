@@ -143,23 +143,17 @@ abstract class AbstractClient
      */
     public function request($url, \ReflectionMethod|string $caller = null, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
     {
-        $auth = null;
         if(!empty($this->reader)) {
-            $classAuths = $this->reader->getClassAnnotations(new \ReflectionClass(static::class));
-            $methodAnnotations = [];
             if (!is_null($caller)) {
                 try {
                     if (is_string($caller)) {
                         $caller = new \ReflectionMethod($caller);
                     }
-                    $methodAnnotations = $this->reader->getMethodAnnotations($caller);
+                    $auth = $this->reader->getMethodAnnotation($caller, Auth::class);
                 } catch (\ReflectionException) {
 
                 }
             }
-            $auth = Arr::where(array_merge($classAuths, $methodAnnotations), function ($value, $key) {
-                return $value instanceof Auth;
-            });
         }
         if (is_array($url)) {
             $url = implode('/', $url);
@@ -167,7 +161,7 @@ abstract class AbstractClient
         if (empty($url) || !is_string($url)) {
             throw new InvalidArgumentException();
         }
-        $auth = $this->getAuthenticationOption();
+        $auth = $this->getAuthenticationOption($auth ?? new Auth());
         if (!empty($auth) && is_array($auth)) {
             $options = array_merge_recursive($options, $auth);
         }
@@ -187,7 +181,7 @@ abstract class AbstractClient
     /**
      * @return array
      */
-    protected function getAuthenticationOption()
+    protected function getAuthenticationOption(?Auth $auth = null)
     {
         return [];
     }
