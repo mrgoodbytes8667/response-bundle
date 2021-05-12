@@ -9,6 +9,7 @@ use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Doctrine\Common\Annotations\Reader;
+use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -144,17 +145,21 @@ abstract class AbstractClient
     {
         $auth = null;
         if(!empty($this->reader)) {
-            $classAuth = $this->reader->getClassAnnotation(new \ReflectionClass(static::class), Auth::class);
+            $classAuths = $this->reader->getClassAnnotations(new \ReflectionClass(static::class));
+            $methodAnnotations = [];
             if (!is_null($caller)) {
                 try {
                     if (is_string($caller)) {
                         $caller = new \ReflectionMethod($caller);
                     }
-                    $methodAnnotations = $this->reader->getMethodAnnotation($caller, Auth::class);
+                    $methodAnnotations = $this->reader->getMethodAnnotations($caller);
                 } catch (\ReflectionException) {
 
                 }
             }
+            $auth = Arr::where(array_merge($classAuths, $methodAnnotations), function ($value, $key) {
+                return $value instanceof Auth;
+            });
         }
         if (is_array($url)) {
             $url = implode('/', $url);
