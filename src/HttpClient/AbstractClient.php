@@ -143,6 +143,9 @@ abstract class AbstractClient
      */
     public function request($url, \ReflectionMethod|string $caller = null, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
     {
+        if(is_null($caller)) {
+            trigger_deprecation('mrgoodbytes8667/response-bundle', '2.0.0', 'Calling request() without the caller argument is deprecated and will cease working in a future version.');
+        }
         if(!empty($this->reader)) {
             if (!is_null($caller)) {
                 try {
