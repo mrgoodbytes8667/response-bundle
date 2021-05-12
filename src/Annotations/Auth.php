@@ -28,17 +28,12 @@ class Auth
     /**
      * @var bool
      */
-    private $auth;
-
-    /**
-     * @var bool
-     */
-    private $user;
+    private $authRequired = false;
 
     /**
      * @var array
      */
-    private $scopes;
+    private $scopes = [];
 
     /**
      * Auth constructor.
@@ -46,12 +41,26 @@ class Auth
      */
     public function __construct(array $values)
     {
+        if(isset($values['value']))
+        {
+            $values['authRequired'] = $values['value'];
+            unset($values['value']);
+        }
+        $this->set(...$values);
+    }
+
+    public function set(?string $identifier = null, TokenSource|string $tokenSource = null, bool $authRequired = false, ?array $scopes = [])
+    {
+        $this->setIdentifier($identifier);
+        $this->setTokenSource($tokenSource);
+        $this->setAuthRequired($authRequired);
+        $this->setScopes($scopes);
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getIdentifier(): mixed
+    public function getIdentifier(): ?string
     {
         return $this->identifier;
     }
@@ -67,9 +76,9 @@ class Auth
     }
 
     /**
-     * @return TokenSource
+     * @return TokenSource|null
      */
-    public function getTokenSource(): TokenSource
+    public function getTokenSource(): ?TokenSource
     {
         return $this->tokenSource;
     }
@@ -94,36 +103,18 @@ class Auth
     /**
      * @return bool
      */
-    public function isAuth(): bool
+    public function isAuthRequired(): bool
     {
-        return $this->auth;
+        return $this->authRequired ?? false;
     }
 
     /**
-     * @param bool $auth
+     * @param bool $authRequired
      * @return $this
      */
-    public function setAuth(bool $auth): self
+    public function setAuthRequired(bool $authRequired): self
     {
-        $this->auth = $auth;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUser(): bool
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param bool $user
-     * @return $this
-     */
-    public function setUser(bool $user): self
-    {
-        $this->user = $user;
+        $this->authRequired = $authRequired;
         return $this;
     }
 
@@ -132,7 +123,7 @@ class Auth
      */
     public function getScopes(): array
     {
-        return $this->scopes;
+        return $this->scopes ?: [];
     }
 
     /**

@@ -8,7 +8,7 @@ use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
 use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Reader;
 use InvalidArgumentException;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -35,7 +35,7 @@ abstract class AbstractClient
     private $dispatcher;
 
     /**
-     * @var AnnotationReader
+     * @var Reader
      */
     protected $reader;
 
@@ -148,8 +148,9 @@ abstract class AbstractClient
             if (!is_null($caller)) {
                 try {
                     if (is_string($caller)) {
-                        $caller = new \ReflectionMethod(static::class, $caller);
+                        $caller = new \ReflectionMethod($caller);
                     }
+                    $methodAnnotations = $this->reader->getMethodAnnotation($caller, Auth::class);
                 } catch (\ReflectionException) {
 
                 }
@@ -226,10 +227,10 @@ abstract class AbstractClient
     }
 
     /**
-     * @param AnnotationReader $reader
+     * @param Reader $reader
      * @return $this
      */
-    public function setReader(AnnotationReader $reader): self
+    public function setReader(Reader $reader): self
     {
         $this->reader = $reader;
         return $this;
