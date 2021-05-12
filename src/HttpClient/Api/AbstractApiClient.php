@@ -46,6 +46,10 @@ abstract class AbstractApiClient extends AbstractClient
     {
         /** @var ObtainValidTokenEvent $event */
         $event = $this->dispatch(ObtainValidTokenEvent::new(static::getIdentifier(), static::getTokenSource(), $this->getTokenUser()));
-        return $event->getToken();
+        if(!empty($event) && $event instanceof \Symfony\Contracts\EventDispatcher\Event) {
+            return $event?->getToken();
+        } else {
+            return null;
+        }
     }
 }
