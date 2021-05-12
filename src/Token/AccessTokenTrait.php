@@ -236,7 +236,7 @@ trait AccessTokenTrait
     public function getTokenSource(): ?TokenSource
     {
         try {
-            return TokenSource::make($this->tokenSource);
+            return TokenSource::from($this->tokenSource);
         } catch (\TypeError $exception)
         {
             return null;

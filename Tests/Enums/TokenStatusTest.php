@@ -22,11 +22,11 @@ class TokenStatusTest extends TestCase
      */
     public function testEnum($label, $value)
     {
-        $enum = TokenStatus::make($value);
+        $enum = TokenStatus::from($value);
         $this->assertEquals($label, $enum->label);
         $this->assertEquals($value, $enum->value);
 
-        $enum = TokenStatus::make($label);
+        $enum = TokenStatus::from($label);
         $this->assertEquals($label, $enum->label);
         $this->assertEquals($value, $enum->value);
     }
@@ -40,7 +40,7 @@ class TokenStatusTest extends TestCase
     public function testEnumSerialization($label, $value)
     {
         $serializer = $this->createSerializer();
-        $enum = TokenStatus::make($value);
+        $enum = TokenStatus::from($value);
 
         $output = $serializer->serialize($enum, 'json');
 
@@ -85,9 +85,9 @@ class TokenStatusTest extends TestCase
     public function testIsActive($label, $value)
     {
         $this->assertTrue(TokenStatus::isActive($label));
-        $this->assertTrue(TokenStatus::isActive(TokenStatus::make($label)));
+        $this->assertTrue(TokenStatus::isActive(TokenStatus::from($label)));
         $this->assertTrue(TokenStatus::isActive($value));
-        $this->assertTrue(TokenStatus::isActive(TokenStatus::make($value)));
+        $this->assertTrue(TokenStatus::isActive(TokenStatus::from($value)));
     }
 
     /**
@@ -98,9 +98,9 @@ class TokenStatusTest extends TestCase
     public function testIsNotActive($label, $value)
     {
         $this->assertFalse(TokenStatus::isActive($label));
-        $this->assertFalse(TokenStatus::isActive(TokenStatus::make($label)));
+        $this->assertFalse(TokenStatus::isActive(TokenStatus::from($label)));
         $this->assertFalse(TokenStatus::isActive($value));
-        $this->assertFalse(TokenStatus::isActive(TokenStatus::make($value)));
+        $this->assertFalse(TokenStatus::isActive(TokenStatus::from($value)));
     }
 
     /**
@@ -123,7 +123,7 @@ class TokenStatusTest extends TestCase
     public function testMakeInvalidLabel($label, $value)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->assertFalse(TokenStatus::isActive(TokenStatus::make($label)));
+        $this->assertFalse(TokenStatus::isActive(TokenStatus::from($label)));
     }
 
     /**
@@ -134,6 +134,6 @@ class TokenStatusTest extends TestCase
     public function testMakeInvalidValue($label, $value)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->assertFalse(TokenStatus::isActive(TokenStatus::make($value)));
+        $this->assertFalse(TokenStatus::isActive(TokenStatus::from($value)));
     }
 }

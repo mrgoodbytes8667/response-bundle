@@ -19,11 +19,11 @@ class TokenSourceTest extends TestCase
      */
     public function testEnum($label, $value)
     {
-        $enum = TokenSource::make($value);
+        $enum = TokenSource::from($value);
         $this->assertEquals($label, $enum->label);
         $this->assertEquals($value, $enum->value);
 
-        $enum = TokenSource::make($label);
+        $enum = TokenSource::from($label);
         $this->assertEquals($label, $enum->label);
         $this->assertEquals($value, $enum->value);
     }
@@ -36,7 +36,7 @@ class TokenSourceTest extends TestCase
     public function testEnumSerialization($label, $value)
     {
         $serializer = $this->createSerializer();
-        $enum = TokenSource::make($value);
+        $enum = TokenSource::from($value);
 
         $output = $serializer->serialize($enum, 'json');
 

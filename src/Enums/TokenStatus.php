@@ -27,7 +27,7 @@ class TokenStatus extends Enum
     {
         if (is_string($status)) {
             try {
-                $status = TokenStatus::make($status);
+                $status = TokenStatus::from($status);
             } catch (BadMethodCallException | TypeError $exception) {
                 return false;
             }
