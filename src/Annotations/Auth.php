@@ -3,6 +3,8 @@
 
 namespace Bytes\ResponseBundle\Annotations;
 
+use Bytes\ResponseBundle\Enums\TokenSource;
+
 /**
  * Class Auth
  * @package Bytes\ResponseBundle\Annotations
@@ -12,6 +14,8 @@ namespace Bytes\ResponseBundle\Annotations;
  */
 class Auth
 {
+    use ClientTrait;
+
     /**
      * @var array
      */
@@ -32,10 +36,17 @@ class Auth
 
     /**
      * @param array|null $scopes
+     * @param string|null $identifier
+     * @param TokenSource|string|null $tokenSource
+     * @return $this
      */
-    public function set(?array $scopes = [])
+    public function set(?array $scopes = [], ?string $identifier = null, TokenSource|string|null $tokenSource = null): self
     {
         $this->setScopes($scopes);
+        $this->setIdentifier($identifier);
+        $this->setTokenSource($tokenSource);
+
+        return $this;
     }
 
     /**

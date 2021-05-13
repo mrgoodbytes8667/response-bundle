@@ -153,7 +153,10 @@ abstract class AbstractClient
                     if (is_string($caller)) {
                         $caller = new \ReflectionMethod($caller);
                     }
+                    /** @var Auth $auth */
                     $auth = $this->reader->getMethodAnnotation($caller, Auth::class);
+                    $auth->setIdentifier($this->getIdentifier());
+                    $auth->setTokenSource($this->getTokenSource());
                 } catch (\ReflectionException) {
 
                 }
