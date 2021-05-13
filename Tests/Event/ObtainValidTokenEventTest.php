@@ -55,12 +55,14 @@ class ObtainValidTokenEventTest extends TestCase
         $identifier = $this->faker->word();
         $tokenSource = $this->faker->randomEnum(TokenSource::class);
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
+        $scopes = $this->faker->words(3);
         $token = $this->getMockBuilder(AccessTokenInterface::class)->getMock();
-        $event = ObtainValidTokenEvent::new($identifier, $tokenSource, $user);
+        $event = ObtainValidTokenEvent::new($identifier, $tokenSource, $user, $scopes);
 
         self::assertEquals($identifier, $event->getIdentifier());
         self::assertEquals($tokenSource, $event->getTokenSource());
         self::assertEquals($user, $event->getUser());
+        self::assertCount(3, $event->getScopes());
         self::assertNull($event->getToken());
 
         self::assertInstanceOf(ObtainValidTokenEvent::class, $event->setToken($token));
@@ -93,6 +95,7 @@ class ObtainValidTokenEventTest extends TestCase
             ->randomEnum(TokenSource::class);
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
         $token = $this->getMockBuilder(AccessTokenInterface::class)->getMock();
+        $scopes = $this->faker->words(3);
         $event = ObtainValidTokenEvent::new($identifier, $tokenSource);
 
         self::assertEquals($identifier, $event->getIdentifier());
@@ -108,6 +111,11 @@ class ObtainValidTokenEventTest extends TestCase
         self::assertEquals($tokenSource2, $event->getTokenSource());
         self::assertEquals($user, $event->getUser());
         self::assertEquals($token, $event->getToken());
+
+        self::assertCount(0, $event->getScopes());
+        self::assertInstanceOf(ObtainValidTokenEvent::class, $event->setScopes($scopes));
+        self::assertCount(3, $event->getScopes());
+
     }
 }
 

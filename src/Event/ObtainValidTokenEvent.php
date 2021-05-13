@@ -23,7 +23,7 @@ class ObtainValidTokenEvent extends Event
      * @param UserInterface|null $user
      * @param AccessTokenInterface|null $token
      */
-    public function __construct(private string $identifier, private TokenSource $tokenSource, private ?UserInterface $user = null, private ?AccessTokenInterface $token = null)
+    public function __construct(private string $identifier, private TokenSource $tokenSource, private ?UserInterface $user = null, private array $scopes = [], private ?AccessTokenInterface $token = null)
     {
         if ($tokenSource->equals(TokenSource::user(), TokenSource::id()) && empty($user)) {
             throw new InvalidArgumentException('Id and User tokens require a user.');
@@ -34,11 +34,12 @@ class ObtainValidTokenEvent extends Event
      * @param string $identifier
      * @param TokenSource $tokenSource
      * @param UserInterface|null $user
+     * @param array $scopes
      * @return static
      */
-    public static function new(string $identifier, TokenSource $tokenSource, ?UserInterface $user = null): static
+    public static function new(string $identifier, TokenSource $tokenSource, ?UserInterface $user = null, array $scopes = []): static
     {
-        return new static($identifier, $tokenSource, $user);
+        return new static($identifier, $tokenSource, $user, $scopes);
     }
 
     /**
@@ -92,6 +93,24 @@ class ObtainValidTokenEvent extends Event
     public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getScopes(): array
+    {
+        return $this->scopes ?: [];
+    }
+
+    /**
+     * @param array $scopes
+     * @return $this
+     */
+    public function setScopes(array $scopes): self
+    {
+        $this->scopes = $scopes;
         return $this;
     }
 

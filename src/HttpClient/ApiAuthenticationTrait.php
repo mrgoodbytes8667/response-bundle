@@ -11,10 +11,11 @@ use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 trait ApiAuthenticationTrait
 {
     /**
+     * @param Auth|null $auth
      * @return AccessTokenInterface|null
      * @throws NoTokenException
      */
-    abstract protected function getToken(): ?AccessTokenInterface;
+    abstract protected function getToken(?Auth $auth = null): ?AccessTokenInterface;
 
     /**
      * @param Auth|null $auth

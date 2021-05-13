@@ -4,6 +4,7 @@
 namespace Bytes\ResponseBundle\HttpClient\Api;
 
 
+use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Event\ObtainValidTokenEvent;
 use Bytes\ResponseBundle\HttpClient\AbstractClient;
 use Bytes\ResponseBundle\Security\SecurityTrait;
@@ -40,13 +41,15 @@ abstract class AbstractApiClient extends AbstractClient
     }
 
     /**
+     * @param Auth|null $auth
      * @return AccessTokenInterface|null
      * @throws NoTokenException
      */
-    protected function getToken(): ?AccessTokenInterface
+    protected function getToken(?Auth $auth = null): ?AccessTokenInterface
     {
         /** @var ObtainValidTokenEvent $event */
-        $event = $this->dispatch(ObtainValidTokenEvent::new($this->getIdentifier(), $this->getTokenSource(), $this->getTokenUser()));
+        $event = $this->dispatch(ObtainValidTokenEvent::new($auth?->getIdentifier() ?? $this->getIdentifier(),
+            $auth?->getTokenSource() ?? $this->getTokenSource(), $this->getTokenUser(), $auth?->getScopes() ?? []));
         if (!empty($event) && $event instanceof Event) {
             return $event?->getToken();
         }
