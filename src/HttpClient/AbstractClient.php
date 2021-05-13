@@ -9,6 +9,7 @@ use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Annotations\Client;
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
+use Bytes\ResponseBundle\Token\Exceptions\NoTokenException;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Doctrine\Common\Annotations\Reader;
 use Illuminate\Support\Arr;
@@ -139,6 +140,7 @@ abstract class AbstractClient
      * @param array $params Extra params for makeFrom
      * @return ClientResponseInterface
      * @throws TransportExceptionInterface
+     * @throws NoTokenException
      */
     public function request($url, \ReflectionMethod|string $caller = null, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
     {
@@ -183,6 +185,8 @@ abstract class AbstractClient
     /**
      * @param Auth|null $auth
      * @return array
+     *
+     * @throws NoTokenException
      */
     protected function getAuthenticationOption(?Auth $auth = null)
     {

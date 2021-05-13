@@ -6,6 +6,7 @@ namespace Bytes\ResponseBundle\Event;
 
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
+use InvalidArgumentException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -24,9 +25,8 @@ class ObtainValidTokenEvent extends Event
      */
     public function __construct(private string $identifier, private TokenSource $tokenSource, private ?UserInterface $user = null, private ?AccessTokenInterface $token = null)
     {
-        if($tokenSource->equals(TokenSource::user(), TokenSource::id()) && empty($$this->user))
-        {
-            throw new \InvalidArgumentException('Id and User tokens require a user.');
+        if ($tokenSource->equals(TokenSource::user(), TokenSource::id()) && empty($user)) {
+            throw new InvalidArgumentException('Id and User tokens require a user.');
         }
     }
 
@@ -112,7 +112,4 @@ class ObtainValidTokenEvent extends Event
         $this->token = $token;
         return $this;
     }
-
-
-
 }

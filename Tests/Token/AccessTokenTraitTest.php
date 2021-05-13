@@ -23,6 +23,14 @@ class AccessTokenTraitTest extends TestCase
     use TestFakerTrait;
 
     /**
+     * Ensure the StrinkMaskRuntime class is loaded
+     */
+    protected function setUp(): void
+    {
+        \Bytes\StringMaskBundle\Twig\StringMaskRuntime::getMaskedString('');
+    }
+
+    /**
      *
      */
     public function testGetSetAccessToken()
@@ -37,6 +45,8 @@ class AccessTokenTraitTest extends TestCase
 
         $token->setAccessToken($accessToken);
         $this->assertEquals($accessToken, $token->getAccessToken());
+
+        $this->assertNotEquals($token, $token->getAccessToken(true));
     }
 
     /**
@@ -116,6 +126,8 @@ class AccessTokenTraitTest extends TestCase
 
         $token->setRefreshToken($refreshToken);
         $this->assertEquals($refreshToken, $token->getRefreshToken());
+
+        $this->assertNotEquals($token, $token->getRefreshToken(true));
     }
 
     /**
@@ -215,16 +227,25 @@ class AccessTokenTraitTest extends TestCase
     }
 
     /**
-     *
+     * @dataProvider provideExpiresAt
+     * @param $expiresAt
      */
-    public function testGetSetExpiresAt()
+    public function testGetSetExpiresAt($expiresAt)
     {
-        $expiresAt = $this->faker->dateTimeThisMonth();
-
         $token = $this->getMockForTrait(AccessTokenTrait::class);
         $this->assertNull($token->getExpiresAt());
 
         $token->setExpiresAt($expiresAt);
         $this->assertEquals($expiresAt, $token->getExpiresAt());
+    }
+
+    /**
+     * @return Generator
+     */
+    public function provideExpiresAt()
+    {
+        $this->setupFaker();
+        yield [$this->faker->dateTimeThisMonth()];
+        yield [\DateTimeImmutable::createFromInterface($this->faker->dateTimeThisMonth())];
     }
 }

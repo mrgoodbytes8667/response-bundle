@@ -7,11 +7,17 @@ namespace Bytes\ResponseBundle\Token;
 use Bytes\ResponseBundle\Entity\CreatedUpdatedTrait;
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\Objects\ComparableDateInterval;
+use Bytes\StringMaskBundle\Twig\StringMaskRuntime;
+use DateInterval;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
+use TypeError;
 
 /**
  * Trait AccessTokenTrait
@@ -46,14 +52,14 @@ trait AccessTokenTrait
 
     /**
      * Time (in seconds) until the access token expires
-     * @var \DateInterval|null
+     * @var DateInterval|null
      * @ORM\Column(type="dateinterval")
      */
     private $expiresIn;
 
     /**
      * (Calculated) datetime when the access token expires
-     * @var \DateTimeInterface|null
+     * @var DateTimeInterface|null
      * @ORM\Column(type="datetime")
      */
     private $expiresAt;
@@ -103,8 +109,8 @@ trait AccessTokenTrait
      */
     public function getAccessToken(bool $masked = false): ?string
     {
-        if($masked && class_exists('\Bytes\StringMaskBundle\Twig\StringMaskRuntime', false)) {
-            return \Bytes\StringMaskBundle\Twig\StringMaskRuntime::getMaskedString($this->accessToken);
+        if ($masked && class_exists('\Bytes\StringMaskBundle\Twig\StringMaskRuntime', false)) {
+            return StringMaskRuntime::getMaskedString($this->accessToken);
         } else {
             return $this->accessToken;
         }
@@ -126,8 +132,8 @@ trait AccessTokenTrait
      */
     public function getRefreshToken(bool $masked = false): ?string
     {
-        if($masked && class_exists('\Bytes\StringMaskBundle\Twig\StringMaskRuntime', false)) {
-            return \Bytes\StringMaskBundle\Twig\StringMaskRuntime::getMaskedString($this->refreshToken);
+        if ($masked && class_exists('\Bytes\StringMaskBundle\Twig\StringMaskRuntime', false)) {
+            return StringMaskRuntime::getMaskedString($this->refreshToken);
         } else {
             return $this->refreshToken;
         }
@@ -144,23 +150,23 @@ trait AccessTokenTrait
     }
 
     /**
-     * @return \DateInterval|null
+     * @return DateInterval|null
      */
-    public function getExpiresIn(): ?\DateInterval
+    public function getExpiresIn(): ?DateInterval
     {
         return $this->expiresIn;
     }
 
     /**
-     * @param int|\DateInterval|null $expiresIn
+     * @param int|DateInterval|null $expiresIn
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
-    public function setExpiresIn(int|\DateInterval|null $expiresIn): self
+    public function setExpiresIn(int|DateInterval|null $expiresIn): self
     {
         if (!empty($expiresIn) && is_numeric($expiresIn)) {
             $expiresIn = ComparableDateInterval::secondsToInterval($expiresIn);
-            $now = new \DateTimeImmutable();
+            $now = new DateTimeImmutable();
             $this->setExpiresAt($now->add($expiresIn));
         }
         $this->expiresIn = $expiresIn;
@@ -168,23 +174,22 @@ trait AccessTokenTrait
     }
 
     /**
-     * @return \DateTimeInterface|null
+     * @return DateTimeInterface|null
      */
-    public function getExpiresAt(): ?\DateTimeImmutable
+    public function getExpiresAt(): ?DateTimeImmutable
     {
-        if($this->expiresAt instanceof \DateTimeImmutable)
-        {
+        if ($this->expiresAt instanceof DateTimeImmutable) {
             return $this->expiresAt;
         } else {
-            return empty($this->expiresAt) ? null : \DateTimeImmutable::createFromInterface($this->expiresAt);
+            return empty($this->expiresAt) ? null : DateTimeImmutable::createFromInterface($this->expiresAt);
         }
     }
 
     /**
-     * @param \DateTimeInterface|null $expiresAt
+     * @param DateTimeInterface|null $expiresAt
      * @return $this
      */
-    public function setExpiresAt(?\DateTimeInterface $expiresAt): self
+    public function setExpiresAt(?DateTimeInterface $expiresAt): self
     {
         $this->expiresAt = $expiresAt;
         return $this;
@@ -204,8 +209,7 @@ trait AccessTokenTrait
      */
     public function setScope(string|array $scope = ''): self
     {
-        if(is_array($scope))
-        {
+        if (is_array($scope)) {
             $scope = implode(' ', $scope);
         }
         $this->scope = $scope;
@@ -237,8 +241,7 @@ trait AccessTokenTrait
     {
         try {
             return TokenSource::from($this->tokenSource);
-        } catch (\TypeError $exception)
-        {
+        } catch (TypeError $exception) {
             return null;
         }
     }
@@ -249,10 +252,8 @@ trait AccessTokenTrait
      */
     public function setTokenSource(TokenSource|string|null $tokenSource): self
     {
-        if(!empty($tokenSource))
-        {
-            if($tokenSource instanceof TokenSource)
-            {
+        if (!empty($tokenSource)) {
+            if ($tokenSource instanceof TokenSource) {
                 $tokenSource = $tokenSource->value;
             }
         }

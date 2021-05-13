@@ -7,6 +7,7 @@ namespace Bytes\ResponseBundle\HttpClient\Api;
 use Bytes\ResponseBundle\Event\ObtainValidTokenEvent;
 use Bytes\ResponseBundle\HttpClient\AbstractClient;
 use Bytes\ResponseBundle\Security\SecurityTrait;
+use Bytes\ResponseBundle\Token\Exceptions\NoTokenException;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Symfony\Component\HttpClient\Retry\RetryStrategyInterface;
 use Symfony\Component\HttpClient\RetryableHttpClient;
@@ -39,6 +40,7 @@ abstract class AbstractApiClient extends AbstractClient
 
     /**
      * @return AccessTokenInterface|null
+     * @throws NoTokenException
      */
     protected function getToken(): ?AccessTokenInterface
     {
@@ -46,8 +48,8 @@ abstract class AbstractApiClient extends AbstractClient
         $event = $this->dispatch(ObtainValidTokenEvent::new($this->getIdentifier(), $this->getTokenSource(), $this->getTokenUser()));
         if(!empty($event) && $event instanceof \Symfony\Contracts\EventDispatcher\Event) {
             return $event?->getToken();
-        } else {
-            return null;
         }
+
+        throw new NoTokenException();
     }
 }

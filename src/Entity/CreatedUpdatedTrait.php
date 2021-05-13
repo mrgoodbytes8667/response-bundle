@@ -50,9 +50,10 @@ trait CreatedUpdatedTrait
      */
     public function setupDates(): self
     {
-        $this->setCreatedAt(new DateTime());
+        $dateTime = new DateTime();
+        $this->setCreatedAt($dateTime);
         if ($this->getUpdatedAt() == null) {
-            $this->setUpdatedAt(new DateTime());
+            $this->setUpdatedAt($dateTime);
         }
 
         return $this;

@@ -19,9 +19,9 @@ class TokenRefreshedEvent extends AbstractTokenEvent
     /**
      * TokenRefreshedEvent constructor.
      * @param AccessTokenInterface $token
-     * @param AccessTokenInterface $oldToken
+     * @param AccessTokenInterface|null $oldToken
      */
-    public function __construct(AccessTokenInterface $token, private AccessTokenInterface $oldToken)
+    public function __construct(AccessTokenInterface $token, private ?AccessTokenInterface $oldToken)
     {
         parent::__construct($token);
     }
@@ -31,7 +31,7 @@ class TokenRefreshedEvent extends AbstractTokenEvent
      * @param AccessTokenInterface|null $oldToken
      * @return static
      */
-    public static function new(AccessTokenInterface $token, AccessTokenInterface $oldToken = null): static
+    public static function new(AccessTokenInterface $token, ?AccessTokenInterface $oldToken = null): static
     {
         return new static($token, $oldToken);
     }
