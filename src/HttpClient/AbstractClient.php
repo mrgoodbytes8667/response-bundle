@@ -157,8 +157,8 @@ abstract class AbstractClient
                     }
                     /** @var Auth $auth */
                     $auth = $this->reader->getMethodAnnotation($caller, Auth::class);
-                    $auth->setIdentifier($this->getIdentifier());
-                    $auth->setTokenSource($this->getTokenSource());
+                    $auth?->setIdentifier($this->getIdentifier());
+                    $auth?->setTokenSource($this->getTokenSource());
                 } catch (\ReflectionException) {
 
                 }
