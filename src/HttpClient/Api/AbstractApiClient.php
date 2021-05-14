@@ -40,21 +40,4 @@ abstract class AbstractApiClient extends AbstractClient
         parent::__construct($httpClient, $userAgent, $defaultOptionsByRegexp, $defaultRegexp, $retryAuth);
         $this->httpClient = new RetryableHttpClient($this->httpClient, $strategy);
     }
-
-    /**
-     * @param Auth|null $auth
-     * @return AccessTokenInterface|null
-     * @throws NoTokenException
-     */
-    protected function getToken(?Auth $auth = null): ?AccessTokenInterface
-    {
-        /** @var ObtainValidTokenEvent $event */
-        $event = $this->dispatch(ObtainValidTokenEvent::new($auth?->getIdentifier() ?? $this->getIdentifier(),
-            $auth?->getTokenSource() ?? $this->getTokenSource(), $this->getTokenUser(), $auth?->getScopes() ?? []));
-        if (!empty($event) && $event instanceof Event) {
-            return $event?->getToken();
-        }
-
-        throw new NoTokenException();
-    }
 }

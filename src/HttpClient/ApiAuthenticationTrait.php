@@ -5,17 +5,55 @@ namespace Bytes\ResponseBundle\HttpClient;
 
 
 use Bytes\ResponseBundle\Annotations\Auth;
+use Bytes\ResponseBundle\Event\ObtainValidTokenEvent;
+use Bytes\ResponseBundle\Security\SecurityTrait;
 use Bytes\ResponseBundle\Token\Exceptions\NoTokenException;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
+use Psr\EventDispatcher\StoppableEventInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
+/**
+ * Trait ApiAuthenticationTrait
+ * @package Bytes\ResponseBundle\HttpClient
+ *
+ * @method dispatch(StoppableEventInterface $event, string $eventName = null)
+ */
 trait ApiAuthenticationTrait
 {
+    use \Bytes\ResponseBundle\Annotations\ClientTrait, SecurityTrait;
+
+    /**
+     * @var AccessTokenInterface
+     */
+    private $token;
+
     /**
      * @param Auth|null $auth
+     * @param bool $reset
      * @return AccessTokenInterface|null
      * @throws NoTokenException
      */
-    abstract protected function getToken(?Auth $auth = null): ?AccessTokenInterface;
+    protected function getToken(?Auth $auth = null, bool $reset = false): ?AccessTokenInterface
+    {
+        if($reset)
+        {
+            $this->token = null;
+        }
+        if(!empty($this->token))
+        {
+            return $this->token;
+        }
+
+        /** @var ObtainValidTokenEvent $event */
+        $event = $this->dispatch(ObtainValidTokenEvent::new($auth?->getIdentifier() ?? $this->getIdentifier(),
+            $auth?->getTokenSource() ?? $this->getTokenSource(), $this->getTokenUser(), $auth?->getScopes() ?? []));
+        if (!empty($event) && $event instanceof Event) {
+            $this->token = $event?->getToken();
+            return $this->token;
+        }
+
+        throw new NoTokenException();
+    }
 
     /**
      * @param Auth|null $auth
@@ -24,7 +62,7 @@ trait ApiAuthenticationTrait
      */
     protected function getAuthenticationOption(?Auth $auth = null)
     {
-        $token = $this->getToken();
+        $token = $this->getToken($auth);
         if(!empty($token))
         {
             return ['auth_bearer' => $token->getAccessToken()];

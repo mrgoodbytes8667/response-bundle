@@ -15,6 +15,7 @@ use Doctrine\Common\Annotations\Reader;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Psr\EventDispatcher\StoppableEventInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -169,10 +170,7 @@ abstract class AbstractClient
         if (empty($url) || !is_string($url)) {
             throw new InvalidArgumentException();
         }
-        $auth = $this->getAuthenticationOption($auth ?? new Auth());
-        if (!empty($auth) && is_array($auth)) {
-            $options = array_merge_recursive($options, $auth);
-        }
+        $options = $this->mergeAuth($auth, $options);
         if (!is_null($responseClass)) {
             if (is_string($responseClass) && is_subclass_of($responseClass, ClientResponseInterface::class)) {
                 $response = $responseClass::makeFrom($this->response, $params);
@@ -183,8 +181,39 @@ abstract class AbstractClient
             $response = clone $this->response;
             $response->setExtraParams($params);
         }
-        return $response->withResponse($this->httpClient->request($method, $this->buildURL($url), $options), $type, $context, $onDeserializeCallable, $onSuccessCallable);
+        $return = $this->httpClient->request($method, $this->buildURL($url), $options);
+        if($this->retryAuth && $return->getStatusCode() === Response::HTTP_UNAUTHORIZED)
+        {
+            // Retry token
+            $this->getToken($auth, true);
+            $options = $this->mergeAuth($auth, $options);
+            $return = $this->httpClient->request($method, $this->buildURL($url), $options);
+        }
+        return $response->withResponse($return, $type, $context, $onDeserializeCallable, $onSuccessCallable);
     }
+
+    /**
+     * @param Auth|null $auth
+     * @param array $options
+     * @return array
+     * @throws NoTokenException
+     */
+    protected function mergeAuth(?Auth $auth, array $options): array
+    {
+        $authHeader = $this->getAuthenticationOption($auth ?? new Auth());
+        if (!empty($authHeader) && is_array($authHeader)) {
+            $options = array_merge_recursive($options, $authHeader);
+        }
+        return $options;
+    }
+
+    /**
+     * @param Auth|null $auth
+     * @param bool $reset
+     * @return AccessTokenInterface|null
+     * @throws NoTokenException
+     */
+    abstract protected function getToken(?Auth $auth = null, bool $reset = false): ?AccessTokenInterface;
 
     /**
      * @param Auth|null $auth
