@@ -33,10 +33,11 @@ abstract class AbstractApiClient extends AbstractClient
      * @param string|null $userAgent
      * @param array $defaultOptionsByRegexp
      * @param string|null $defaultRegexp
+     * @param bool $retryAuth
      */
-    public function __construct(HttpClientInterface $httpClient, ?RetryStrategyInterface $strategy, protected string $clientId, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null)
+    public function __construct(HttpClientInterface $httpClient, ?RetryStrategyInterface $strategy, protected string $clientId, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, bool $retryAuth = true)
     {
-        parent::__construct($httpClient, $userAgent, $defaultOptionsByRegexp, $defaultRegexp);
+        parent::__construct($httpClient, $userAgent, $defaultOptionsByRegexp, $defaultRegexp, $retryAuth);
         $this->httpClient = new RetryableHttpClient($this->httpClient, $strategy);
     }
 

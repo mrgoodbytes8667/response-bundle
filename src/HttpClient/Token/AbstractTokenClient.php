@@ -66,10 +66,11 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @param bool $fireRevokeOnRefresh
      * @param array $defaultOptionsByRegexp
      * @param string|null $defaultRegexp
+     * @param bool $retryAuth
      */
-    public function __construct(HttpClientInterface $httpClient, ?string $userAgent, protected bool $revokeOnRefresh, protected bool $fireRevokeOnRefresh, array $defaultOptionsByRegexp = [], string $defaultRegexp = null)
+    public function __construct(HttpClientInterface $httpClient, ?string $userAgent, protected bool $revokeOnRefresh, protected bool $fireRevokeOnRefresh, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, bool $retryAuth = false)
     {
-        parent::__construct($httpClient, $userAgent, $defaultOptionsByRegexp, $defaultRegexp);
+        parent::__construct($httpClient, $userAgent, $defaultOptionsByRegexp, $defaultRegexp, $retryAuth);
         $this->setupRevokeOnRefresh($revokeOnRefresh, $fireRevokeOnRefresh);
     }
 

@@ -46,8 +46,9 @@ abstract class AbstractClient
      * @param string|null $userAgent
      * @param array $defaultOptionsByRegexp
      * @param string|null $defaultRegexp
+     * @param bool $retryAuth
      */
-    public function __construct(protected HttpClientInterface $httpClient, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null)
+    public function __construct(protected HttpClientInterface $httpClient, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, private bool $retryAuth = true)
     {
         // Add user agent if not already set
         if (!empty($userAgent)) {
