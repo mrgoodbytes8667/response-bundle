@@ -185,7 +185,7 @@ abstract class AbstractClient
         if($this->retryAuth && $return->getStatusCode() === Response::HTTP_UNAUTHORIZED)
         {
             // Retry token
-            $this->getToken($auth, true);
+            $this->resetToken();
             $options = $this->mergeAuth($auth, $options);
             $return = $this->httpClient->request($method, $this->buildURL($url), $options);
         }
@@ -202,6 +202,10 @@ abstract class AbstractClient
     {
         $authHeader = $this->getAuthenticationOption($auth ?? new Auth());
         if (!empty($authHeader) && is_array($authHeader)) {
+            if(isset($options['auth_bearer']))
+            {
+                unset($options['auth_bearer']);
+            }
             $options = array_merge_recursive($options, $authHeader);
         }
         return $options;
@@ -213,7 +217,18 @@ abstract class AbstractClient
      * @return AccessTokenInterface|null
      * @throws NoTokenException
      */
-    abstract protected function getToken(?Auth $auth = null, bool $reset = false): ?AccessTokenInterface;
+    protected function getToken(?Auth $auth = null, bool $reset = false): ?AccessTokenInterface
+    {
+        return null;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function resetToken(): self
+    {
+        return $this;
+    }
 
     /**
      * @param Auth|null $auth

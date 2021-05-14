@@ -37,7 +37,7 @@ trait ApiAuthenticationTrait
     {
         if($reset)
         {
-            $this->token = null;
+            $this->resetToken();
         }
         if(!empty($this->token))
         {
@@ -53,6 +53,15 @@ trait ApiAuthenticationTrait
         }
 
         throw new NoTokenException();
+    }
+
+    /**
+     * @return $this
+     */
+    protected function resetToken(): self
+    {
+        $this->token = null;
+        return $this;
     }
 
     /**
