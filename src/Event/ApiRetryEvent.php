@@ -37,7 +37,7 @@ class ApiRetryEvent extends Event
      * @param mixed ...$options = client, method, url, context, [options], [content], retryCount
      * @return static
      */
-    public static function new(array ...$options)
+    public static function new(...$options)
     {
         return new static(...$options);
     }
