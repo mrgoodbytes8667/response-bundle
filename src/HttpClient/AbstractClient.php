@@ -178,13 +178,6 @@ abstract class AbstractClient
             $response->setExtraParams($params);
         }
         $return = $this->httpClient->request($method, $this->buildURL($url), $options);
-        if($this->retryAuth && $return->getStatusCode() === Response::HTTP_UNAUTHORIZED)
-        {
-            // Retry token
-            $this->resetToken();
-            $options = $this->mergeAuth($auth, $options);
-            $return = $this->httpClient->request($method, $this->buildURL($url), $options);
-        }
         return $response->withResponse($return, $type, $context, $onDeserializeCallable, $onSuccessCallable);
     }
 
