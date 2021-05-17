@@ -42,6 +42,6 @@ abstract class AbstractApiClient extends AbstractClient implements ApiClientInte
     public function __construct(HttpClientInterface $httpClient, EventDispatcherInterface $dispatcher, ?RetryStrategyInterface $strategy, protected string $clientId, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, bool $retryAuth = true)
     {
         parent::__construct($httpClient, $dispatcher, $userAgent, $defaultOptionsByRegexp, $defaultRegexp, $retryAuth);
-        $this->httpClient = new ApiRetryableHttpClient($this->httpClient, $strategy, eventDispatcher: $this->getDispatcher(), apiClient: $this);
+        $this->httpClient = new ApiRetryableHttpClient($this->httpClient, $strategy, eventDispatcher: $this->dispatcher, apiClient: $this);
     }
 }

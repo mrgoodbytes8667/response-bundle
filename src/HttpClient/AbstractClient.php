@@ -166,7 +166,7 @@ abstract class AbstractClient
         if (empty($url) || !is_string($url)) {
             throw new InvalidArgumentException();
         }
-        $options = $this->mergeAuth($auth, $options);
+        $options = $this->mergeAuth($auth ?? null, $options);
         if (!is_null($responseClass)) {
             if (is_string($responseClass) && is_subclass_of($responseClass, ClientResponseInterface::class)) {
                 $response = $responseClass::makeFrom($this->response, $params);
@@ -205,17 +205,6 @@ abstract class AbstractClient
             $options = array_merge_recursive($options, $authHeader);
         }
         return $options;
-    }
-
-    /**
-     * @param Auth|null $auth
-     * @param bool $reset
-     * @return AccessTokenInterface|null
-     * @throws NoTokenException
-     */
-    protected function getToken(?Auth $auth = null, bool $reset = false): ?AccessTokenInterface
-    {
-        return null;
     }
 
     /**
