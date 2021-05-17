@@ -236,7 +236,7 @@ abstract class AbstractClient
      *
      * @throws NoTokenException
      */
-    protected function getAuthenticationOption(?Auth $auth = null)
+    public function getAuthenticationOption(?Auth $auth = null)
     {
         return [];
     }
@@ -268,6 +268,14 @@ abstract class AbstractClient
             $eventName = get_class($event);
         }
         return $this->dispatcher->dispatch($event, $eventName);
+    }
+
+    /**
+     * @return EventDispatcherInterface
+     */
+    public function getDispatcher(): EventDispatcherInterface
+    {
+        return $this->dispatcher;
     }
 
     /**

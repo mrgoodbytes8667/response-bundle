@@ -69,7 +69,7 @@ trait ApiAuthenticationTrait
      * @return array
      * @throws NoTokenException
      */
-    protected function getAuthenticationOption(?Auth $auth = null)
+    public function getAuthenticationOption(?Auth $auth = null)
     {
         $token = $this->getToken($auth);
         if(!empty($token))
