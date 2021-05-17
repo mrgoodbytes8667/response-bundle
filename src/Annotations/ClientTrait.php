@@ -6,6 +6,10 @@ namespace Bytes\ResponseBundle\Annotations;
 
 use Bytes\ResponseBundle\Enums\TokenSource;
 
+/**
+ * Trait ClientTrait
+ * @package Bytes\ResponseBundle\Annotations
+ */
 trait ClientTrait
 {
 

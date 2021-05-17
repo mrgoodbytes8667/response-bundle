@@ -20,7 +20,7 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 trait ApiAuthenticationTrait
 {
-    use \Bytes\ResponseBundle\Annotations\ClientTrait, SecurityTrait;
+    use ClientTrait, SecurityTrait;
 
     /**
      * @var AccessTokenInterface
