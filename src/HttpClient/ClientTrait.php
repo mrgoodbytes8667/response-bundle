@@ -19,12 +19,12 @@ trait ClientTrait
     /**
      * @var string
      */
-    private $identifier;
+    private $cachedIdentifier;
 
     /**
      * @var TokenSource
      */
-    private $tokenSource;
+    private $cachedTokenSource;
 
     /**
      *
@@ -40,8 +40,8 @@ trait ClientTrait
         $annotations = $this->reader->getClassAnnotation($reflectionClass, Client::class);
         if(!empty($annotations))
         {
-            $this->identifier = $annotations?->getIdentifier();
-            $this->tokenSource = $annotations?->getTokenSource();
+            $this->cachedIdentifier = $annotations?->getIdentifier();
+            $this->cachedTokenSource = $annotations?->getTokenSource();
         }
     }
 
@@ -51,14 +51,14 @@ trait ClientTrait
     public function getIdentifier(): ?string
     {
         if(property_exists(static::class, 'identifier')) {
-            $this->identifier = static::$identifier;
+            $this->cachedIdentifier = static::$identifier;
         }
 
-        if(is_null($this->identifier))
+        if(is_null($this->cachedIdentifier))
         {
             $this->setClientAnnotations();
         }
-        return $this->identifier;
+        return $this->cachedIdentifier;
     }
 
     /**
@@ -68,14 +68,14 @@ trait ClientTrait
     {
         if(property_exists(static::class, 'tokenSource')) {
             if(!empty(static::$tokenSource) && is_string(static::$tokenSource) && TokenSource::isValid(static::$tokenSource)) {
-                $this->tokenSource = TokenSource::from(static::$tokenSource);
+                $this->cachedTokenSource = TokenSource::from(static::$tokenSource);
             }
         }
-        if(is_null($this->tokenSource))
+        if(is_null($this->cachedTokenSource))
         {
             $this->setClientAnnotations();
         }
-        return $this->tokenSource;
+        return $this->cachedTokenSource;
     }
 
 }
