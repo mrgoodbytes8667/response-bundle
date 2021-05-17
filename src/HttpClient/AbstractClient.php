@@ -37,19 +37,15 @@ abstract class AbstractClient
     protected $response;
 
     /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
      * AbstractClient constructor.
      * @param HttpClientInterface $httpClient
+     * @param EventDispatcherInterface $dispatcher
      * @param string|null $userAgent
      * @param array $defaultOptionsByRegexp
      * @param string|null $defaultRegexp
      * @param bool $retryAuth
      */
-    public function __construct(protected HttpClientInterface $httpClient, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, private bool $retryAuth = true)
+    public function __construct(protected HttpClientInterface $httpClient, protected EventDispatcherInterface $dispatcher, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, private bool $retryAuth = true)
     {
         // Add user agent if not already set
         if (!empty($userAgent)) {
@@ -269,16 +265,4 @@ abstract class AbstractClient
         }
         return $this->dispatcher->dispatch($event, $eventName);
     }
-
-    /**
-     * @param EventDispatcherInterface $dispatcher
-     * @return $this
-     */
-    public function setDispatcher(EventDispatcherInterface $dispatcher): self
-    {
-        $this->dispatcher = $dispatcher;
-        return $this;
-    }
-
-
 }

@@ -28,7 +28,6 @@ class HttpClientPass implements CompilerPassInterface
             $definition = $container->findDefinition($id);
             $definition->addMethodCall('setSerializer', [new Reference('serializer')]);
             $definition->addMethodCall('setValidator', [new Reference('validator')]);
-            $definition->addMethodCall('setDispatcher', [new Reference('event_dispatcher')]);
             $definition->addMethodCall('setReader', [new Reference('annotations.cached_reader')]);
         }
 

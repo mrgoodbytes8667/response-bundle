@@ -17,6 +17,7 @@ use Bytes\ResponseBundle\Routing\UrlGeneratorTrait;
 use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
 use LogicException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\SerializerAwareTrait;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -61,6 +62,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     /**
      * AbstractTokenClient constructor.
      * @param HttpClientInterface $httpClient
+     * @param EventDispatcherInterface $dispatcher
      * @param string|null $userAgent
      * @param bool $revokeOnRefresh
      * @param bool $fireRevokeOnRefresh
@@ -68,9 +70,9 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @param string|null $defaultRegexp
      * @param bool $retryAuth
      */
-    public function __construct(HttpClientInterface $httpClient, ?string $userAgent, protected bool $revokeOnRefresh, protected bool $fireRevokeOnRefresh, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, bool $retryAuth = false)
+    public function __construct(HttpClientInterface $httpClient, EventDispatcherInterface $dispatcher, ?string $userAgent, protected bool $revokeOnRefresh, protected bool $fireRevokeOnRefresh, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, bool $retryAuth = false)
     {
-        parent::__construct($httpClient, $userAgent, $defaultOptionsByRegexp, $defaultRegexp, $retryAuth);
+        parent::__construct($httpClient, $dispatcher, $userAgent, $defaultOptionsByRegexp, $defaultRegexp, $retryAuth);
         $this->setupRevokeOnRefresh($revokeOnRefresh, $fireRevokeOnRefresh);
     }
 
@@ -220,7 +222,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @param Auth|null $auth
      * @return array
      */
-    final protected function getAuthenticationOption(?Auth $auth = null)
+    final public function getAuthenticationOption(?Auth $auth = null)
     {
         return [];
     }
