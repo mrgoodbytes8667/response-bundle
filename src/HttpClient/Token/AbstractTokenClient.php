@@ -221,6 +221,18 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
 
     /**
      * @param Auth|null $auth
+     * @param array $options
+     * @param bool $refresh
+     * @param array|null $authHeader
+     * @return array
+     */
+    final public function mergeAuth(?Auth $auth = null, array $options = [], bool $refresh = false, array $authHeader = null): array
+    {
+        return $options;
+    }
+
+    /**
+     * @param Auth|null $auth
      * @param bool $refresh
      * @return array
      */
