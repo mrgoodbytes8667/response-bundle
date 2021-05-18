@@ -68,7 +68,13 @@ trait AccessTokenTrait
      * Space separated scopes
      * @var string|array|null
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotNull()
+     * @Assert\AtLeastOneOf({
+     *     @Assert\Blank(),
+     *     @Assert\NotNull(),
+     *     @Assert\Length(
+     *         max = 255
+     *     )
+     * })
      */
     private $scope;
 
@@ -207,12 +213,12 @@ trait AccessTokenTrait
      * @param string|array $scope
      * @return $this
      */
-    public function setScope(string|array $scope = ''): self
+    public function setScope(string|array|null $scope = ''): self
     {
         if (is_array($scope)) {
             $scope = implode(' ', $scope);
         }
-        $this->scope = $scope;
+        $this->scope = $scope ?? '';
         return $this;
     }
 
