@@ -14,6 +14,7 @@ use Bytes\ResponseBundle\Interfaces\ClientTokenResponseInterface;
 use Bytes\ResponseBundle\Objects\Push;
 use Bytes\ResponseBundle\Routing\OAuthInterface;
 use Bytes\ResponseBundle\Routing\UrlGeneratorTrait;
+use Bytes\ResponseBundle\Token\Exceptions\NoTokenException;
 use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
 use LogicException;
@@ -220,9 +221,10 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
 
     /**
      * @param Auth|null $auth
+     * @param bool $refresh
      * @return array
      */
-    final public function getAuthenticationOption(?Auth $auth = null)
+    final public function getAuthenticationOption(?Auth $auth = null, bool $refresh = false): array
     {
         return [];
     }

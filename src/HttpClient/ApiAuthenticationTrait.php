@@ -6,6 +6,7 @@ namespace Bytes\ResponseBundle\HttpClient;
 
 use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Event\ObtainValidTokenEvent;
+use Bytes\ResponseBundle\Event\RefreshTokenEvent;
 use Bytes\ResponseBundle\Security\SecurityTrait;
 use Bytes\ResponseBundle\Token\Exceptions\NoTokenException;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
@@ -56,6 +57,27 @@ trait ApiAuthenticationTrait
     }
 
     /**
+     * @return AccessTokenInterface|null
+     * @throws NoTokenException
+     */
+    public function refreshToken(): ?AccessTokenInterface
+    {
+        if(empty($this->token))
+        {
+            throw new NoTokenException('No token was found to refresh.');
+        }
+
+        /** @var RefreshTokenEvent $event */
+        $event = $this->dispatch(RefreshTokenEvent::new($this->token));
+        if (!empty($event) && $event instanceof Event) {
+            $this->token = $event?->getToken();
+            return $this->token;
+        }
+
+        throw new NoTokenException('Token could not be refreshed.');
+    }
+
+    /**
      * @return $this
      */
     protected function resetToken(): self
@@ -66,12 +88,18 @@ trait ApiAuthenticationTrait
 
     /**
      * @param Auth|null $auth
+     * @param bool $refresh
      * @return array
      * @throws NoTokenException
      */
-    public function getAuthenticationOption(?Auth $auth = null)
+    public function getAuthenticationOption(?Auth $auth = null, bool $refresh = false): array
     {
-        $token = $this->getToken($auth);
+        if($refresh)
+        {
+            $token = $this->refreshToken();
+        } else {
+            $token = $this->getToken($auth);
+        }
         if(!empty($token))
         {
             return ['auth_bearer' => $token->getAccessToken()];

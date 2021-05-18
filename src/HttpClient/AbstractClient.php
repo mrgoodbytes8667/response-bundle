@@ -184,12 +184,14 @@ abstract class AbstractClient
     /**
      * @param Auth|null $auth
      * @param array $options
+     * @param bool $refresh
+     * @param array|null $authHeader
      * @return array
      * @throws NoTokenException
      */
-    protected function mergeAuth(?Auth $auth, array $options): array
+    public function mergeAuth(?Auth $auth = null, array $options = [], bool $refresh = false, array $authHeader = null): array
     {
-        $authHeader = $this->getAuthenticationOption($auth ?? new Auth());
+        $authHeader = $authHeader ?? $this->getAuthenticationOption(auth: $auth ?? new Auth(), refresh: $refresh);
         if (!empty($authHeader) && is_array($authHeader)) {
             if(isset($options['auth_bearer']))
             {
@@ -210,11 +212,12 @@ abstract class AbstractClient
 
     /**
      * @param Auth|null $auth
+     * @param bool $refresh
      * @return array
      *
      * @throws NoTokenException
      */
-    public function getAuthenticationOption(?Auth $auth = null)
+    public function getAuthenticationOption(?Auth $auth = null, bool $refresh = false): array
     {
         return [];
     }
