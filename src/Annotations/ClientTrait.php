@@ -24,9 +24,9 @@ trait ClientTrait
     private $tokenSource;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getIdentifier(): string
+    public function getIdentifier(): ?string
     {
         return $this->identifier;
     }

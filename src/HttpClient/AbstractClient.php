@@ -8,6 +8,7 @@ use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
 use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Annotations\Client;
 use Bytes\ResponseBundle\Enums\TokenSource;
+use Bytes\ResponseBundle\Event\DispatcherTrait;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use Bytes\ResponseBundle\Token\Exceptions\NoTokenException;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
@@ -29,7 +30,7 @@ use UnexpectedValueException;
  */
 abstract class AbstractClient
 {
-    use ClientTrait;
+    use ClientTrait, DispatcherTrait;
 
     /**
      * @var ClientResponseInterface
@@ -236,18 +237,5 @@ abstract class AbstractClient
     protected function buildURL(string $path, string $prepend = '')
     {
         return ($prepend ?? '') . $path;
-    }
-
-    /**
-     * @param StoppableEventInterface $event
-     * @param string|null $eventName
-     * @return object
-     */
-    protected function dispatch(StoppableEventInterface $event, string $eventName = null)
-    {
-        if(empty($eventName)) {
-            $eventName = get_class($event);
-        }
-        return $this->dispatcher->dispatch($event, $eventName);
     }
 }
