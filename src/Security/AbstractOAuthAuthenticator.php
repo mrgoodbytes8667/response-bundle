@@ -17,16 +17,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
@@ -103,14 +104,15 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator
 
         $tokenResponse = $this->client->exchange($code);
 
+        if (empty($tokenResponse)) {
+            throw new AuthenticationException();
+        }
+
         $user = $this->getUser($tokenResponse);
 
         // check credentials - e.g. make sure the password is valid
 
-//        $this->tokenService->createToken(['credentials' => $tokenResponse, 'service' => $this->getService(), 'user' => $user]);
-//        $this->em->flush();
-
-        return new SelfValidatingPassport($user);
+        return new SelfValidatingPassport(new UserBadge($user->getUsername()));
     }
 
     /**
@@ -130,7 +132,8 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    protected function getUser(AccessTokenInterface $tokenResponse) {
+    protected function getUser(AccessTokenInterface $tokenResponse)
+    {
         $validate = $this->client->validateToken($tokenResponse);
 
         $user = $this->userRepository->findOneBy([$this->userIdField => $validate->getUserId()]);
