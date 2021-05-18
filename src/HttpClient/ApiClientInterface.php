@@ -20,4 +20,14 @@ interface ApiClientInterface
      * @throws NoTokenException
      */
     public function getAuthenticationOption(?Auth $auth = null, bool $refresh = false): array;
+
+    /**
+     * @param Auth|null $auth
+     * @param array $options
+     * @param bool $refresh
+     * @param array|null $authHeader
+     * @return array
+     * @throws NoTokenException
+     */
+    public function mergeAuth(?Auth $auth = null, array $options = [], bool $refresh = false, array $authHeader = null): array;
 }
