@@ -4,6 +4,7 @@
 namespace Bytes\ResponseBundle\Event;
 
 
+use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -26,5 +27,14 @@ trait DispatcherTrait
             $eventName = get_class($event);
         }
         return $this->dispatcher->dispatch($event, $eventName);
+    }
+
+    /**
+     * @param AccessTokenInterface $token
+     * @return RefreshTokenEvent
+     */
+    protected function dispatchRefreshTokenEvent(AccessTokenInterface $token)
+    {
+        return $this->dispatch(RefreshTokenEvent::new($token));
     }
 }
