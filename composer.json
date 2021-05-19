@@ -16,6 +16,7 @@
         "symfony/framework-bundle": "^5.2",
         "symfony/security-core": "^5.2",
         "symfony/security-http": "^5.2",
+        "symfony/security-guard": "^5.2",
         "symfony/serializer": "^5.2",
         "symfony/string": "^5.2",
         "symfony/uid": "^5.2"
