@@ -12,7 +12,6 @@ use Bytes\ResponseBundle\Enums\TokenSource;
  */
 trait ClientTrait
 {
-
     /**
      * @var string
      */
@@ -55,8 +54,7 @@ trait ClientTrait
      */
     public function setTokenSource(TokenSource|string|null $tokenSource): self
     {
-        if(!is_null($tokenSource) && !($tokenSource instanceof TokenSource))
-        {
+        if (!is_null($tokenSource) && !($tokenSource instanceof TokenSource)) {
             $tokenSource = TokenSource::from($tokenSource);
         }
         $this->tokenSource = $tokenSource;
