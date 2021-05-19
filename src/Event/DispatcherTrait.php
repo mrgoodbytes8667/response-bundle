@@ -108,7 +108,7 @@ trait DispatcherTrait
      * @param TokenValidationResponseInterface $validation
      * @return TokenValidatedEvent
      */
-    protected function dispatchTokenValidatedEvent(AccessTokenInterface $token, TokenValidationResponseInterface $validation){
-        return $this->dispatch(TokenValidatedEvent::new(token: $token, validation: $validation));
+    protected function dispatchTokenValidatedEvent(AccessTokenInterface $token, TokenValidationResponseInterface $validation, ?UserInterface $user = null){
+        return $this->dispatch(TokenValidatedEvent::new(token: $token, validation: $validation, user: $user));
     }
 }
