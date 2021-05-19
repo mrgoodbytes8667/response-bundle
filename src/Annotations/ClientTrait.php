@@ -6,9 +6,12 @@ namespace Bytes\ResponseBundle\Annotations;
 
 use Bytes\ResponseBundle\Enums\TokenSource;
 
+/**
+ * Trait ClientTrait
+ * @package Bytes\ResponseBundle\Annotations
+ */
 trait ClientTrait
 {
-
     /**
      * @var string
      */
@@ -20,9 +23,9 @@ trait ClientTrait
     private $tokenSource;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getIdentifier(): string
+    public function getIdentifier(): ?string
     {
         return $this->identifier;
     }
@@ -51,8 +54,7 @@ trait ClientTrait
      */
     public function setTokenSource(TokenSource|string|null $tokenSource): self
     {
-        if(!is_null($tokenSource) && !($tokenSource instanceof TokenSource))
-        {
+        if (!is_null($tokenSource) && !($tokenSource instanceof TokenSource)) {
             $tokenSource = TokenSource::from($tokenSource);
         }
         $this->tokenSource = $tokenSource;

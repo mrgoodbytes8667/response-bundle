@@ -8,6 +8,7 @@ use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
 use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Annotations\Client;
 use Bytes\ResponseBundle\Enums\TokenSource;
+use Bytes\ResponseBundle\Event\DispatcherTrait;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use Bytes\ResponseBundle\Token\Exceptions\NoTokenException;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
@@ -29,7 +30,7 @@ use UnexpectedValueException;
  */
 abstract class AbstractClient
 {
-    use ClientTrait;
+    use ClientTrait, DispatcherTrait;
 
     /**
      * @var ClientResponseInterface
@@ -166,7 +167,7 @@ abstract class AbstractClient
         if (empty($url) || !is_string($url)) {
             throw new InvalidArgumentException();
         }
-        $options = $this->mergeAuth($auth, $options);
+        $options = $this->mergeAuth($auth ?? null, $options);
         if (!is_null($responseClass)) {
             if (is_string($responseClass) && is_subclass_of($responseClass, ClientResponseInterface::class)) {
                 $response = $responseClass::makeFrom($this->response, $params);
@@ -178,25 +179,20 @@ abstract class AbstractClient
             $response->setExtraParams($params);
         }
         $return = $this->httpClient->request($method, $this->buildURL($url), $options);
-        if($this->retryAuth && $return->getStatusCode() === Response::HTTP_UNAUTHORIZED)
-        {
-            // Retry token
-            $this->resetToken();
-            $options = $this->mergeAuth($auth, $options);
-            $return = $this->httpClient->request($method, $this->buildURL($url), $options);
-        }
         return $response->withResponse($return, $type, $context, $onDeserializeCallable, $onSuccessCallable);
     }
 
     /**
      * @param Auth|null $auth
      * @param array $options
+     * @param bool $refresh
+     * @param array|null $authHeader
      * @return array
      * @throws NoTokenException
      */
-    protected function mergeAuth(?Auth $auth, array $options): array
+    public function mergeAuth(?Auth $auth = null, array $options = [], bool $refresh = false, array $authHeader = null): array
     {
-        $authHeader = $this->getAuthenticationOption($auth ?? new Auth());
+        $authHeader = $authHeader ?? $this->getAuthenticationOption(auth: $auth ?? new Auth(), refresh: $refresh);
         if (!empty($authHeader) && is_array($authHeader)) {
             if(isset($options['auth_bearer']))
             {
@@ -205,17 +201,6 @@ abstract class AbstractClient
             $options = array_merge_recursive($options, $authHeader);
         }
         return $options;
-    }
-
-    /**
-     * @param Auth|null $auth
-     * @param bool $reset
-     * @return AccessTokenInterface|null
-     * @throws NoTokenException
-     */
-    protected function getToken(?Auth $auth = null, bool $reset = false): ?AccessTokenInterface
-    {
-        return null;
     }
 
     /**
@@ -228,11 +213,12 @@ abstract class AbstractClient
 
     /**
      * @param Auth|null $auth
+     * @param bool $refresh
      * @return array
      *
      * @throws NoTokenException
      */
-    protected function getAuthenticationOption(?Auth $auth = null)
+    public function getAuthenticationOption(?Auth $auth = null, bool $refresh = false): array
     {
         return [];
     }
@@ -251,18 +237,5 @@ abstract class AbstractClient
     protected function buildURL(string $path, string $prepend = '')
     {
         return ($prepend ?? '') . $path;
-    }
-
-    /**
-     * @param StoppableEventInterface $event
-     * @param string|null $eventName
-     * @return object
-     */
-    protected function dispatch(StoppableEventInterface $event, string $eventName = null)
-    {
-        if(empty($eventName)) {
-            $eventName = get_class($event);
-        }
-        return $this->dispatcher->dispatch($event, $eventName);
     }
 }
