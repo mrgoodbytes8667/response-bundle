@@ -1,10 +1,15 @@
 <?php
 
+/**
+ *
+ */
+
 
 namespace Bytes\ResponseBundle\HttpClient;
 
 
-use Bytes\ResponseBundle\Event\ApiRetryEvent;
+use Bytes\ResponseBundle\Event\DispatcherTrait;
+use LogicException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpClient\AsyncDecoratorTrait;
@@ -17,18 +22,29 @@ use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use function get_class;
 
 /**
  * Class ApiRetryableHttpClient
  * RetryableHttpClient that lets you modify the request (for API token renewal)
+ * Based on the RetryableHttpClient from https://github.com/symfony/http-client/blob/cdaf3df771d3ea9b05696c9e91281ffd056aff66/RetryableHttpClient.php
  * @package Bytes\ResponseBundle\HttpClient
  */
 class ApiRetryableHttpClient implements HttpClientInterface
 {
-    use AsyncDecoratorTrait;
+    use AsyncDecoratorTrait, DispatcherTrait;
 
+    /**
+     * @var GenericRetryStrategy|RetryStrategyInterface
+     */
     private $strategy;
+    /**
+     * @var int
+     */
     private $maxRetries;
+    /**
+     * @var LoggerInterface|NullLogger
+     */
     private $logger;
     /**
      * @var EventDispatcherInterface
@@ -53,6 +69,12 @@ class ApiRetryableHttpClient implements HttpClientInterface
         $this->apiClient = $apiClient;
     }
 
+    /**
+     * @param string $method
+     * @param string $url
+     * @param array $options
+     * @return ResponseInterface
+     */
     public function request(string $method, string $url, array $options = []): ResponseInterface
     {
         if ($this->maxRetries <= 0) {
@@ -79,7 +101,7 @@ class ApiRetryableHttpClient implements HttpClientInterface
                 if ('' !== $context->getInfo('primary_ip')) {
                     $shouldRetry = $this->strategy->shouldRetry($context, null, $exception);
                     if (null === $shouldRetry) {
-                        throw new \LogicException(sprintf('The "%s::shouldRetry()" method must not return null when called with an exception.', \get_class($this->decider)));
+                        throw new LogicException(sprintf('The "%s::shouldRetry()" method must not return null when called with an exception.', get_class($this->decider)));
                     }
 
                     if (false === $shouldRetry) {
@@ -119,7 +141,7 @@ class ApiRetryableHttpClient implements HttpClientInterface
                 }
 
                 if (null === $shouldRetry = $this->strategy->shouldRetry($context, $content, null)) {
-                    throw new \LogicException(sprintf('The "%s::shouldRetry()" method must not return null when called with a body.', \get_class($this->strategy)));
+                    throw new LogicException(sprintf('The "%s::shouldRetry()" method must not return null when called with a body.', get_class($this->strategy)));
                 }
 
                 if (false === $shouldRetry) {
@@ -132,18 +154,19 @@ class ApiRetryableHttpClient implements HttpClientInterface
                 }
             }
 
-            /** @var ApiRetryEvent|null $event */
-            $event = $this->dispatcher->dispatch(ApiRetryEvent::new(client: $this->apiClient, method: $method, url: $url, options: $options, context: $context, responseContent: $content, retryCount: $retryCount));
-            if(!is_null($event)) {
-                if (false === $event->getShouldRetry()) {
-                    $context->passthru();
-                    yield $firstChunk;
-                    yield $context->createChunk($content);
-                    $content = '';
+            if (!is_null($this->apiClient)) {
+                $event = $this->dispatchApiRetryEvent(client: $this->apiClient, method: $method, url: $url, context: $context, options: $options, content: $content, retryCount: $retryCount);
+                if (!is_null($event)) {
+                    if (false === $event->getShouldRetry()) {
+                        $context->passthru();
+                        yield $firstChunk;
+                        yield $context->createChunk($content);
+                        $content = '';
 
-                    return;
+                        return;
+                    }
+                    $options = $event->getOptions();
                 }
-                $options = $event->getOptions();
             }
 
             $context->getResponse()->cancel();
@@ -167,6 +190,10 @@ class ApiRetryableHttpClient implements HttpClientInterface
         });
     }
 
+    /**
+     * @param array $headers
+     * @return int|null
+     */
     private function getDelayFromHeader(array $headers): ?int
     {
         if (null !== $after = $headers['retry-after'][0] ?? null) {
