@@ -45,5 +45,8 @@
             "Bytes\\ResponseBundle\\": "src/",
             "Bytes\\ResponseBundle\\Tests\\": "Tests/"
         }
+    },
+    "conflict": {
+        "symfony/http-client": "<5.2.1"
     }
 }
