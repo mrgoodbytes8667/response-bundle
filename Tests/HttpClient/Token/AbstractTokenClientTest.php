@@ -84,4 +84,19 @@ class AbstractTokenClientTest extends TestCase
         $this->assertResponseStatusCodeSame($response, Http::HTTP_NO_CONTENT);
         $this->assertResponseHasNoContent($response);
     }
+
+    /**
+     *
+     */
+    public function testFinalMethods()
+    {
+        $client = $this->getMockForAbstractClass(AbstractTokenClient::class, [HttpClient::create(), new EventDispatcher(), '', true, false]);
+
+        // mergeAuth
+        $options = $this->faker->words(3);
+        $this->assertEquals($options, $client->mergeAuth(options: $options));
+
+        // getAuthenticationOption
+        $this->assertCount(0, $client->getAuthenticationOption());
+    }
 }
