@@ -65,6 +65,11 @@ interface TokenValidationResponseInterface
     public function isMatch(...$args): bool;
 
     /**
+     * @return \DateTimeInterface|null
+     */
+    public function getExpiresAt(): ?\DateTimeInterface;
+
+    /**
      * @return bool
      */
     public function hasExpired(): bool;
