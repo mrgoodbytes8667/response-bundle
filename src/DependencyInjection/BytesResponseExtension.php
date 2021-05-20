@@ -56,9 +56,9 @@ class BytesResponseExtension extends Extension implements ExtensionInterface, Pr
             foreach ($container->getExtensions() as $name => $extension) {
                 if($extension instanceof ResponseExtensionInterface) {
                     switch ($name) {
-                        case 'bytes_discord':
+                        case 'bytes_discord_client':
                         case 'bytes_twitch_client':
-                            $clientConfig = self::processResponseClientBundle($name === 'bytes_discord' ? 'discord' : 'twitch', $config, $extension);
+                            $clientConfig = self::processResponseClientBundle($name === 'bytes_discord_client' ? 'discord' : 'twitch', $config, $extension);
                             if (!empty($clientConfig)) {
                                 $container->prependExtensionConfig($name, $clientConfig);
                             }
