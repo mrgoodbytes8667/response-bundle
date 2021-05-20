@@ -7,7 +7,7 @@ namespace Bytes\ResponseBundle\Handler;
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\HttpClient\AbstractClient;
 use Bytes\ResponseBundle\HttpClient\Api\AbstractApiClient;
-use Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient;
+use Bytes\ResponseBundle\HttpClient\Token\TokenClientInterface;
 use function Symfony\Component\String\u;
 
 /**
@@ -20,7 +20,7 @@ class HttpClientLocator extends Locator
      * @param string $identifier
      * @param TokenSource $tokenSource
      * @param string $token
-     * @return AbstractClient|AbstractApiClient|AbstractTokenClient|null
+     * @return AbstractClient|AbstractApiClient|TokenClientInterface|null
      */
     public function getClient(string $identifier, TokenSource $tokenSource, string $token = '-')
     {
@@ -45,7 +45,7 @@ class HttpClientLocator extends Locator
     /**
      * @param string $identifier
      * @param TokenSource $tokenSource
-     * @return AbstractTokenClient|null
+     * @return TokenClientInterface|null
      */
     public function getTokenClient(string $identifier, TokenSource $tokenSource)
     {
