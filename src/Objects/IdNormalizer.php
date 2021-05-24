@@ -40,6 +40,9 @@ class IdNormalizer
             $id = $object->getId();
         } elseif (is_string($object)) {
             $id = $object;
+        } elseif (is_int($object))
+        {
+            $id = (string)$object;
         }
         if (empty($id) && !$allowNull) {
             throw new InvalidArgumentException($message);

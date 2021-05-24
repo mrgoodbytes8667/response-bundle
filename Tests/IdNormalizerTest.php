@@ -31,6 +31,17 @@ class IdNormalizerTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function testNormalizeIdInt()
+    {
+        $message = $this->faker->sentence();
+        $result = IdNormalizer::normalizeIdArgument(123, $message, false);
+
+        $this->assertEquals('123', $result);
+    }
+
+    /**
      * @dataProvider provideIdsForDisallowNulls
      * @param $input
      */
