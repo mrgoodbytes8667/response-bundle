@@ -39,6 +39,7 @@ class Dispatcher
         return [
             'refreshTokenEvent' => $this->dispatchRefreshTokenEvent($token),
             'revokeTokenEvent' => $this->dispatchRevokeTokenEvent($token),
+            'validateTokenEvent' => $this->dispatchValidateTokenEvent($token),
             'tokenGrantedEvent' => $this->dispatchTokenGrantedEvent($token),
             'tokenRevokedEvent' => $this->dispatchTokenRevokedEvent($token),
             'tokenRefreshedEvent' => $this->dispatchTokenRefreshedEvent($token, $token),

@@ -42,7 +42,7 @@ class DispatcherTraitTest extends TestCase
         $mock = new Dispatcher();
 
         $results = $mock->dispatchTokenEvents($token);
-        $this->assertCount(5, $results);
+        $this->assertCount(6, $results);
         foreach($results as $i)
         {
             $this->assertInstanceOf(Event::class, $i);
