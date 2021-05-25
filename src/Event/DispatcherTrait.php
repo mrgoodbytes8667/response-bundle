@@ -80,11 +80,12 @@ trait DispatcherTrait
 
     /**
      * @param AccessTokenInterface $token
+     * @param UserInterface|null $user
      * @return ValidateTokenEvent
      */
-    protected function dispatchValidateTokenEvent(AccessTokenInterface $token)
+    protected function dispatchValidateTokenEvent(AccessTokenInterface $token, ?UserInterface $user = null)
     {
-        return $this->dispatch(ValidateTokenEvent::new(token: $token));
+        return $this->dispatch(ValidateTokenEvent::new(token: $token, user: $user));
     }
 
     /**
