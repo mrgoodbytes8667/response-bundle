@@ -7,25 +7,22 @@ namespace Bytes\ResponseBundle\Security;
 use Bytes\ResponseBundle\HttpClient\Token\TokenClientInterface;
 use Bytes\ResponseBundle\Routing\OAuthInterface;
 use Bytes\ResponseBundle\Security\Traits\AuthenticationSuccessTrait;
+use Bytes\ResponseBundle\Security\Traits\CreateAuthenticatedTokenTrait;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use LogicException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
-use Symfony\Component\Security\Http\Authenticator\Passport\UserPassportInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -36,7 +33,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
  */
 abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
 {
-    use TargetPathTrait, AuthenticationSuccessTrait;
+    use TargetPathTrait, AuthenticationSuccessTrait, CreateAuthenticatedTokenTrait;
 
     /**
      * AbstractOAuthAuthenticator constructor.
@@ -149,25 +146,6 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
         }
 
         return $user;
-    }
-
-    /**
-     * Creates a PostAuthenticationGuardToken with the entity id of the token attached as attribute accessToken
-     *
-     * @param PassportInterface $passport
-     * @param string $firewallName
-     *
-     * @return PostAuthenticationGuardToken
-     */
-    public function createAuthenticatedToken(PassportInterface $passport, string $firewallName): TokenInterface
-    {
-        if (!$passport instanceof UserPassportInterface) {
-            throw new LogicException(sprintf('Passport does not contain a user, overwrite "createAuthenticatedToken()" in "%s" to create a custom authenticated token.', static::class));
-        }
-        $token = new PostAuthenticationGuardToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles());
-        $token->setAttribute('accessToken', $passport->getAttribute('accessToken')?->getId());
-        $token->setAttribute('tokenIdentifier', $passport->getAttribute('tokenIdentifier'));
-        return $token;
     }
 
     /**
