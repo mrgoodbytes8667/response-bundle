@@ -18,11 +18,12 @@ interface TokenValidateInterface
 {
     /**
      * Validates the provided access token
-     * Should fire a TokenValidatedEvent on success
+     * Should fire a TokenValidatedEvent on success if $fireCallback is true
      * @param AccessTokenInterface $token
+     * @param bool $fireCallback Should a TokenValidatedEvent be fired?
      * @return TokenValidationResponseInterface|null
      *
      * @see TokenValidatedEvent
      */
-    public function validateToken(AccessTokenInterface $token): ?TokenValidationResponseInterface;
+    public function validateToken(AccessTokenInterface $token, bool $fireCallback = false): ?TokenValidationResponseInterface;
 }
