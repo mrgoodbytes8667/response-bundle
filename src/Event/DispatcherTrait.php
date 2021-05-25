@@ -80,6 +80,15 @@ trait DispatcherTrait
 
     /**
      * @param AccessTokenInterface $token
+     * @return ValidateTokenEvent
+     */
+    protected function dispatchValidateTokenEvent(AccessTokenInterface $token)
+    {
+        return $this->dispatch(ValidateTokenEvent::new(token: $token));
+    }
+
+    /**
+     * @param AccessTokenInterface $token
      * @return TokenGrantedEvent
      */
     protected function dispatchTokenGrantedEvent(AccessTokenInterface $token){
