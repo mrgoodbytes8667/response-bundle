@@ -115,6 +115,7 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
 
         $passport = new SelfValidatingPassport(new UserBadge($user->getUsername()));
         $passport->setAttribute('accessToken', $tokenResponse);
+        $passport->setAttribute('tokenIdentifier', $tokenResponse->getIdentifier());
         return $passport;
     }
 
@@ -165,6 +166,7 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
         }
         $token = new PostAuthenticationGuardToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles());
         $token->setAttribute('accessToken', $passport->getAttribute('accessToken')?->getId());
+        $token->setAttribute('tokenIdentifier', $passport->getAttribute('tokenIdentifier'));
         return $token;
     }
 
