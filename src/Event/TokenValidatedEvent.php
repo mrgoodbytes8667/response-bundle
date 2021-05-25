@@ -27,6 +27,11 @@ class TokenValidatedEvent extends Event
      */
     public function __construct(private AccessTokenInterface $token, private TokenValidationResponseInterface $validation, private ?UserInterface $user = null)
     {
+        if(empty($user) && method_exists($token, 'getUser'))
+        {
+            $user = $token->getUser();
+            $this->setUser($user);
+        }
     }
 
     /**
