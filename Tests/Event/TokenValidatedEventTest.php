@@ -5,6 +5,7 @@ namespace Bytes\ResponseBundle\Tests\Event;
 
 
 use Bytes\ResponseBundle\Event\TokenValidatedEvent;
+use Bytes\ResponseBundle\Tests\Fixtures\Token;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Bytes\ResponseBundle\Token\Interfaces\TokenValidationResponseInterface;
 use PHPUnit\Framework\TestCase;
@@ -38,5 +39,19 @@ class TokenValidatedEventTest extends TestCase
         $this->assertEquals($token2, $event->getToken());
         $this->assertEquals($validation2, $event->getValidation());
         $this->assertEquals($user2, $event->getUser());
+    }
+
+    public function testNewWithUserFromToken()
+    {
+        $user = $this->getMockBuilder(UserInterface::class)->getMock();
+        $token = new Token();
+        $token->setUser($user);
+
+        $validation = $this->getMockBuilder(TokenValidationResponseInterface::class)->getMock();
+
+        $event = TokenValidatedEvent::new($token, $validation);
+        $this->assertEquals($token, $event->getToken());
+        $this->assertEquals($validation, $event->getValidation());
+        $this->assertEquals($user, $event->getUser());
     }
 }
