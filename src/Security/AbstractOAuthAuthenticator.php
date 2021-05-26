@@ -4,6 +4,7 @@
 namespace Bytes\ResponseBundle\Security;
 
 
+use Bytes\ResponseBundle\Handler\Locator;
 use Bytes\ResponseBundle\HttpClient\Token\TokenClientInterface;
 use Bytes\ResponseBundle\Routing\OAuthInterface;
 use Bytes\ResponseBundle\Security\Traits\AuthenticationSuccessTrait;
@@ -28,8 +29,10 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use function Symfony\Component\String\u;
 
 /**
@@ -46,7 +49,7 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      * @param ServiceEntityRepository $userRepository
      * @param Security $security
      * @param UrlGeneratorInterface $urlGenerator
-     * @param OAuthInterface $oAuth
+     * @param Locator $httpClientOAuthLocator
      * @param TokenClientInterface $client
      * @param CsrfTokenManagerInterface $csrfTokenManager
      * @param string $loginRoute
@@ -54,9 +57,8 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      * @param string $userIdField
      * @param string $registrationRoute
      */
-    public function __construct(protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security, protected UrlGeneratorInterface $urlGenerator, protected OAuthInterface $oAuth, protected TokenClientInterface $client, protected CsrfTokenManagerInterface $csrfTokenManager, protected string $loginRoute, protected string $loginSuccessRoute, protected string $userIdField, protected string $registrationRoute)
+    public function __construct(protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security, protected UrlGeneratorInterface $urlGenerator, protected Locator $httpClientOAuthLocator, protected TokenClientInterface $client, protected CsrfTokenManagerInterface $csrfTokenManager, protected string $loginRoute, protected string $loginSuccessRoute, protected string $userIdField, protected string $registrationRoute)
     {
-        $client->setOAuth($oAuth);
     }
 
     /**
@@ -72,6 +74,20 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
         if (!in_array($request->attributes->get('_route'), [$this->registrationRoute, $this->loginRoute])) {
             return false;
         }
+
+        if (!$request->query->has('code') || !$request->query->has('state')) {
+            return false;
+        }
+
+        if ($request->attributes->get('_route') == $this->loginRoute && !$this->security->getUser()) {
+            return true;
+        }
+
+        if ($request->attributes->get('_route') == $this->registrationRoute) {
+            return true;
+        }
+
+        return false;
 
         // if there is already an authenticated user (likely due to the session)
         // and we are not in the registration portion then return false and skip authentication: there is no need.
@@ -105,29 +121,38 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      * presented password and the CSRF token value.
      *
      * You may throw any AuthenticationException in this method in case of error (e.g.
-     * a UsernameNotFoundException when the user cannot be found).
+     * a UserNotFoundException when the user cannot be found).
      *
      * @param Request $request
      * @return PassportInterface
-     *
-     * @throws AuthenticationException
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function authenticate(Request $request): PassportInterface
     {
+        $oauthTag = u($this->getOAuthTag());
         $incomingState = u($request->query->get('state'));
         $code = $request->query->get('code');
-        $state = $incomingState->beforeLast('|||')->toString();
+        $state = $incomingState->slice(length: 26)->toString();
 
-        $csrf = $incomingState->afterLast('|||')->toString();
-        $valid = $this->csrfTokenManager->isTokenValid(new CsrfToken($state, $csrf));
+        $csrf = $incomingState->slice(start: 26)->toString();
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($state, $csrf))) {
+            throw new InvalidCsrfTokenException();
+        }
 
         if ($request->attributes->get('_route') == $this->registrationRoute) {
             $user = $this->security->getUser();
-            if(!$this->validateRegistrationState($state, $user))
-            {
+            if (!$this->validateRegistrationState($state, $user)) {
                 throw new InvalidCsrfTokenException();
             }
+            $oauthTag->append('-USER');
+        } else {
+            $oauthTag->append('-LOGIN');
         }
+
+        $this->client->setOAuth($this->httpClientOAuthLocator->get($oauthTag->toString()));
 
         $tokenResponse = $this->client->exchange($code);
 
@@ -152,12 +177,40 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
     }
 
     /**
+     * @return string
+     */
+    abstract protected function getOAuthTag(): string;
+
+    /**
      * For user registrations, validate the state against the passed user
      * @param string $requestState
      * @param UserInterface $user
      * @return bool
      */
     abstract protected function validateRegistrationState(string $requestState, UserInterface $user): bool;
+
+    /**
+     * @param AccessTokenInterface $tokenResponse
+     * @return TokenValidationResponseInterface
+     */
+    protected function validateToken(AccessTokenInterface $tokenResponse): TokenValidationResponseInterface
+    {
+        $validate = $this->client->validateToken($tokenResponse);
+
+        if (empty($validate)) {
+            throw new AuthenticationException();
+        }
+        return $validate;
+    }
+
+    /**
+     * Set any details on the user entity that are needed to tie the user to this authentication mechanism
+     * @param UserInterface $user
+     * @param AccessTokenInterface $tokenResponse
+     * @param TokenValidationResponseInterface $validationResponse
+     * @return UserInterface
+     */
+    abstract protected function setUserDetails(UserInterface $user, AccessTokenInterface $tokenResponse, TokenValidationResponseInterface $validationResponse): UserInterface;
 
     /**
      * The $credentials argument is the value returned by getCredentials().
@@ -187,15 +240,6 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
     }
 
     /**
-     * Set any details on the user entity that are needed to tie the user to this authentication mechanism
-     * @param UserInterface $user
-     * @param AccessTokenInterface $tokenResponse
-     * @param TokenValidationResponseInterface $validationResponse
-     * @return UserInterface
-     */
-    abstract protected function setUserDetails(UserInterface $user, AccessTokenInterface $tokenResponse, TokenValidationResponseInterface $validationResponse): UserInterface;
-
-    /**
      * Called when authentication executed, but failed (e.g. wrong username password).
      *
      * This should return the Response sent back to the user, like a
@@ -219,19 +263,5 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
-    }
-
-    /**
-     * @param AccessTokenInterface $tokenResponse
-     * @return TokenValidationResponseInterface
-     */
-    protected function validateToken(AccessTokenInterface $tokenResponse): TokenValidationResponseInterface
-    {
-        $validate = $this->client->validateToken($tokenResponse);
-
-        if (empty($validate)) {
-            throw new AuthenticationException();
-        }
-        return $validate;
     }
 }
