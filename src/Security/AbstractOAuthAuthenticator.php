@@ -88,28 +88,6 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
         }
 
         return false;
-
-        // if there is already an authenticated user (likely due to the session)
-        // and we are not in the registration portion then return false and skip authentication: there is no need.
-        if ($this->security->getUser()) {
-            if ($request->attributes->get('_route') == $this->registrationRoute) {
-                if (!$request->query->has('code') || !$request->query->has('state')) {
-                    return false;
-                }
-                return true;
-            }
-            return false;
-        }
-        // the user is not logged in, so the authenticator should continue
-
-        if ($request->attributes->get('_route') == $this->loginRoute) {
-            if (!$request->query->has('code') || !$request->query->has('state')) {
-                return false;
-            }
-            return true;
-        }
-
-        return false;
     }
 
     /**
