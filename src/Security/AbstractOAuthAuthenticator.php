@@ -125,9 +125,9 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
             if (!$this->validateRegistrationState($state, $user)) {
                 throw new InvalidCsrfTokenException();
             }
-            $oauthTag->append('-USER');
+            $oauthTag = $oauthTag->append('-USER');
         } else {
-            $oauthTag->append('-LOGIN');
+            $oauthTag = $oauthTag->append('-LOGIN');
         }
 
         $this->client->setOAuth($this->httpClientOAuthLocator->get($oauthTag->toString()));
