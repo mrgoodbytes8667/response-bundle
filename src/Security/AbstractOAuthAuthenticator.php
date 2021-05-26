@@ -18,9 +18,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
@@ -28,6 +30,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use function Symfony\Component\String\u;
 
 /**
  * Class AbstractOAuthAuthenticator
@@ -45,12 +48,13 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      * @param UrlGeneratorInterface $urlGenerator
      * @param OAuthInterface $oAuth
      * @param TokenClientInterface $client
+     * @param CsrfTokenManagerInterface $csrfTokenManager
      * @param string $loginRoute
      * @param string $loginSuccessRoute
      * @param string $userIdField
      * @param string $registrationRoute
      */
-    public function __construct(protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security, protected UrlGeneratorInterface $urlGenerator, protected OAuthInterface $oAuth, protected TokenClientInterface $client, protected string $loginRoute, protected string $loginSuccessRoute, protected string $userIdField, protected string $registrationRoute)
+    public function __construct(protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security, protected UrlGeneratorInterface $urlGenerator, protected OAuthInterface $oAuth, protected TokenClientInterface $client, protected CsrfTokenManagerInterface $csrfTokenManager, protected string $loginRoute, protected string $loginSuccessRoute, protected string $userIdField, protected string $registrationRoute)
     {
         $client->setOAuth($oAuth);
     }
@@ -65,6 +69,10 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      */
     public function supports(Request $request): ?bool
     {
+        if (!in_array($request->attributes->get('_route'), [$this->registrationRoute, $this->loginRoute])) {
+            return false;
+        }
+
         // if there is already an authenticated user (likely due to the session)
         // and we are not in the registration portion then return false and skip authentication: there is no need.
         if ($this->security->getUser()) {
@@ -106,8 +114,12 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      */
     public function authenticate(Request $request): PassportInterface
     {
+        $incomingState = u($request->query->get('state'));
         $code = $request->query->get('code');
-        $state = $request->query->get('state');
+        $state = $incomingState->beforeLast('|||')->toString();
+
+        $csrf = $incomingState->afterLast('|||')->toString();
+        $valid = $this->csrfTokenManager->isTokenValid(new CsrfToken($state, $csrf));
 
         if ($request->attributes->get('_route') == $this->registrationRoute) {
             $user = $this->security->getUser();
@@ -161,14 +173,14 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      * @throws AuthenticationException
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
-     * @throws UsernameNotFoundException
+     * @throws UserNotFoundException
      */
     protected function getUser(AccessTokenInterface $tokenResponse, TokenValidationResponseInterface $validationResponse)
     {
         $user = $this->userRepository->findOneBy([$this->userIdField => $validationResponse->getUserId()]);
 
         if (empty($user)) {
-            throw new UsernameNotFoundException();
+            throw new UserNotFoundException();
         }
 
         return $user;
