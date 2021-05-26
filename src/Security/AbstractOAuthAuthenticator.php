@@ -9,6 +9,7 @@ use Bytes\ResponseBundle\Routing\OAuthInterface;
 use Bytes\ResponseBundle\Security\Traits\AuthenticationSuccessTrait;
 use Bytes\ResponseBundle\Security\Traits\CreateAuthenticatedTokenTrait;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
+use Bytes\ResponseBundle\Token\Interfaces\TokenValidationResponseInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -46,8 +48,9 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      * @param string $loginRoute
      * @param string $loginSuccessRoute
      * @param string $userIdField
+     * @param string $registrationRoute
      */
-    public function __construct(protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security, protected UrlGeneratorInterface $urlGenerator, protected OAuthInterface $oAuth, protected TokenClientInterface $client, protected string $loginRoute, protected string $loginSuccessRoute, protected string $userIdField)
+    public function __construct(protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security, protected UrlGeneratorInterface $urlGenerator, protected OAuthInterface $oAuth, protected TokenClientInterface $client, protected string $loginRoute, protected string $loginSuccessRoute, protected string $userIdField, protected string $registrationRoute)
     {
         $client->setOAuth($oAuth);
     }
@@ -63,8 +66,14 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
     public function supports(Request $request): ?bool
     {
         // if there is already an authenticated user (likely due to the session)
-        // then return false and skip authentication: there is no need.
+        // and we are not in the registration portion then return false and skip authentication: there is no need.
         if ($this->security->getUser()) {
+            if ($request->attributes->get('_route') == $this->registrationRoute) {
+                if (!$request->query->has('code') || !$request->query->has('state')) {
+                    return false;
+                }
+                return true;
+            }
             return false;
         }
         // the user is not logged in, so the authenticator should continue
@@ -100,13 +109,27 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
         $code = $request->query->get('code');
         $state = $request->query->get('state');
 
+        if ($request->attributes->get('_route') == $this->registrationRoute) {
+            $user = $this->security->getUser();
+            if(!$this->validateRegistrationState($state, $user))
+            {
+                throw new InvalidCsrfTokenException();
+            }
+        }
+
         $tokenResponse = $this->client->exchange($code);
 
         if (empty($tokenResponse)) {
             throw new AuthenticationException();
         }
 
-        $user = $this->getUser($tokenResponse);
+        $validationResponse = $this->validateToken($tokenResponse);
+
+        if ($request->attributes->get('_route') == $this->registrationRoute) {
+            $user = $this->setUserDetails($user, $tokenResponse, $validationResponse);
+        } else {
+            $user = $this->getUser($tokenResponse, $validationResponse);
+        }
 
         // check credentials - e.g. make sure the password is valid
 
@@ -117,12 +140,21 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
     }
 
     /**
+     * For user registrations, validate the state against the passed user
+     * @param string $requestState
+     * @param UserInterface $user
+     * @return bool
+     */
+    abstract protected function validateRegistrationState(string $requestState, UserInterface $user): bool;
+
+    /**
      * The $credentials argument is the value returned by getCredentials().
      * Your job is to return an object that implements UserInterface. If you
      * do, then checkCredentials() will be called. If you return null (or
      * throw an AuthenticationException) authentication will fail.
      *
      * @param AccessTokenInterface $tokenResponse
+     * @param TokenValidationResponseInterface $validationResponse
      *
      * @return UserInterface|null
      *
@@ -131,15 +163,9 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      * @throws ServerExceptionInterface
      * @throws UsernameNotFoundException
      */
-    protected function getUser(AccessTokenInterface $tokenResponse)
+    protected function getUser(AccessTokenInterface $tokenResponse, TokenValidationResponseInterface $validationResponse)
     {
-        $validate = $this->client->validateToken($tokenResponse);
-
-        if (empty($validate)) {
-            throw new AuthenticationException();
-        }
-
-        $user = $this->userRepository->findOneBy([$this->userIdField => $validate->getUserId()]);
+        $user = $this->userRepository->findOneBy([$this->userIdField => $validationResponse->getUserId()]);
 
         if (empty($user)) {
             throw new UsernameNotFoundException();
@@ -147,6 +173,15 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
 
         return $user;
     }
+
+    /**
+     * Set any details on the user entity that are needed to tie the user to this authentication mechanism
+     * @param UserInterface $user
+     * @param AccessTokenInterface $tokenResponse
+     * @param TokenValidationResponseInterface $validationResponse
+     * @return UserInterface
+     */
+    abstract protected function setUserDetails(UserInterface $user, AccessTokenInterface $tokenResponse, TokenValidationResponseInterface $validationResponse): UserInterface;
 
     /**
      * Called when authentication executed, but failed (e.g. wrong username password).
@@ -172,5 +207,19 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * @param AccessTokenInterface $tokenResponse
+     * @return TokenValidationResponseInterface
+     */
+    protected function validateToken(AccessTokenInterface $tokenResponse): TokenValidationResponseInterface
+    {
+        $validate = $this->client->validateToken($tokenResponse);
+
+        if (empty($validate)) {
+            throw new AuthenticationException();
+        }
+        return $validate;
     }
 }
