@@ -12,7 +12,7 @@ use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Bytes\ResponseBundle\Token\Interfaces\TokenValidationResponseInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -43,6 +43,11 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
     use TargetPathTrait, AuthenticationSuccessTrait, CreateAuthenticatedTokenTrait;
 
     /**
+     * Error message for a invalid user at login
+     */
+    const REDIRECT_TO_REGISTRATION = 'redirect_to_registration';
+
+    /**
      * AbstractOAuthAuthenticator constructor.
      * @param EntityManagerInterface $em
      * @param ServiceEntityRepository $userRepository
@@ -51,12 +56,19 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      * @param Locator $httpClientOAuthLocator
      * @param TokenClientInterface $client
      * @param CsrfTokenManagerInterface $csrfTokenManager
+     * @param string $userIdField
      * @param string $loginRoute
      * @param string $loginSuccessRoute
-     * @param string $userIdField
+     * @param string $loginFailureRoute
      * @param string $registrationRoute
+     * @param string $redirectToRegistrationRoute
      */
-    public function __construct(protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security, protected UrlGeneratorInterface $urlGenerator, protected Locator $httpClientOAuthLocator, protected TokenClientInterface $client, protected CsrfTokenManagerInterface $csrfTokenManager, protected string $loginRoute, protected string $loginSuccessRoute, protected string $userIdField, protected string $registrationRoute)
+    public function __construct(
+        protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security,
+        protected UrlGeneratorInterface $urlGenerator, protected Locator $httpClientOAuthLocator,
+        protected TokenClientInterface $client, protected CsrfTokenManagerInterface $csrfTokenManager,
+        protected string $userIdField, protected string $loginRoute, protected string $loginSuccessRoute,
+        protected string $loginFailureRoute, protected string $registrationRoute, protected string $redirectToRegistrationRoute)
     {
     }
 
@@ -209,7 +221,9 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
         $user = $this->userRepository->findOneBy([$this->userIdField => $validationResponse->getUserId()]);
 
         if (empty($user)) {
-            throw new UserNotFoundException();
+            // Technically this should be a UserNotFoundException, but that gets sanitized out. We know the user is
+            // a valid oauth token at this point, so redirect them back to the registration page.
+            throw new AuthenticationException(self::REDIRECT_TO_REGISTRATION);
         }
 
         return $user;
@@ -230,14 +244,17 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $data = [
-            // you may want to customize or obfuscate the message first
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+        if ($request->hasSession()) {
+            $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+        }
 
-            // or to translate this message
-            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
-        ];
+        if($exception::class === AuthenticationException::class && $exception->getMessage() === self::REDIRECT_TO_REGISTRATION)
+        {
+            $url = $this->redirectToRegistrationRoute;
+        } else {
+            $url = $this->loginFailureRoute;
+        }
 
-        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+        return new RedirectResponse($this->urlGenerator->generate($url));
     }
 }
