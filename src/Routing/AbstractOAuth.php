@@ -5,6 +5,7 @@ namespace Bytes\ResponseBundle\Routing;
 
 
 use BadMethodCallException;
+use Bytes\ResponseBundle\Handler\LocatorInterface;
 use Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient;
 use Bytes\ResponseBundle\Objects\Push;
 use Bytes\ResponseBundle\Security\SecurityTrait;
@@ -14,6 +15,7 @@ use InvalidArgumentException;
 use LogicException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -25,7 +27,7 @@ use function Symfony\Component\String\u;
  * Class AbstractOAuth
  * @package Bytes\ResponseBundle\Routing
  */
-abstract class AbstractOAuth implements OAuthInterface
+abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
 {
     use SecurityTrait, UrlGeneratorTrait, ValidatorTrait;
 
@@ -72,6 +74,11 @@ abstract class AbstractOAuth implements OAuthInterface
      * @var string
      */
     private $redirect;
+
+    /**
+     * @var CsrfTokenManagerInterface
+     */
+    private $csrfTokenManager;
 
     /**
      * AbstractOAuth constructor.
@@ -233,14 +240,15 @@ abstract class AbstractOAuth implements OAuthInterface
      */
     protected function getState(string $route)
     {
-        $user = null;
+        $userId = null;
         if (!empty($this->security)) {
-            $u = $this->getTokenUser();
-            if (!empty($u) && method_exists($u, 'getId')) {
-                $user = $u?->getId();
+            $user = $this->getTokenUser();
+            if (!empty($user) && method_exists($user, 'getId')) {
+                $userId = $user?->getId();
             }
         }
-        return $user ?? (string)new Ulid();
+        $userId ??= (string)new Ulid();
+        return u($userId)->append($this->csrfTokenManager->getToken($userId))->toString();
     }
 
     /**
@@ -345,8 +353,12 @@ abstract class AbstractOAuth implements OAuthInterface
     }
 
     /**
-     * Return the OAuth name
-     * @return string
+     * @param CsrfTokenManagerInterface $csrfTokenManager
+     * @return $this
      */
-    abstract public static function getDefaultIndexName(): string;
+    public function setCsrfTokenManager(CsrfTokenManagerInterface $csrfTokenManager): self
+    {
+        $this->csrfTokenManager = $csrfTokenManager;
+        return $this;
+    }
 }

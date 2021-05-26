@@ -5,6 +5,7 @@ namespace Bytes\ResponseBundle;
 
 
 use Bytes\ResponseBundle\DependencyInjection\Compiler\HttpClientPass;
+use Bytes\ResponseBundle\DependencyInjection\Compiler\OAuthPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -23,5 +24,6 @@ class BytesResponseBundle extends Bundle
     {
         parent::build($container);
         $container->addCompilerPass(new HttpClientPass());
+        $container->addCompilerPass(new OAuthPass());
     }
 }

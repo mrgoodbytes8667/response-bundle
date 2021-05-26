@@ -6,7 +6,6 @@ namespace Bytes\ResponseBundle\Security;
 
 use Bytes\ResponseBundle\Handler\Locator;
 use Bytes\ResponseBundle\HttpClient\Token\TokenClientInterface;
-use Bytes\ResponseBundle\Routing\OAuthInterface;
 use Bytes\ResponseBundle\Security\Traits\AuthenticationSuccessTrait;
 use Bytes\ResponseBundle\Security\Traits\CreateAuthenticatedTokenTrait;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
@@ -115,8 +114,7 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
         $code = $request->query->get('code');
         $state = $incomingState->slice(length: 26)->toString();
 
-        $csrf = $incomingState->slice(start: 26)->toString();
-        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($state, $csrf))) {
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($state, $incomingState->slice(start: 26)->toString()))) {
             throw new InvalidCsrfTokenException();
         }
 
