@@ -40,6 +40,10 @@ return static function (ContainerConfigurator $container) {
         ->args([tagged_locator('bytes_response.oauth', 'key', 'getDefaultIndexName')])
         ->public();
 
+    $services->set('bytes_response.locator.authenticator.oauth', Locator::class)
+        ->args([tagged_locator('bytes_response.authenticator.oauth', 'key', 'getDefaultIndexName')])
+        ->public();
+
     $services->alias(Locator::class . ' $httpClientLocator', 'bytes_response.locator.http_client');
     $services->alias(Locator::class . ' $httpClientApiLocator', 'bytes_response.locator.http_client.api');
     $services->alias(Locator::class . ' $httpClientTokenLocator', 'bytes_response.locator.http_client.token');
@@ -47,5 +51,6 @@ return static function (ContainerConfigurator $container) {
     $services->alias(HttpClientLocator::class . ' $httpClientApiLocator', 'bytes_response.locator.http_client.api');
     $services->alias(HttpClientLocator::class . ' $httpClientTokenLocator', 'bytes_response.locator.http_client.token');
     $services->alias(Locator::class . ' $httpClientOAuthLocator', 'bytes_response.locator.oauth');
+    $services->alias(Locator::class . ' $authenticatorOAuthLocator', 'bytes_response.locator.authenticator.oauth');
     //endregion
 };
