@@ -11,11 +11,13 @@ use Bytes\ResponseBundle\Security\Traits\CreateAuthenticatedTokenTrait;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Bytes\ResponseBundle\Token\Interfaces\TokenValidationResponseInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -48,6 +50,11 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
     const REDIRECT_TO_REGISTRATION = 'redirect_to_registration';
 
     /**
+     * Error message for a duplicate user
+     */
+    const REDIRECT_TO_LOGOUT = 'You are already registered. Please login.';
+
+    /**
      * AbstractOAuthAuthenticator constructor.
      * @param EntityManagerInterface $em
      * @param ServiceEntityRepository $userRepository
@@ -66,7 +73,7 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
     public function __construct(
         protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security,
         protected UrlGeneratorInterface $urlGenerator, protected Locator $httpClientOAuthLocator,
-        protected TokenClientInterface $client, protected CsrfTokenManagerInterface $csrfTokenManager,
+        protected TokenClientInterface $client, protected CsrfTokenManagerInterface $csrfTokenManager, protected TokenStorageInterface $tokenStorage,
         protected string $userIdField, protected string $loginRoute, protected string $loginSuccessRoute,
         protected string $loginFailureRoute, protected string $registrationRoute, protected string $redirectToRegistrationRoute)
     {
@@ -151,7 +158,11 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
         $validationResponse = $this->validateToken($tokenResponse);
 
         if ($request->attributes->get('_route') == $this->registrationRoute) {
-            $user = $this->setUserDetails($user, $tokenResponse, $validationResponse);
+            try {
+                $user = $this->setUserDetails($user, $tokenResponse, $validationResponse);
+            } catch (UniqueConstraintViolationException $exception) {
+                throw new AuthenticationException(self::REDIRECT_TO_LOGOUT, previous: $exception);
+            }
         } else {
             $user = $this->getUser($tokenResponse, $validationResponse);
         }
@@ -246,11 +257,14 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
     {
         if ($request->hasSession()) {
             $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+            $request->getSession()->getFlashBag()->add('error', $exception->getMessage());
         }
 
-        if($exception::class === AuthenticationException::class && $exception->getMessage() === self::REDIRECT_TO_REGISTRATION)
-        {
+        if ($exception::class === AuthenticationException::class && $exception->getMessage() === self::REDIRECT_TO_REGISTRATION) {
             $url = $this->redirectToRegistrationRoute;
+        } elseif ($exception::class === AuthenticationException::class && $exception->getMessage() === self::REDIRECT_TO_LOGOUT) {
+            $this->tokenStorage->setToken(null);
+            $url = $this->loginFailureRoute;
         } else {
             $url = $this->loginFailureRoute;
         }
