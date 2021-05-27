@@ -4,6 +4,7 @@
 namespace Bytes\ResponseBundle\Security;
 
 
+use App\Entity\User;
 use Bytes\ResponseBundle\Handler\Locator;
 use Bytes\ResponseBundle\HttpClient\Token\TokenClientInterface;
 use Bytes\ResponseBundle\Security\Traits\AuthenticationSuccessTrait;
@@ -159,9 +160,10 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
 
         if ($request->attributes->get('_route') == $this->registrationRoute) {
             try {
+                $this->handleDuplicateAccounts($user, $validationResponse);
                 $user = $this->setUserDetails($user, $tokenResponse, $validationResponse);
             } catch (UniqueConstraintViolationException $exception) {
-                throw new AuthenticationException(self::REDIRECT_TO_LOGOUT, previous: $exception);
+                throw new DuplicateAccountException(self::REDIRECT_TO_LOGOUT, previous: $exception);
             }
         } else {
             $user = $this->getUser($tokenResponse, $validationResponse);
@@ -178,7 +180,10 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
     /**
      * @return string
      */
-    abstract protected function getOAuthTag(): string;
+    protected function getOAuthTag(): string
+    {
+        return static::$tag;
+    }
 
     /**
      * For user registrations, validate the state against the passed user
@@ -201,6 +206,35 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
         }
         return $validate;
     }
+
+    /**
+     * Is this account already tied to another user?
+     * @param UserInterface $user
+     * @param TokenValidationResponseInterface $validationResponse
+     * @return UserInterface
+     *
+     * @throws DuplicateAccountException
+     */
+    protected function handleDuplicateAccounts(UserInterface $user, TokenValidationResponseInterface $validationResponse): UserInterface
+    {
+        $found = $this->userRepository->findBy([$this->userIdField => $validationResponse->getUserId()]);
+        switch (count($found)) {
+            case 0:
+            case 1:
+                return $user;
+                break;
+            default:
+                $this->setDuplicateDetails($user);
+                throw new DuplicateAccountException();
+                break;
+        }
+    }
+
+    /**
+     * @param UserInterface $user
+     * @return UserInterface
+     */
+    abstract protected function setDuplicateDetails(UserInterface $user): UserInterface;
 
     /**
      * Set any details on the user entity that are needed to tie the user to this authentication mechanism
@@ -262,7 +296,7 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
 
         if ($exception::class === AuthenticationException::class && $exception->getMessage() === self::REDIRECT_TO_REGISTRATION) {
             $url = $this->redirectToRegistrationRoute;
-        } elseif ($exception::class === AuthenticationException::class && $exception->getMessage() === self::REDIRECT_TO_LOGOUT) {
+        } elseif ($exception::class === DuplicateAccountException::class || ($exception::class === AuthenticationException::class && $exception->getMessage() === self::REDIRECT_TO_LOGOUT)) {
             $this->tokenStorage->setToken(null);
             $url = $this->loginFailureRoute;
         } else {
