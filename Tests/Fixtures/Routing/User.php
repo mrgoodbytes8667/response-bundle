@@ -6,6 +6,10 @@ namespace Bytes\ResponseBundle\Tests\Fixtures\Routing;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * Class User
+ * @package Bytes\ResponseBundle\Tests\Fixtures\Routing
+ */
 class User implements UserInterface
 {
 
@@ -100,7 +104,12 @@ class User implements UserInterface
         return $this;
     }
 
-
-
-
+    /**
+     * Returns the identifier for this user (e.g. its username or e-mail address)
+     * @return string
+     */
+    public function getUserIdentifier(): string
+    {
+        return $this->getUsername();
+    }
 }

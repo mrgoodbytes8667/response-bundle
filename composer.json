@@ -3,7 +3,6 @@
     "type": "symfony-bundle",
     "license": "CC-BY-NC-4.0",
     "description": "Symfony bundle that wraps response-common and provides shared enums for child response-bundles",
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": "^8.0",
@@ -49,6 +48,7 @@
         }
     },
     "conflict": {
+        "phpunit/phpunit": "<9.5",
         "symfony/http-client": "<5.2.1"
     }
 }
