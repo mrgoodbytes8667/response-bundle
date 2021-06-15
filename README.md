@@ -6,7 +6,7 @@
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mrgoodbytes8667/response-bundle/release?label=stable&logo=github&logoColor=FFF&style=flat)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mrgoodbytes8667/response-bundle/tests?logo=github&logoColor=FFF&style=flat)
 [![codecov](https://img.shields.io/codecov/c/github/mrgoodbytes8667/response-bundle?logo=codecov&logoColor=FFF&style=flat)](https://codecov.io/gh/mrgoodbytes8667/response-bundle)  
-A Symfony bundle that wraps response-common and provides shared enums for child response-bundles
+A Symfony bundle that wraps response-common and provides shared classes for child response-bundles
 
 ## Installation
 
