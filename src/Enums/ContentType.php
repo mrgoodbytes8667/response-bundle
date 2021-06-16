@@ -12,6 +12,8 @@ use Bytes\EnumSerializerBundle\Enums\Enum;
  *
  * @method static self imageJpg()
  * @method static self imagePng()
+ *
+ * @method static self json()
  */
 class ContentType extends Enum
 {
@@ -23,6 +25,7 @@ class ContentType extends Enum
         return [
             'imageJpg' => 'image/jpeg',
             'imagePng' => 'image/png',
+            'json' => 'application/json',
         ];
     }
 }
