@@ -7,9 +7,11 @@ namespace Bytes\ResponseBundle\HttpClient;
 use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
 use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Annotations\Client;
+use Bytes\ResponseBundle\Enums\ContentType;
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\Event\DispatcherTrait;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
+use Bytes\ResponseBundle\Objects\Push;
 use Bytes\ResponseBundle\Token\Exceptions\NoTokenException;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Doctrine\Common\Annotations\Reader;
@@ -180,6 +182,30 @@ abstract class AbstractClient
         }
         $return = $this->httpClient->request($method, $this->buildURL($url), $options);
         return $response->withResponse($return, $type, $context, $onDeserializeCallable, $onSuccessCallable);
+    }
+
+    /**
+     * Helper variant of request() that sets the header content-type to application/json
+     * @param string|string[] $url
+     * @param \ReflectionMethod|string|null $caller
+     * @param string|null $type
+     * @param array $options = HttpClientInterface::OPTIONS_DEFAULTS
+     * @param string $method = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
+     * @param ClientResponseInterface|string|null $responseClass
+     * @param array $context Additional context for deserialize(), can be overloaded by deserialize()
+     * @param callable|null $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
+     * @param callable|null $onSuccessCallable If set, should be triggered by deserialize() on success
+     * @param array $params Extra params for makeFrom
+     * @return ClientResponseInterface
+     * @throws TransportExceptionInterface
+     * @throws NoTokenException
+     */
+    public function jsonRequest($url, \ReflectionMethod|string $caller = null, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
+    {
+        $options['headers']['Content-Type'] = ContentType::json()->value;
+        return $this->request(url: $url, caller: $caller, type: $type, options: $options, method: $method,
+            responseClass: $responseClass, context: $context, onDeserializeCallable: $onDeserializeCallable,
+            onSuccessCallable: $onSuccessCallable, params: $params);
     }
 
     /**
