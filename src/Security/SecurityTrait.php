@@ -20,6 +20,11 @@ trait SecurityTrait
     protected $security;
 
     /**
+     * @var UserInterface|null
+     */
+    protected $tokenUser;
+
+    /**
      * @param Security|null $security
      * @return $this
      */
@@ -40,6 +45,10 @@ trait SecurityTrait
      */
     protected function getTokenUser(): ?UserInterface
     {
+        if (!empty($this->tokenUser)) {
+            return $this->tokenUser;
+        }
+
         if (empty($this->security)) {
             return null;
         }
@@ -54,5 +63,15 @@ trait SecurityTrait
         }
 
         return $user;
+    }
+
+    /**
+     * @param UserInterface|null $tokenUser
+     * @return $this
+     */
+    public function setTokenUser(?UserInterface $tokenUser): self
+    {
+        $this->tokenUser = $tokenUser;
+        return $this;
     }
 }
