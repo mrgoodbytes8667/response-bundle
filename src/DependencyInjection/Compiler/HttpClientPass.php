@@ -7,6 +7,7 @@ namespace Bytes\ResponseBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 /**
  * Class HttpClientPass
@@ -29,6 +30,14 @@ class HttpClientPass implements CompilerPassInterface
             $definition->addMethodCall('setSerializer', [new Reference('serializer')]);
             $definition->addMethodCall('setValidator', [new Reference('validator')]);
             $definition->addMethodCall('setReader', [new Reference('annotations.cached_reader')]);
+        }
+
+        // find all service IDs with the bytes_response.http_client.api tag
+        $taggedServices = $container->findTaggedServiceIds('bytes_response.http_client.api');
+
+        foreach ($taggedServices as $id => $tags) {
+            $definition = $container->findDefinition($id);
+            $definition->addMethodCall('setSecurity', [new Reference('security.helper')]);
         }
 
         // find all service IDs with the bytes_response.http_client.token tag
