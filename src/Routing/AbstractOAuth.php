@@ -286,7 +286,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
      */
     protected function getQueryValues(Push $query): array
     {
-        return $query->value();
+        return $query->toArray();
     }
 
     /**

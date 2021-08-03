@@ -4,7 +4,9 @@ namespace Bytes\ResponseBundle\Tests\Objects;
 
 use Bytes\Common\Faker\TestFakerTrait;
 use Bytes\ResponseBundle\Objects\Push;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Class PushTest
@@ -12,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class PushTest extends TestCase
 {
-    use TestFakerTrait;
+    use TestFakerTrait, ExpectDeprecationTrait;
 
     /**
      *
@@ -25,34 +27,34 @@ class PushTest extends TestCase
         $arr = Push::create();
         $this->assertInstanceOf(Push::class, $arr);
 
-        $this->assertIsArray($arr->value());
-        $this->assertEmpty($arr->value());
+        $this->assertIsArray($arr->toArray());
+        $this->assertEmpty($arr->toArray());
 
         $arr->push($value, $key);
 
-        $this->assertIsArray($arr->value());
-        $this->assertCount(1, $arr->value());
-        $this->assertArrayHasKey($key, $arr->value());
+        $this->assertIsArray($arr->toArray());
+        $this->assertCount(1, $arr->toArray());
+        $this->assertArrayHasKey($key, $arr->toArray());
         $this->assertEquals($value, $arr->getValue($key));
 
         $arr->push(null);
 
-        $this->assertIsArray($arr->value());
-        $this->assertCount(1, $arr->value());
+        $this->assertIsArray($arr->toArray());
+        $this->assertCount(1, $arr->toArray());
 
         $arr->push('', empty: false);
-        $this->assertIsArray($arr->value());
-        $this->assertCount(2, $arr->value());
+        $this->assertIsArray($arr->toArray());
+        $this->assertCount(2, $arr->toArray());
 
         $arr->removeKey(0);
-        $this->assertIsArray($arr->value());
-        $this->assertCount(1, $arr->value());
+        $this->assertIsArray($arr->toArray());
+        $this->assertCount(1, $arr->toArray());
 
-        foreach(range(2, 10) as $count) {
+        foreach (range(2, 10) as $count) {
 
             $arr->push('', key: $this->faker->unique()->word(), empty: false);
-            $this->assertIsArray($arr->value());
-            $this->assertCount($count, $arr->value());
+            $this->assertIsArray($arr->toArray());
+            $this->assertCount($count, $arr->toArray());
         }
     }
 
@@ -69,9 +71,9 @@ class PushTest extends TestCase
         $arr = Push::createPush($array, $value, $key);
         $this->assertInstanceOf(Push::class, $arr);
 
-        $this->assertIsArray($arr->value());
-        $this->assertCount(2, $arr->value());
-        $this->assertArrayHasKey($key, $arr->value());
+        $this->assertIsArray($arr->toArray());
+        $this->assertCount(2, $arr->toArray());
+        $this->assertArrayHasKey($key, $arr->toArray());
     }
 
     /**
@@ -81,7 +83,7 @@ class PushTest extends TestCase
     {
         $options = Push::createPush(value: $this->faker->word(), key: 'hi there');
 
-        $values = $options->value();
+        $values = $options->toArray();
         $camels = $options->camel();
         $snakes = $options->snake();
 
@@ -104,7 +106,7 @@ class PushTest extends TestCase
         $options = $options->push(value: $this->faker->word())
             ->push(value: $this->faker->word(), key: 'hello there');
 
-        $values = $options->value();
+        $values = $options->toArray();
         $camels = $options->camel();
         $snakes = $options->snake();
 
@@ -125,16 +127,18 @@ class PushTest extends TestCase
         $this->assertArrayNotHasKey('helloThere', $snakes);
 
         // Get them again with no changes to test/cover the caching
-        $values = $options->value();
+        $values = $options->toArray();
         $camels = $options->camel();
         $snakes = $options->snake();
 
         $this->assertCount(3, $values);
         $this->assertCount(3, $camels);
         $this->assertCount(3, $snakes);
-    }    /**
- *
- */
+    }
+
+    /**
+     *
+     */
     public function testGetValueInvalidKey()
     {
         $key = $this->faker->unique()->word();
@@ -144,7 +148,16 @@ class PushTest extends TestCase
 
         $arr->push($value, $key);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $arr->getValue($this->faker->unique()->word());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testGetValue()
+    {
+        $push = Push::create(['abc' => 123]);
+        $this->assertCount(1, $push->value());
     }
 }
