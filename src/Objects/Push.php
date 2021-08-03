@@ -138,6 +138,16 @@ class Push
     }
 
     /**
+     * Gets a native PHP array representation of the collection.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->array;
+    }
+
+    /**
      * Get the array with each key transformed into camel case
      * @return array
      */
