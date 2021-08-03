@@ -132,12 +132,12 @@ class Push
     /**
      * Get the array
      * @return array
-     * @deprecated since 2.0.10, use toArray() instead
+     * @deprecated since 2.0.11, use toArray() instead
      */
-    #[Deprecated(reason: 'since 2.0.10, use toArray() instead', replacement: '%class%->toArray()')]
+    #[Deprecated(reason: 'since 2.0.11, use toArray() instead', replacement: '%class%->toArray()')]
     public function value()
     {
-        trigger_deprecation('mrgoodbytes8667/response-bundle', '2.0.10', 'Please use toArray() instead.');
+        trigger_deprecation('mrgoodbytes8667/response-bundle', '2.0.11', 'Please use toArray() instead.');
         return $this->array;
     }
 
