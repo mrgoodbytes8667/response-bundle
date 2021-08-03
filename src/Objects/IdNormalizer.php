@@ -32,7 +32,7 @@ class IdNormalizer
                 $message = 'The argument is required.';
             }
         }
-        $id = '';
+        $id = null;
         if (is_null($object)) {
             throw new InvalidArgumentException($message);
         }
