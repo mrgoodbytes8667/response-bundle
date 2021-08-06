@@ -411,4 +411,20 @@ class ResponseTest extends TestCase
 
         return $discordResponse;
     }
+
+    /**
+     *
+     */
+    public function testMagicGetter()
+    {
+        $response = new DiscordResponse($this->serializer);
+
+        $this->assertNull($response->getNoResultsExpected());
+
+        $response->setExtraParams(['abc' => 123]);
+
+        $this->assertEquals(123, $response->getAbc());
+
+        $this->assertNull($response->getNoResultsExpected());
+    }
 }
