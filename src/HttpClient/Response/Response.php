@@ -124,6 +124,30 @@ class Response implements ClientResponseInterface
     //region Getters/Setters
 
     /**
+     * For magic extra parameter getters
+     * @param string $name
+     * @param array $arguments
+     * @return mixed|void|null
+     */
+    public function __call(string $name, array $arguments)
+    {
+        if(count($arguments) === 0) {
+            $param = u($name)->snake();
+            if($param->startsWith('get_'))
+            {
+                $param = $param->after('get_')->camel()->toString();
+                if (empty($this->getExtraParams())) {
+                    return null;
+                }
+                if (!array_key_exists($param, $this->getExtraParams())) {
+                    return null;
+                }
+                return $this->getExtraParams()[$param];
+            }
+        }
+    }
+
+    /**
      * @return SerializerInterface
      */
     public function getSerializer(): SerializerInterface
