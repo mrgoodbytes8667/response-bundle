@@ -2,7 +2,6 @@
 
 namespace Bytes\ResponseBundle\Tests\Event;
 
-use Bytes\ResponseBundle\Event\EventTrait;
 use Bytes\ResponseBundle\Event\PersistTrait;
 use PHPUnit\Framework\TestCase;
 
