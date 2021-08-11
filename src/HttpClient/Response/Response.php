@@ -6,6 +6,7 @@ namespace Bytes\ResponseBundle\HttpClient\Response;
 
 use Bytes\ResponseBundle\Exception\Response\EmptyContentException;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -131,10 +132,9 @@ class Response implements ClientResponseInterface
      */
     public function __call(string $name, array $arguments)
     {
-        if(count($arguments) === 0) {
+        if (count($arguments) === 0) {
             $param = u($name)->snake();
-            if($param->startsWith('get_'))
-            {
+            if ($param->startsWith('get_')) {
                 $param = $param->after('get_')->camel()->toString();
                 if (empty($this->getExtraParams())) {
                     return null;
@@ -249,8 +249,7 @@ class Response implements ClientResponseInterface
      */
     public function setOnDeserializeCallables(callable|array|null $onDeserializeCallables): self
     {
-        if(!is_null($onDeserializeCallables) && !is_array($onDeserializeCallables))
-        {
+        if (!is_null($onDeserializeCallables) && !is_array($onDeserializeCallables)) {
             $onDeserializeCallables = [$onDeserializeCallables];
         }
         $this->onDeserializeCallables = $onDeserializeCallables ?: [];
@@ -333,39 +332,40 @@ class Response implements ClientResponseInterface
      * @param bool $throw
      * @param array $context
      * @param string|null $type
+     *
      * @return mixed
+     *
      * @throws ClientExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws EmptyContentException
      */
     public function deserialize(bool $throw = true, array $context = [], ?string $type = null)
     {
-        if (empty($type ?? $this->type)) {
-            throw new \InvalidArgumentException(sprintf('The argument "$type" must be provided to %s if the type property is not set.', __METHOD__));
+        if (empty($type)) {
+            $type = $type ?? $this->type;
         }
+        if (empty($type)) {
+            throw new InvalidArgumentException(sprintf('The argument "$type" must be provided to %s if the type property is not set.', __METHOD__));
+        }
+        $throw = $this->deserializeGetThrow($throw, $type);
         try {
             $content = $this->response->getContent();
         } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $exception) {
             if ($throw) {
                 throw $exception;
             }
-            $content = $exception->getResponse()->getContent(false);
-            // If we're deserializing into an array, try to deserialize into a single instance instead and wrap it
-            $type = $type ?? $this->type;
-            if (u($type)->endsWith('[]')) {
-                $single = u($type)->beforeLast('[]')->toString();
-
-                return [$this->serializer->deserialize($content, $single, 'json', $context)];
+            list('continue' => $continue, 'content' => $content) = $this->deserializeOnError($context, $exception->getResponse()->getContent(false), $type);
+            if (!$continue) {
+                return $content;
             }
         }
-        if($this->throwOnDeserializationWhenContentEmpty && empty($content))
-        {
+        if ($this->throwOnDeserializationWhenContentEmpty && empty($content)) {
             throw new EmptyContentException($this->response);
         }
-        $this->results = $this->onDeserializeCallback($this->serializer->deserialize($content, $type ?? $this->type, 'json', $context ?: $this->deserializeContext));
+        $this->results = $this->onDeserializeCallback($this->doDeserializeContent($content, $type, $context));
 
         $this->onSuccessCallback();
 
@@ -415,7 +415,7 @@ class Response implements ClientResponseInterface
      */
     protected function onDeserializeCallback($results)
     {
-        foreach($this->onDeserializeCallables as $onDeserializeCallable) {
+        foreach ($this->onDeserializeCallables as $onDeserializeCallable) {
             if (!is_null($onDeserializeCallable) && is_callable($onDeserializeCallable)) {
                 $results = call_user_func($onDeserializeCallable, $this, $results);
             }
@@ -470,6 +470,54 @@ class Response implements ClientResponseInterface
     public function getContent(bool $throw = true): ?string
     {
         return $this->response?->getContent($throw);
+    }
+    //endregion
+
+    //region Deserialization Overloads
+    /**
+     * @param bool $throw
+     * @param string|null $type
+     * @return bool
+     */
+    protected function deserializeGetThrow(bool $throw, ?string $type)
+    {
+        return $throw;
+    }
+
+    /**
+     * @param array $context
+     * @param $content
+     * @param string|null $type
+     *
+     * @return array{continue: bool, content: mixed}
+     */
+    protected function deserializeOnError(array $context, $content, ?string $type): array
+    {
+        // If we're deserializing into an array, try to deserialize into a single instance instead and wrap it
+        if (u($type)->endsWith('[]')) {
+            $single = u($type)->beforeLast('[]')->toString();
+
+            return [
+                'continue' => false,
+                'content' => [$this->serializer->deserialize($content, $single, 'json', $context)]
+            ];
+        }
+
+        return [
+            'continue' => true,
+            'content' => $content
+        ];
+    }
+
+    /**
+     * @param mixed $content
+     * @param string $type
+     * @param array $context
+     * @return mixed
+     */
+    protected function doDeserializeContent(mixed $content, string $type, array $context): mixed
+    {
+        return $this->serializer->deserialize($content, $type, 'json', $context ?: $this->deserializeContext);
     }
     //endregion
 }
