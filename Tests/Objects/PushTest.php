@@ -158,6 +158,6 @@ class PushTest extends TestCase
     public function testGetValue()
     {
         $push = Push::create(['abc' => 123]);
-        $this->assertCount(1, $push->value());
+        $this->assertCount(1, $push->toArray());
     }
 }
