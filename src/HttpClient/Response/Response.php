@@ -357,7 +357,13 @@ class Response implements ClientResponseInterface
             if ($throw) {
                 throw $exception;
             }
-            list('continue' => $continue, 'content' => $content) = $this->deserializeOnError($context, $exception->getResponse()->getContent(false), $type);
+            // If our content is empty, we cannot deserialize. Re-throw the original exception.
+            $content = $exception->getResponse()->getContent(false);
+            if(empty($content))
+            {
+                throw $exception;
+            }
+            list('continue' => $continue, 'content' => $content) = $this->deserializeOnError($context, $content, $type);
             if (!$continue) {
                 return $content;
             }
