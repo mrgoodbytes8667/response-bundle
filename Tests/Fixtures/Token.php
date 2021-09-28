@@ -54,7 +54,7 @@ class Token implements AccessTokenInterface
      * @param UserInterface|null $user
      * @return $this
      */
-    public function setUser(?UserInterface $user): self
+    public function setUser(?UserInterface $user): static
     {
         $this->user = $user;
         return $this;

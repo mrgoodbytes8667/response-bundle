@@ -37,6 +37,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
@@ -125,8 +126,9 @@ class AbstractOAuthTest extends TestCase
         if ($setValidator) {
             $mock->setValidator($this->validator);
         }
+        $token = new CsrfToken('', 'abc123');
         $csrf = $this->getMockBuilder(CsrfTokenManagerInterface::class)->getMock();
-        $csrf->method('getToken')->willReturn('abc123');
+        $csrf->method('getToken')->willReturn($token);
         $mock->setCsrfTokenManager($csrf);
 
         //$mock = $this->getMockForAbstractClass(Model::class, [$this->faker, $this->defaultScopes, $this->faker->randomAlphanumericString(), $config]);

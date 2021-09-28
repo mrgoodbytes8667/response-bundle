@@ -27,7 +27,7 @@ class User implements UserInterface
      *
      * @return string[] The user roles
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return [];
     }
@@ -98,7 +98,7 @@ class User implements UserInterface
      * @param string $id
      * @return $this
      */
-    public function setId(string $id): self
+    public function setId(string $id): static
     {
         $this->id = $id;
         return $this;
