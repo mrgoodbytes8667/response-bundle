@@ -3,13 +3,12 @@
     "type": "symfony-bundle",
     "license": "CC-BY-NC-4.0",
     "description": "Symfony bundle that wraps response-common and provides shared enums for child response-bundles",
-    "minimum-stability": "dev",
     "require": {
         "php": "^8.0",
         "ext-json": "*",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.8",
-        "mrgoodbytes8667/enum-serializer-bundle": "^1.3.1",
+        "mrgoodbytes8667/enum-serializer-bundle": "^1.4",
         "mrgoodbytes8667/http-client-common": "^0.2.3",
         "symfony/console": "^5.3 | ^6.0",
         "symfony/security-core": "^5.3 | ^6.0",
@@ -44,13 +43,7 @@
         }
     },
     "conflict": {
-        "mrgoodbytes8667/enum-serializer-bundle": "1.3.2",
         "phpunit/phpunit": "<9.5 || 9.5.8",
         "symfony/http-client": "<5.2.1"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-symfony5.4": "2.1.x-dev"
-        }
     }
 }
