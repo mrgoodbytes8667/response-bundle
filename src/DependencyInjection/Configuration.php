@@ -42,6 +42,11 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('client_public_key')
                                 ->info('The client public key for the Discord bundle')
                                 ->defaultValue('')
+                                ->setDeprecated(
+                                    'mrgoodbytes8667/response-bundle',
+                                    '2.0.18',
+                                    'The "%node%" option is deprecated and will not be replaced. Please remove it if set.'
+                                )
                             ->end()
                             ->scalarNode('bot_token')
                                 ->info('The bot token for the Discord bundle')
