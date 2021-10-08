@@ -136,4 +136,17 @@ class TokenStatusTest extends TestCase
         $this->expectException(BadMethodCallException::class);
         $this->assertFalse(TokenStatus::isActive(TokenStatus::from($value)));
     }
+
+    /**
+     *
+     */
+    public function testFormChoices()
+    {
+        $this->assertEquals([
+            'Granted' => 'granted',
+            'Refreshed' => 'refreshed',
+            'Expired' => 'expired',
+            'Revoked' => 'revoked',
+        ], TokenStatus::formChoices());
+    }
 }

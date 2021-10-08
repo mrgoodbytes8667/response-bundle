@@ -34,4 +34,17 @@ class TokenStatus extends Enum
         }
         return $status->equals(TokenStatus::granted(), TokenStatus::refreshed());
     }
+
+    /**
+     * @return array
+     */
+    public static function formChoices(): array
+    {
+        return [
+            'Granted' => 'granted',
+            'Refreshed' => 'refreshed',
+            'Expired' => 'expired',
+            'Revoked' => 'revoked',
+        ];
+    }
 }

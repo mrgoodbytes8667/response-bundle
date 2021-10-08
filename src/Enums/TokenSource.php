@@ -5,6 +5,7 @@ namespace Bytes\ResponseBundle\Enums;
 
 
 use Bytes\EnumSerializerBundle\Enums\Enum;
+use function Symfony\Component\String\u;
 
 /**
  * Class TokenSource
@@ -16,5 +17,15 @@ use Bytes\EnumSerializerBundle\Enums\Enum;
  */
 class TokenSource extends Enum
 {
-
+    /**
+     * @return array
+     */
+    public static function formChoices(): array
+    {
+        return [
+            'ID' => 'id',
+            'User' => 'user',
+            'App' => 'app',
+        ];
+    }
 }

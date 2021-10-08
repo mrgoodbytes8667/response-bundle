@@ -55,4 +55,16 @@ class TokenSourceTest extends TestCase
         yield ['label' => 'id', 'value' => 'id'];
         yield ['label' => 'user', 'value' => 'user'];
     }
+
+    /**
+     *
+     */
+    public function testFormChoices()
+    {
+        $this->assertEquals([
+            'ID' => 'id',
+            'User' => 'user',
+            'App' => 'app',
+        ], TokenSource::formChoices());
+    }
 }
