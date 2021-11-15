@@ -4,7 +4,6 @@
 namespace Bytes\ResponseBundle\Security;
 
 
-use App\Entity\User;
 use Bytes\ResponseBundle\Handler\Locator;
 use Bytes\ResponseBundle\HttpClient\Token\TokenClientInterface;
 use Bytes\ResponseBundle\Security\Traits\AuthenticationSuccessTrait;
@@ -26,6 +25,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
@@ -41,7 +41,7 @@ use function Symfony\Component\String\u;
  * Class AbstractOAuthAuthenticator
  * @package Bytes\ResponseBundle\Security
  */
-abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
+abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implements AuthenticatorInterface
 {
     use TargetPathTrait, AuthenticationSuccessTrait, CreateAuthenticatedTokenTrait;
 
@@ -73,10 +73,10 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      */
     public function __construct(
         protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security,
-        protected UrlGeneratorInterface $urlGenerator, protected Locator $httpClientOAuthLocator,
-        protected TokenClientInterface $client, protected CsrfTokenManagerInterface $csrfTokenManager, protected TokenStorageInterface $tokenStorage,
-        protected string $userIdField, protected string $loginRoute, protected string $loginSuccessRoute,
-        protected string $loginFailureRoute, protected string $registrationRoute, protected string $redirectToRegistrationRoute)
+        protected UrlGeneratorInterface  $urlGenerator, protected Locator $httpClientOAuthLocator,
+        protected TokenClientInterface   $client, protected CsrfTokenManagerInterface $csrfTokenManager, protected TokenStorageInterface $tokenStorage,
+        protected string                 $userIdField, protected string $loginRoute, protected string $loginSuccessRoute,
+        protected string                 $loginFailureRoute, protected string $registrationRoute, protected string $redirectToRegistrationRoute)
     {
     }
 
