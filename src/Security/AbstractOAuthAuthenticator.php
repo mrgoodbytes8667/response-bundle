@@ -261,7 +261,7 @@ abstract class AbstractOAuthAuthenticator implements AuthenticatorInterface
      * @throws ServerExceptionInterface
      * @throws UserNotFoundException
      */
-    protected function getUser(AccessTokenInterface $tokenResponse, TokenValidationResponseInterface $validationResponse)
+    protected function getUser(AccessTokenInterface $tokenResponse, TokenValidationResponseInterface $validationResponse): ?UserInterface
     {
         $user = $this->userRepository->findOneBy([$this->userIdField => $validationResponse->getUserId()]);
 
