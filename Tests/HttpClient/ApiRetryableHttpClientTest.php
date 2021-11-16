@@ -200,7 +200,7 @@ class ApiRetryableHttpClientTest extends TestCase
 
     public function testRetryEvent()
     {
-        $passthru = '';
+        $passthru = function () { return ''; };
         $info = [];
         $response = new MockResponse();
         $context = new AsyncContext($passthru, HttpClient::create(), $response, $info, '', 0);
