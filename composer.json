@@ -45,5 +45,6 @@
     "conflict": {
         "phpunit/phpunit": "<9.5 || 9.5.8",
         "symfony/http-client": "<5.2.1"
-    }
+    },
+    "minimum-stability": "dev"
 }
