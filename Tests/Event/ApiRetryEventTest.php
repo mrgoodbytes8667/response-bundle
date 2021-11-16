@@ -47,7 +47,7 @@ class ApiRetryEventTest extends TestCase
 
     public function testNew()
     {
-        $passthru = '';
+        $passthru = function () { return ''; };
         $info = [];
         $response = new MockResponse();
         $context = new AsyncContext($passthru, HttpClient::create(), $response, $info, '', 0);
@@ -126,7 +126,7 @@ class ApiRetryEventTest extends TestCase
 
     public function provideClient()
     {
-        $passthru = '';
+        $passthru = function () { return ''; };
         $info = [];
         $response = new MockResponse();
         $context = new AsyncContext($passthru, HttpClient::create(), $response, $info, '', 0);
