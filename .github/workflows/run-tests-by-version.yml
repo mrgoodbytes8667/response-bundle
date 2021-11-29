@@ -1,4 +1,4 @@
-name: Tests - Symfony Next
+name: Tests By Symfony Version
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         php: [ 8.0 ]
-        symfony: [ '5.4', '6.0' ]
+        symfony: [ '5.3', '5.4', '6.0' ]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -37,9 +37,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: run-tests-symfony-next-${{ runner.os }}-php${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: run-tests-symfony-by-version-${{ runner.os }}-php${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            run-tests-symfony-next-${{ matrix.symfony }}-${{ runner.os }}-php${{ matrix.php }}-composer-
+            run-tests-symfony-by-version-${{ matrix.symfony }}-${{ runner.os }}-php${{ matrix.php }}-composer-
 
       - name: Setup PHP
         if: success()
