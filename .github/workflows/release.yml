@@ -49,7 +49,9 @@ jobs:
 
       - name: Install dependencies
         if: success()
-        run: composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+        run: |
+          composer config minimum-stability stable
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Run PHPUnit
         if: success()
@@ -91,8 +93,3 @@ jobs:
           release_name: ${{ github.ref }}
           draft: true
           prerelease: false
-          body: |
-            Description
-            ### Features
-            ### Changes
-            ### Bugs

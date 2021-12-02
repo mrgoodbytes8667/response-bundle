@@ -8,7 +8,9 @@ on:
   repository_dispatch:
   push:
     branches:
-      - "main"
+      - main
+      - 2.*
+      - 3.*
   schedule:
     # Weekly on Thursdays at 2pm UTC
     - cron:  '0 14 * * 4'

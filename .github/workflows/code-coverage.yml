@@ -3,8 +3,8 @@ name: Code Coverage
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
 on:
-  workflow_dispatch:
   pull_request:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -50,6 +50,7 @@ jobs:
       - name: Install dependencies
         if: success()
         run: |
+          composer config minimum-stability stable
           composer update --prefer-stable --prefer-dist --no-interaction --no-progress --optimize-autoloader
 
       - name: Run PHPUnit
