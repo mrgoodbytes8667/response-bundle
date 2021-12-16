@@ -32,4 +32,19 @@ class ContentType extends Enum
             'json' => 'application/json',
         ];
     }
+
+    /**
+     * @return string
+     */
+    public function getExtension(): string
+    {
+        return match ($this->value) {
+            'image/gif' => 'gif',
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+            'application/json' => 'json',
+            default => throw new \BadMethodCallException('The value is invalid.'),
+        };
+    }
 }
