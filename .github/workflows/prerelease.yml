@@ -1,12 +1,11 @@
-name: release
+name: prerelease
 
 on:
   push:
     tags:
-      - v*
-      - '!v*ALPHA*'
-      - '!v*BETA*'
-      - '!v*RC*'
+      - 'v*ALPHA*'
+      - 'v*BETA*'
+      - 'v*RC*'
   workflow_dispatch:
 
 jobs:
@@ -14,7 +13,8 @@ jobs:
     uses: mrgoodbytes8667/workflows/.github/workflows/release.yml@php8.0-8.1
     with:
       phpUnitVersion: 9.5
-        
+      prerelease: true
+
   trigger_child_tests:
     needs: build
     # The type of runner that the job will run on
