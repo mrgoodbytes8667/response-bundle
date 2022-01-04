@@ -4,6 +4,7 @@ namespace Bytes\ResponseBundle\Tests\Annotations;
 
 use Bytes\Common\Faker\Providers\MiscProvider;
 use Bytes\Common\Faker\TestFakerTrait;
+use Bytes\EnumSerializerBundle\Faker\FakerEnumProvider;
 use Bytes\ResponseBundle\Annotations\ClientTrait;
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Faker\Generator as FakerGenerator;
@@ -27,7 +28,6 @@ use Faker\Provider\Text;
 use Faker\Provider\UserAgent;
 use Faker\Provider\Uuid;
 use PHPUnit\Framework\TestCase;
-use Spatie\Enum\Faker\FakerEnumProvider;
 
 /**
  * Class ClientTraitTest

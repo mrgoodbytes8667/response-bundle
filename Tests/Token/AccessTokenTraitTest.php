@@ -3,14 +3,15 @@
 namespace Bytes\ResponseBundle\Tests\Token;
 
 use Bytes\Common\Faker\TestFakerTrait;
+use Bytes\EnumSerializerBundle\Faker\FakerEnumProvider;
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\Objects\ComparableDateInterval;
 use Bytes\ResponseBundle\Token\AccessTokenTrait;
+use Bytes\StringMaskBundle\Twig\StringMaskRuntime;
 use DateInterval;
 use Exception;
 use Generator;
 use PHPUnit\Framework\TestCase;
-use Spatie\Enum\Faker\FakerEnumProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 use TypeError;
 
@@ -27,7 +28,7 @@ class AccessTokenTraitTest extends TestCase
      */
     protected function setUp(): void
     {
-        \Bytes\StringMaskBundle\Twig\StringMaskRuntime::getMaskedString('');
+        StringMaskRuntime::getMaskedString('');
     }
 
     /**
