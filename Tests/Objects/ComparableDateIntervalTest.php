@@ -113,6 +113,16 @@ class ComparableDateIntervalTest extends TestCase
     public function testInvalidConstructor()
     {
         $this->expectException(Exception::class);
+        new ComparableDateInterval('abc123');
+    }
+
+    /**
+     * @requires PHP < 8.1
+     * @return void
+     */
+    public function testInvalidConstructorPhp8()
+    {
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('DateInterval::__construct(): Unknown or bad format');
         new ComparableDateInterval('abc123');
     }

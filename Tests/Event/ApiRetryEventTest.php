@@ -4,6 +4,7 @@ namespace Bytes\ResponseBundle\Tests\Event;
 
 use Bytes\Common\Faker\Providers\MiscProvider;
 use Bytes\Common\Faker\TestFakerTrait;
+use Bytes\EnumSerializerBundle\Faker\FakerEnumProvider;
 use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\Event\ApiRetryEvent;
 use Bytes\ResponseBundle\HttpClient\ApiClientInterface;
@@ -28,7 +29,6 @@ use Faker\Provider\Text;
 use Faker\Provider\UserAgent;
 use Faker\Provider\Uuid;
 use PHPUnit\Framework\TestCase;
-use Spatie\Enum\Faker\FakerEnumProvider;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\Response\AsyncContext;
 use Symfony\Component\HttpClient\Response\MockResponse;

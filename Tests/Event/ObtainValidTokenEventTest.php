@@ -4,6 +4,7 @@ namespace Bytes\ResponseBundle\Tests\Event;
 
 use Bytes\Common\Faker\Providers\MiscProvider;
 use Bytes\Common\Faker\TestFakerTrait;
+use Bytes\EnumSerializerBundle\Faker\FakerEnumProvider;
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\Event\ObtainValidTokenEvent;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
@@ -29,7 +30,6 @@ use Faker\Provider\UserAgent;
 use Faker\Provider\Uuid;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Spatie\Enum\Faker\FakerEnumProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**

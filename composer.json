@@ -8,7 +8,7 @@
         "ext-json": "*",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.8",
-        "mrgoodbytes8667/enum-serializer-bundle": "^1.4",
+        "mrgoodbytes8667/enum-serializer-bundle": "^1.7 | ^2.0",
         "mrgoodbytes8667/http-client-common": "^0.2.3",
         "symfony/console": "^5.3 | ^6.0",
         "symfony/security-core": "^5.3 | ^6.0",
@@ -34,7 +34,10 @@
         "mrgoodbytes8667/string-mask-bundle": "Mask tokens when displaying them"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -44,6 +47,7 @@
     },
     "conflict": {
         "phpunit/phpunit": "<9.5 || 9.5.8",
+        "spatie/enum": "<3.11.0",
         "symfony/http-client": "<5.2.1"
     },
     "minimum-stability": "dev"
