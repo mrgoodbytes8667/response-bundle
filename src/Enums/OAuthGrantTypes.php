@@ -4,13 +4,13 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
 use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 use JetBrains\PhpStorm\Deprecated;
 
 enum OAuthGrantTypes: string implements EasyAdminChoiceEnumInterface
 {
-    use BackedEnumTrait;
+    use StringBackedEnumTrait;
 
     case authorizationCode = 'authorization_code';
     case refreshToken = 'refresh_token';

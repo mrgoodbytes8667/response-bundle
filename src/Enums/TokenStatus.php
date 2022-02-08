@@ -4,14 +4,14 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
 use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 use JetBrains\PhpStorm\Deprecated;
 use ValueError;
 
 enum TokenStatus: string implements EasyAdminChoiceEnumInterface
 {
-    use BackedEnumTrait;
+    use StringBackedEnumTrait;
 
     case granted = 'granted';
     case refreshed = 'refreshed';

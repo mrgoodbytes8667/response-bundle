@@ -4,8 +4,8 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
 use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 use JetBrains\PhpStorm\Deprecated;
 
 /**
@@ -13,7 +13,7 @@ use JetBrains\PhpStorm\Deprecated;
  */
 enum HttpMethods: string implements EasyAdminChoiceEnumInterface
 {
-    use BackedEnumTrait;
+    use StringBackedEnumTrait;
 
     case get = 'GET';     // The GET method requests a representation of the specified resource. Requests using GET should only retrieve data.
     case head = 'HEAD';    // The HEAD method asks for a response identical to that of a GET request; but without the response body.
@@ -78,5 +78,4 @@ enum HttpMethods: string implements EasyAdminChoiceEnumInterface
     {
         return HttpMethods::patch;
     }
-
 }

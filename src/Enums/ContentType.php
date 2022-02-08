@@ -4,14 +4,15 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
 use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\FormChoiceEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 use JetBrains\PhpStorm\Deprecated;
 use ValueError;
 
-enum ContentType: string implements EasyAdminChoiceEnumInterface, \Bytes\EnumSerializerBundle\Enums\FormChoiceEnumInterface
+enum ContentType: string implements EasyAdminChoiceEnumInterface, FormChoiceEnumInterface
 {
-    use BackedEnumTrait;
+    use StringBackedEnumTrait;
 
     case imageGif = 'image/gif';
     case imageJpg = 'image/jpeg';

@@ -4,13 +4,13 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
 use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 use JetBrains\PhpStorm\Deprecated;
 
 enum TokenSource: string implements EasyAdminChoiceEnumInterface
 {
-    use BackedEnumTrait;
+    use StringBackedEnumTrait;
 
     case id = 'id';
     case user = 'user';
