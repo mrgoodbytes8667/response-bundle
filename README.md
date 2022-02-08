@@ -52,7 +52,7 @@ return [
 - [3.2.0](https://github.com/mrgoodbytes8667/response-bundle/releases/tag/v3.2.0)+ requires PHP 8.1
 - All enum classes have been changed to native PHP enums. Replace all function calls with the newer enum values (the 
 function calls remain in place but are deprecated, and will be removed in
-[Version 4.0](https://github.com/mrgoodbytes8667/response-bundle/milestone/1))
+[Version 4.0](https://github.com/mrgoodbytes8667/response-bundle/releases/tag/v4.0.0))
 ### From [3.2.0](https://github.com/mrgoodbytes8667/response-bundle/releases/tag/v3.2.0) to [4.0.0](https://github.com/mrgoodbytes8667/response-bundle/releases/tag/v4.0.0)
 - All enum classes have been changed to native PHP enums. Replace all function calls with the newer enum values
 
