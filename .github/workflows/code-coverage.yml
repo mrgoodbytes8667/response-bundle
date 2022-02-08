@@ -8,9 +8,10 @@ on:
       - main
       - 2.*
       - 3.*
+      - 4.*
 
 jobs:
   coverage:
-    uses: mrgoodbytes8667/workflows/.github/workflows/code-coverage.yml@php8.0
+    uses: mrgoodbytes8667/workflows/.github/workflows/code-coverage.yml@php8.1
     with:
       phpUnitVersion: 9.5
