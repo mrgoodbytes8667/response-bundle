@@ -75,7 +75,7 @@ class ObtainValidTokenEventTest extends TestCase
     public function testUserTokenWithNoUser()
     {
         $identifier = $this->faker->word();
-        $tokenSource = TokenSource::user();
+        $tokenSource = TokenSource::user;
         $this->expectException(InvalidArgumentException::class);
         $event = ObtainValidTokenEvent::new($identifier, $tokenSource);
     }
@@ -86,7 +86,7 @@ class ObtainValidTokenEventTest extends TestCase
     public function testGetSet()
     {
         $identifier = $this->faker->word();
-        $tokenSource = TokenSource::app();
+        $tokenSource = TokenSource::app;
         $identifier2 = $this->faker->word();
         $tokenSource2 = $this->faker->valid(
             function ($value) use ($tokenSource) {

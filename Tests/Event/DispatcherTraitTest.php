@@ -48,7 +48,7 @@ class DispatcherTraitTest extends TestCase
             $this->assertInstanceOf(Event::class, $i);
         }
 
-        $this->assertInstanceOf(Event::class, $mock->dispatchObtainValidToken($this->faker->word(), TokenSource::app(), null, []));
+        $this->assertInstanceOf(Event::class, $mock->dispatchObtainValidToken($this->faker->word(), TokenSource::app, null, []));
 
         $validation = $this->getMockBuilder(TokenValidationResponseInterface::class)->getMock();
 
