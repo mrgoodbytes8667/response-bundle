@@ -20,11 +20,6 @@ class TokenSourceTest extends TestCase
     public function testEnum($label, $value)
     {
         $enum = TokenSource::from($value);
-        $this->assertEquals($label, $enum->label);
-        $this->assertEquals($value, $enum->value);
-
-        $enum = TokenSource::from($label);
-        $this->assertEquals($label, $enum->label);
         $this->assertEquals($value, $enum->value);
     }
 

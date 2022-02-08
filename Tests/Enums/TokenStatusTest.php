@@ -9,6 +9,7 @@ use Bytes\Tests\Common\TestSerializerTrait;
 use Faker\Factory;
 use Generator;
 use PHPUnit\Framework\TestCase;
+use ValueError;
 
 class TokenStatusTest extends TestCase
 {
@@ -23,11 +24,6 @@ class TokenStatusTest extends TestCase
     public function testEnum($label, $value)
     {
         $enum = TokenStatus::from($value);
-        $this->assertEquals($label, $enum->label);
-        $this->assertEquals($value, $enum->value);
-
-        $enum = TokenStatus::from($label);
-        $this->assertEquals($label, $enum->label);
         $this->assertEquals($value, $enum->value);
     }
 
@@ -120,20 +116,9 @@ class TokenStatusTest extends TestCase
      * @param $label
      * @param $value
      */
-    public function testMakeInvalidLabel($label, $value)
-    {
-        $this->expectException(BadMethodCallException::class);
-        $this->assertFalse(TokenStatus::isActive(TokenStatus::from($label)));
-    }
-
-    /**
-     * @dataProvider provideInvalidLabelsValues
-     * @param $label
-     * @param $value
-     */
     public function testMakeInvalidValue($label, $value)
     {
-        $this->expectException(BadMethodCallException::class);
+        $this->expectException(ValueError::class);
         $this->assertFalse(TokenStatus::isActive(TokenStatus::from($value)));
     }
 

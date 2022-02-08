@@ -20,12 +20,6 @@ class ContentTypeTest extends TestCase
     public function testEnum($label, $value, $extension)
     {
         $enum = ContentType::from($value);
-        $this->assertEquals($label, $enum->label);
-        $this->assertEquals($value, $enum->value);
-        $this->assertEquals($extension, $enum->getExtension());
-
-        $enum = ContentType::from($label);
-        $this->assertEquals($label, $enum->label);
         $this->assertEquals($value, $enum->value);
         $this->assertEquals($extension, $enum->getExtension());
     }

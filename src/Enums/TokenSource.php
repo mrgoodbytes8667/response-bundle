@@ -4,21 +4,20 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\Enum;
-use function Symfony\Component\String\u;
+use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
+use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use JetBrains\PhpStorm\Deprecated;
 
-/**
- * Class TokenSource
- * @package Bytes\ResponseBundle\Enums
- *
- * @method static self id()
- * @method static self user()
- * @method static self app()
- */
-class TokenSource extends Enum
+enum TokenSource: string implements EasyAdminChoiceEnumInterface
 {
+    use BackedEnumTrait;
+
+    case id = 'id';
+    case user = 'user';
+    case app = 'app';
+
     /**
-     * @return array
+     * @return array = ['ID' => "id", 'User' => "user", 'App' => "app"]
      */
     public static function formChoices(): array
     {
@@ -27,5 +26,23 @@ class TokenSource extends Enum
             'User' => 'user',
             'App' => 'app',
         ];
+    }
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function id(): TokenSource
+    {
+        return TokenSource::id;
+    }
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function user(): TokenSource
+    {
+        return TokenSource::user;
+    }
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function app(): TokenSource
+    {
+        return TokenSource::app;
     }
 }

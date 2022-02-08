@@ -4,47 +4,64 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\Enum;
+use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
+use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use JetBrains\PhpStorm\Deprecated;
+use ValueError;
 
-/**
- * Class ContentType
- * @package Bytes\ResponseBundle\Enums
- *
- * @method static self imageGif()
- * @method static self imageJpg()
- * @method static self imagePng()
- * @method static self imageWebP()
- *
- * @method static self json()
- */
-class ContentType extends Enum
+enum ContentType: string implements EasyAdminChoiceEnumInterface, \Bytes\EnumSerializerBundle\Enums\FormChoiceEnumInterface
 {
-    /**
-     * @return string[]
-     */
-    protected static function values(): array
+    use BackedEnumTrait;
+
+    case imageGif = 'image/gif';
+    case imageJpg = 'image/jpeg';
+    case imagePng = 'image/png';
+    case imageWebP = 'image/webp';
+    case json = 'application/json';
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function imageGif(): ContentType
     {
-        return [
-            'imageGif' => 'image/gif',
-            'imageJpg' => 'image/jpeg',
-            'imagePng' => 'image/png',
-            'imageWebP' => 'image/webp',
-            'json' => 'application/json',
-        ];
+        return ContentType::imageGif;
+    }
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function imageJpg(): ContentType
+    {
+        return ContentType::imageJpg;
+    }
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function imagePng(): ContentType
+    {
+        return ContentType::imagePng;
+    }
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function imageWebP(): ContentType
+    {
+        return ContentType::imageWebP;
+    }
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function json(): ContentType
+    {
+        return ContentType::json;
     }
 
     /**
      * @return string
+     * @throws ValueError
      */
     public function getExtension(): string
     {
-        return match ($this->value) {
-            'image/gif' => 'gif',
-            'image/jpeg' => 'jpg',
-            'image/png' => 'png',
-            'image/webp' => 'webp',
-            'application/json' => 'json',
-            default => throw new \BadMethodCallException('The value is invalid.'),
+        return match ($this) {
+            self::imageGif => 'gif',
+            self::imageJpg => 'jpg',
+            self::imagePng => 'png',
+            self::imageWebP => 'webp',
+            self::json => 'json',
+            default => throw new ValueError('The value is invalid.'),
         };
     }
 }

@@ -4,35 +4,38 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use BadMethodCallException;
-use Bytes\EnumSerializerBundle\Enums\Enum;
-use TypeError;
+use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
+use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use ValueError;
 
-/**
- * Class TokenStatus
- * @package Bytes\ResponseBundle\Enums
- *
- * @method static self granted()
- * @method static self refreshed()
- * @method static self expired()
- * @method static self revoked()
- */
-class TokenStatus extends Enum
+enum TokenStatus: string implements EasyAdminChoiceEnumInterface
 {
+    use BackedEnumTrait;
+
+    case granted = 'granted';
+    case refreshed = 'refreshed';
+    case expired = 'expired';
+    case revoked = 'revoked';
+
     /**
      * @param TokenStatus|string $status
      * @return bool
      */
     public static function isActive(TokenStatus|string $status): bool
     {
-        if (is_string($status)) {
+        /** @var TokenStatus $enum */
+        $enum = null;
+
+        if ($status instanceof TokenStatus) {
+            $enum = $status;
+        } else {
             try {
-                $status = TokenStatus::from($status);
-            } catch (BadMethodCallException | TypeError $exception) {
+                $enum = TokenStatus::from($status);
+            } catch (ValueError $exception) {
                 return false;
             }
         }
-        return $status->equals(TokenStatus::granted(), TokenStatus::refreshed());
+        return $enum->equals(TokenStatus::granted, TokenStatus::refreshed);
     }
 
     /**
