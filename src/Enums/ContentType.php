@@ -33,4 +33,16 @@ enum ContentType: string implements StringBackedEnumInterface
             default => throw new ValueError('The value is invalid.'),
         };
     }
+
+    public static function fromExtension($extension): ContentType
+    {
+        return match (strtolower($extension)) {
+            'gif' => self::imageGif,
+            'jpg', 'jpeg' => self::imageJpg,
+            'png' => self::imagePng,
+            'webp' => self::imageWebP,
+            'json' => self::json,
+            default => throw new ValueError('The value is invalid.'),
+        };
+    }
 }

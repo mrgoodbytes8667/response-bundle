@@ -22,6 +22,7 @@ class ContentTypeTest extends TestCase
         $enum = ContentType::from($value);
         $this->assertEquals($value, $enum->value);
         $this->assertEquals($extension, $enum->getExtension());
+        $this->assertEquals($enum, ContentType::fromExtension($extension));
     }
 
     /**
