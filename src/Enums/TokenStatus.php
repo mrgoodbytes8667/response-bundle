@@ -6,6 +6,7 @@ namespace Bytes\ResponseBundle\Enums;
 
 use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
 use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use JetBrains\PhpStorm\Deprecated;
 use ValueError;
 
 enum TokenStatus: string implements EasyAdminChoiceEnumInterface
@@ -16,6 +17,30 @@ enum TokenStatus: string implements EasyAdminChoiceEnumInterface
     case refreshed = 'refreshed';
     case expired = 'expired';
     case revoked = 'revoked';
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function granted(): static
+    {
+        return static::granted;
+    }
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function refreshed(): static
+    {
+        return static::refreshed;
+    }
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function expired(): static
+    {
+        return static::expired;
+    }
+
+    #[Deprecated(reason: 'since 3.2.0, use "%name%" instead.', replacement: '%class%::%name%')]
+    public static function revoked(): static
+    {
+        return static::revoked;
+    }
 
     /**
      * @param TokenStatus|string $status
