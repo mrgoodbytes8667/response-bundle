@@ -4,14 +4,14 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods As of 2020-10-29
  */
-enum HttpMethods: string implements EasyAdminChoiceEnumInterface
+enum HttpMethods: string implements StringBackedEnumInterface
 {
     use StringBackedEnumTrait;
 

@@ -4,11 +4,11 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 use JetBrains\PhpStorm\Deprecated;
 
-enum TokenSource: string implements EasyAdminChoiceEnumInterface
+enum TokenSource: string implements StringBackedEnumInterface
 {
     use StringBackedEnumTrait;
 

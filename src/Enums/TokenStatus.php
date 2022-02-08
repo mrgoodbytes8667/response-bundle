@@ -4,12 +4,12 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\EasyAdminChoiceEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 use JetBrains\PhpStorm\Deprecated;
 use ValueError;
 
-enum TokenStatus: string implements EasyAdminChoiceEnumInterface
+enum TokenStatus: string implements StringBackedEnumInterface
 {
     use StringBackedEnumTrait;
 
@@ -61,18 +61,5 @@ enum TokenStatus: string implements EasyAdminChoiceEnumInterface
             }
         }
         return $enum->equals(TokenStatus::granted, TokenStatus::refreshed);
-    }
-
-    /**
-     * @return array
-     */
-    public static function formChoices(): array
-    {
-        return [
-            'Granted' => 'granted',
-            'Refreshed' => 'refreshed',
-            'Expired' => 'expired',
-            'Revoked' => 'revoked',
-        ];
     }
 }
