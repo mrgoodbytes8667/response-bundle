@@ -4,12 +4,12 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\BackedEnumInterface;
-use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 
-enum TokenSource: string implements BackedEnumInterface
+enum TokenSource: string implements StringBackedEnumInterface
 {
-    use BackedEnumTrait;
+    use StringBackedEnumTrait;
 
     case id = 'id';
     case user = 'user';

@@ -4,13 +4,13 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\BackedEnumInterface;
-use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 use ValueError;
 
-enum TokenStatus: string implements BackedEnumInterface
+enum TokenStatus: string implements StringBackedEnumInterface
 {
-    use BackedEnumTrait;
+    use StringBackedEnumTrait;
 
     case granted = 'granted';
     case refreshed = 'refreshed';
@@ -36,18 +36,5 @@ enum TokenStatus: string implements BackedEnumInterface
             }
         }
         return $enum->equals(TokenStatus::granted, TokenStatus::refreshed);
-    }
-
-    /**
-     * @return array
-     */
-    public static function formChoices(): array
-    {
-        return [
-            'Granted' => 'granted',
-            'Refreshed' => 'refreshed',
-            'Expired' => 'expired',
-            'Revoked' => 'revoked',
-        ];
     }
 }

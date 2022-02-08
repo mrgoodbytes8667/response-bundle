@@ -4,15 +4,15 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\BackedEnumInterface;
-use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 
 /**
  * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods As of 2020-10-29
  */
-enum HttpMethods: string implements BackedEnumInterface
+enum HttpMethods: string implements StringBackedEnumInterface
 {
-    use BackedEnumTrait;
+    use StringBackedEnumTrait;
 
     case get = 'GET';     // The GET method requests a representation of the specified resource. Requests using GET should only retrieve data.
     case head = 'HEAD';    // The HEAD method asks for a response identical to that of a GET request; but without the response body.

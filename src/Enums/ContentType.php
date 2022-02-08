@@ -4,13 +4,13 @@
 namespace Bytes\ResponseBundle\Enums;
 
 
-use Bytes\EnumSerializerBundle\Enums\BackedEnumInterface;
-use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
+use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 use ValueError;
 
-enum ContentType: string implements BackedEnumInterface
+enum ContentType: string implements StringBackedEnumInterface
 {
-    use BackedEnumTrait;
+    use StringBackedEnumTrait;
 
     case imageGif = 'image/gif';
     case imageJpg = 'image/jpeg';
