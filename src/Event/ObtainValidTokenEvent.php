@@ -25,7 +25,7 @@ class ObtainValidTokenEvent extends Event
      */
     public function __construct(private string $identifier, private TokenSource $tokenSource, private ?UserInterface $user = null, private array $scopes = [], private ?AccessTokenInterface $token = null)
     {
-        if ($tokenSource->equals(TokenSource::user(), TokenSource::id()) && empty($user)) {
+        if ($tokenSource->equals(TokenSource::user, TokenSource::id) && empty($user)) {
             throw new InvalidArgumentException('Id and User tokens require a user.');
         }
     }

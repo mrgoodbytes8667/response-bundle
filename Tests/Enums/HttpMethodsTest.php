@@ -1,6 +1,6 @@
 <?php
 
-namespace Bytes\ResponseBundle\Tests;
+namespace Bytes\ResponseBundle\Tests\Enums;
 
 use Bytes\EnumSerializerBundle\PhpUnit\EnumAssertions;
 use Bytes\ResponseBundle\Enums\HttpMethods;
