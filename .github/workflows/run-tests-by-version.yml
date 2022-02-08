@@ -9,6 +9,7 @@ on:
       - main
       - 2.*
       - 3.*
+      - 4.*
   schedule:
     # Weekly on Thursdays at 3pm UTC
     - cron:  '0 15 * * 4'
