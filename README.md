@@ -32,8 +32,6 @@ following command to download the latest stable version of this bundle:
 ```console
 $ composer require mrgoodbytes8667/response-bundle
 ```
-Note: this bundle depends on the [Enum-Serializer-Bundle](https://github.com/mrgoodbytes8667/enum-serializer-bundle) as
-well, but Flex should take care of this for you.
 
 #### Step 2: Enable the Bundle
 
@@ -45,13 +43,9 @@ in the `config/bundles.php` file of your project:
 
 return [
     // ...
-    Bytes\EnumSerializerBundle\BytesEnumSerializerBundle::class => ['all' => true],
     Bytes\ResponseBundle\BytesResponseBundle::class => ['all' => true],
 ];
 ```
-Note: this bundle depends on the [Enum-Serializer-Bundle](https://github.com/mrgoodbytes8667/enum-serializer-bundle) and
-[setup instructions](https://github.com/mrgoodbytes8667/enum-serializer-bundle/blob/main/README.md#applications-that-dont-use-symfony-flex)
-for it must be followed as well.
 
 ## Upgrading
 ### From * to [3.2.0](https://github.com/mrgoodbytes8667/response-bundle/releases/tag/v3.2.0)
@@ -59,6 +53,8 @@ for it must be followed as well.
 - All enum classes have been changed to native PHP enums. Replace all function calls with the newer enum values (the 
 function calls remain in place but are deprecated, and will be removed in
 [Version 4.0](https://github.com/mrgoodbytes8667/response-bundle/milestone/1))
+### From [3.2.0](https://github.com/mrgoodbytes8667/response-bundle/releases/tag/v3.2.0) to [4.0.0](https://github.com/mrgoodbytes8667/response-bundle/releases/tag/v4.0.0)
+- All enum classes have been changed to native PHP enums. Replace all function calls with the newer enum values
 
 ## License
 [![License](https://i.creativecommons.org/l/by-nc/4.0/88x31.png)]("http://creativecommons.org/licenses/by-nc/4.0/)  
