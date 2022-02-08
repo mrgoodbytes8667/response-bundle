@@ -9,11 +9,70 @@ on:
   workflow_dispatch:
 
 jobs:
+  build:
+    timeout-minutes: 15
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ 8.1 ]
+        prefer-lowest: [ false, true ]
+        os: [ ubuntu-latest ]
+    env:
+      SYMFONY_PHPUNIT_VERSION: 9.5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set Variables
+        id: set-variables
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+          if [ ${{ matrix.prefer-lowest }} == 'true' ]; then echo "::set-output name=preferLowest::--prefer-lowest"; else echo "::set-output name=preferLowest::"; fi
+          echo "::set-output name=cacheKeyPath::${{ format('{0}-php{1}-tests-composer-', runner.os, matrix.php) }}"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.set-variables.outputs.dir }}
+          key: ${{ steps.set-variables.outputs.cacheKeyPath }}${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ steps.set-variables.outputs.cacheKeyPath }}
+
+      - name: Setup PHP
+        if: ${{ success() }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: json, dom, curl, libxml, mbstring
+          coverage: none
+
+      - name: Install dependencies
+        if: ${{ success() }}
+        run: composer update ${{ steps.set-variables.outputs.preferLowest }} --prefer-stable --prefer-dist --no-interaction
+
+      - name: Run PHPUnit
+        if: ${{ success() }}
+        run: php vendor/bin/phpunit
+
   release:
-    uses: mrgoodbytes8667/workflows/.github/workflows/release.yml@php8.1
-    with:
-      phpUnitVersion: 9.5
-      prerelease: true
+    needs: build
+    timeout-minutes: 15
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - name: Create Release
+        if: ${{ success() }}
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: true
+          prerelease: true
 
   trigger_child_tests:
     needs: build
@@ -22,7 +81,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     strategy:
       matrix:
-        repo: [ "discord-bundle", "discord-response-bundle", "twitch-client-bundle", "twitch-response-bundle" ]
+        repo: [ "discord-bundle", "discord-response-bundle", "discord-commands-bundle", "discord-interaction-bundle", "twitch-client-bundle", "twitch-response-bundle" ]
     steps:
       - name: Trigger Dispatch
         run: |
