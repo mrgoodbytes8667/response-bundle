@@ -245,6 +245,10 @@ trait AccessTokenTrait
      */
     public function getTokenSource(): ?TokenSource
     {
+        if(is_null($this->tokenSource)) {
+            return null;
+        }
+        
         try {
             return TokenSource::from($this->tokenSource);
         } catch (\ValueError $exception) {
