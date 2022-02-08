@@ -247,7 +247,7 @@ trait AccessTokenTrait
     {
         try {
             return TokenSource::from($this->tokenSource);
-        } catch (TypeError $exception) {
+        } catch (\ValueError $exception) {
             return null;
         }
     }
