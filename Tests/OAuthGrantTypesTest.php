@@ -2,7 +2,7 @@
 
 namespace Bytes\ResponseBundle\Tests;
 
-use Bytes\EnumSerializerBundle\Phpunit\EnumAssertions;
+use Bytes\EnumSerializerBundle\PhpUnit\EnumAssertions;
 use Bytes\ResponseBundle\Enums\OAuthGrantTypes;
 use PHPUnit\Framework\TestCase;
 
