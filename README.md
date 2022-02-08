@@ -32,7 +32,8 @@ following command to download the latest stable version of this bundle:
 ```console
 $ composer require mrgoodbytes8667/response-bundle
 ```
-Note: this bundle depends on the [Enum-Serializer-Bundle](https://github.com/mrgoodbytes8667/enum-serializer-bundle) as well, but Flex should take care of this for you.
+Note: this bundle depends on the [Enum-Serializer-Bundle](https://github.com/mrgoodbytes8667/enum-serializer-bundle) as
+well, but Flex should take care of this for you.
 
 #### Step 2: Enable the Bundle
 
@@ -48,9 +49,19 @@ return [
     Bytes\ResponseBundle\BytesResponseBundle::class => ['all' => true],
 ];
 ```
-Note: this bundle depends on the [Enum-Serializer-Bundle](https://github.com/mrgoodbytes8667/enum-serializer-bundle) and [setup instructions](https://github.com/mrgoodbytes8667/enum-serializer-bundle/blob/main/README.md#applications-that-dont-use-symfony-flex) for it must be followed as well.
+Note: this bundle depends on the [Enum-Serializer-Bundle](https://github.com/mrgoodbytes8667/enum-serializer-bundle) and
+[setup instructions](https://github.com/mrgoodbytes8667/enum-serializer-bundle/blob/main/README.md#applications-that-dont-use-symfony-flex)
+for it must be followed as well.
+
+## Upgrading
+### From * to [3.2.0](https://github.com/mrgoodbytes8667/response-bundle/releases/tag/v3.2.0)
+- [3.2.0](https://github.com/mrgoodbytes8667/response-bundle/releases/tag/v3.2.0)+ requires PHP 8.1
+- All enum classes have been changed to native PHP enums. Replace all function calls with the newer enum values (the 
+function calls remain in place but are deprecated, and will be removed in
+[Version 4.0](https://github.com/mrgoodbytes8667/response-bundle/milestone/1))
 
 ## License
 [![License](https://i.creativecommons.org/l/by-nc/4.0/88x31.png)]("http://creativecommons.org/licenses/by-nc/4.0/)  
-response-bundle by [MrGoodBytes](https://www.goodbytes.live) is licensed under a [Creative Commons Attribution-NonCommercial 4.0 International License](http://creativecommons.org/licenses/by-nc/4.0/).  
+response-bundle by [MrGoodBytes](https://www.goodbytes.live) is licensed under a
+[Creative Commons Attribution-NonCommercial 4.0 International License](http://creativecommons.org/licenses/by-nc/4.0/).  
 Based on a work at [https://github.com/mrgoodbytes8667/response-bundle](https://github.com/mrgoodbytes8667/response-bundle).
