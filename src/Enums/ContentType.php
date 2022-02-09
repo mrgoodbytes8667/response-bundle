@@ -38,7 +38,7 @@ enum ContentType: string implements StringBackedEnumInterface
     {
         return match (strtolower($extension)) {
             'gif' => self::imageGif,
-            'jpg', 'jpeg' => self::imageJpg,
+            'jpg', 'jpeg', 'jfif' => self::imageJpg,
             'png' => self::imagePng,
             'webp' => self::imageWebP,
             'json' => self::json,
