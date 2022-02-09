@@ -62,6 +62,7 @@ class ContentTypeTest extends TestCase
         yield ['label' => 'imageGif', 'value' => 'image/gif', 'extension' => 'gif'];
         yield ['label' => 'imageJpg', 'value' => 'image/jpeg', 'extension' => 'jpg'];
         yield ['label' => 'imagePng', 'value' => 'image/png', 'extension' => 'png'];
+        yield ['label' => 'imageSvg', 'value' => 'image/svg+xml', 'extension' => 'svg'];
         yield ['label' => 'imageWebP', 'value' => 'image/webp', 'extension' => 'webp'];
         yield ['label' => 'json', 'value' => 'application/json', 'extension' => 'json'];
     }

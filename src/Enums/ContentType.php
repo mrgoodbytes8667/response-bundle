@@ -15,6 +15,7 @@ enum ContentType: string implements StringBackedEnumInterface
     case imageGif = 'image/gif';
     case imageJpg = 'image/jpeg';
     case imagePng = 'image/png';
+    case imageSvg = 'image/svg+xml';
     case imageWebP = 'image/webp';
     case json = 'application/json';
 
@@ -28,6 +29,7 @@ enum ContentType: string implements StringBackedEnumInterface
             self::imageGif => 'gif',
             self::imageJpg => 'jpg',
             self::imagePng => 'png',
+            self::imageSvg => 'svg',
             self::imageWebP => 'webp',
             self::json => 'json',
             default => throw new ValueError('The value is invalid.'),
@@ -44,6 +46,7 @@ enum ContentType: string implements StringBackedEnumInterface
             'gif' => self::imageGif,
             'jpg', 'jpeg', 'jpe', 'jif', 'jfif' => self::imageJpg,
             'apng', 'png' => self::imagePng,
+            'svg' => self::imageSvg,
             'webp' => self::imageWebP,
             'json' => self::json,
             default => throw new ValueError('The value is invalid.'),
