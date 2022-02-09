@@ -22,6 +22,17 @@ class ContentTypeTest extends TestCase
         $enum = ContentType::from($value);
         $this->assertEquals($value, $enum->value);
         $this->assertEquals($extension, $enum->getExtension());
+    }
+
+    /**
+     * @dataProvider provideLabelsValuesExtensions
+     * @dataProvider provideLabelsValuesAlternateExtensions
+     * @param $label
+     * @param $value
+     */
+    public function testEnumFromExtension($label, $value, $extension)
+    {
+        $enum = ContentType::from($value);
         $this->assertEquals($enum, ContentType::fromExtension($extension));
     }
 
@@ -53,5 +64,16 @@ class ContentTypeTest extends TestCase
         yield ['label' => 'imagePng', 'value' => 'image/png', 'extension' => 'png'];
         yield ['label' => 'imageWebP', 'value' => 'image/webp', 'extension' => 'webp'];
         yield ['label' => 'json', 'value' => 'application/json', 'extension' => 'json'];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function provideLabelsValuesAlternateExtensions()
+    {
+        yield ['label' => 'imageJpg', 'value' => 'image/jpeg', 'extension' => 'jpeg'];
+        yield ['label' => 'imageJpg', 'value' => 'image/jpeg', 'extension' => 'jpe'];
+        yield ['label' => 'imageJpg', 'value' => 'image/jpeg', 'extension' => 'jif'];
+        yield ['label' => 'imageJpg', 'value' => 'image/jpeg', 'extension' => 'jfif'];
     }
 }
