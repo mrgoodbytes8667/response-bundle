@@ -42,8 +42,8 @@ enum ContentType: string implements StringBackedEnumInterface
     {
         return match (strtolower($extension)) {
             'gif' => self::imageGif,
-            'png' => self::imagePng,
             'jpg', 'jpeg', 'jpe', 'jif', 'jfif' => self::imageJpg,
+            'apng', 'png' => self::imagePng,
             'webp' => self::imageWebP,
             'json' => self::json,
             default => throw new ValueError('The value is invalid.'),
