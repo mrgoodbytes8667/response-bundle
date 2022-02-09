@@ -75,5 +75,6 @@ class ContentTypeTest extends TestCase
         yield ['label' => 'imageJpg', 'value' => 'image/jpeg', 'extension' => 'jpe'];
         yield ['label' => 'imageJpg', 'value' => 'image/jpeg', 'extension' => 'jif'];
         yield ['label' => 'imageJpg', 'value' => 'image/jpeg', 'extension' => 'jfif'];
+        yield ['label' => 'imagePng', 'value' => 'image/png', 'extension' => 'apng'];
     }
 }
