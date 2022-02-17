@@ -7,6 +7,7 @@ namespace Bytes\ResponseBundle\Entity;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * Trait CreatedUpdatedTrait
@@ -48,7 +49,7 @@ trait CreatedUpdatedTrait
     /**
      * @return $this
      */
-    public function setupDates(): self
+    public function initializeDates(): self
     {
         $dateTime = new DateTime();
         $this->setCreatedAt($dateTime);
@@ -57,6 +58,15 @@ trait CreatedUpdatedTrait
         }
 
         return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    #[Deprecated(reason: 'since 4.1.1, use initializeDates() instead', replacement: '%class%->initializeDates()')]
+    public function setupDates(): self
+    {
+        return $this->initializeDates();
     }
 
     /**
