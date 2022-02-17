@@ -39,21 +39,6 @@ class CreatedUpdatedTraitTest extends TestCase
     /**
      * @dataProvider provideMock
      * @param CreatedUpdatedTrait|\PHPUnit\Framework\MockObject\MockObject $mock
-     * @group legacy
-     */
-    public function testSetupDates(CreatedUpdatedTrait|\PHPUnit\Framework\MockObject\MockObject $mock)
-    {
-        $now = $this->faker->dateTime();
-        $mock->setupDates();
-        self::assertEquals($mock->getCreatedAt(), $mock->getUpdatedAt());
-        $mock->setCreatedAt($now);
-        self::assertEquals($now, $mock->getCreatedAt());
-        self::assertNotEquals($now, $mock->getUpdatedAt());
-    }
-
-    /**
-     * @dataProvider provideMock
-     * @param CreatedUpdatedTrait|\PHPUnit\Framework\MockObject\MockObject $mock
      */
     public function testGetSetUpdatedAt(CreatedUpdatedTrait|\PHPUnit\Framework\MockObject\MockObject $mock)
     {

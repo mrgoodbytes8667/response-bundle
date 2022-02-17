@@ -61,15 +61,6 @@ trait CreatedUpdatedTrait
     }
 
     /**
-     * @return $this
-     */
-    #[Deprecated(reason: 'since 4.1.1, use initializeDates() instead', replacement: '%class%->initializeDates()')]
-    public function setupDates(): self
-    {
-        return $this->initializeDates();
-    }
-
-    /**
      * @return DateTimeInterface|null
      */
     public function getUpdatedAt(): ?DateTimeInterface
