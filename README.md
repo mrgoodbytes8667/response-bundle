@@ -1,7 +1,8 @@
 # response-bundle
 [![Packagist Version](https://img.shields.io/packagist/v/mrgoodbytes8667/response-bundle?logo=packagist&logoColor=FFF&style=flat)](https://packagist.org/packages/mrgoodbytes8667/response-bundle)
 [![PHP from Packagist](https://img.shields.io/packagist/php-v/mrgoodbytes8667/response-bundle?logo=php&logoColor=FFF&style=flat)](https://packagist.org/packages/mrgoodbytes8667/response-bundle)
-![Symfony Version](https://img.shields.io/endpoint?url=https%3A%2F%2Fshields.goodbytes.live%2Fshield%2Fsymfony%2F%255E5.3%2520%257C%2520%255E6.0&logoColor=FFF&style=flat)
+![Symfony Versions Supported](https://img.shields.io/endpoint?url=https%3A%2F%2Fshields.goodbytes.live%2Fshield%2Fsymfony%2F%255E5.3%2520%257C%2520%255E6.0&logoColor=FFF&style=flat)
+![Symfony Versions Tested](https://img.shields.io/endpoint?url=https%3A%2F%2Fshields.goodbytes.live%2Fshield%2Fsymfony-test%2F%255E5.3%2520%257C%2520%255E6.0&logoColor=FFF&style=flat)
 ![Packagist License](https://img.shields.io/packagist/l/mrgoodbytes8667/response-bundle?logo=creative-commons&logoColor=FFF&style=flat)  
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mrgoodbytes8667/response-bundle/release?label=stable&logo=github&logoColor=FFF&style=flat)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mrgoodbytes8667/response-bundle/tests?logo=github&logoColor=FFF&style=flat)
