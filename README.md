@@ -1,8 +1,8 @@
 # response-bundle
 [![Packagist Version](https://img.shields.io/packagist/v/mrgoodbytes8667/response-bundle?logo=packagist&logoColor=FFF&style=flat)](https://packagist.org/packages/mrgoodbytes8667/response-bundle)
 [![PHP from Packagist](https://img.shields.io/packagist/php-v/mrgoodbytes8667/response-bundle?logo=php&logoColor=FFF&style=flat)](https://packagist.org/packages/mrgoodbytes8667/response-bundle)
-![Symfony Versions Supported](https://img.shields.io/endpoint?url=https%3A%2F%2Fshields.goodbytes.live%2Fshield%2Fsymfony%2F%255E5.3%2520%257C%2520%255E6.0&logoColor=FFF&style=flat)
-![Symfony Versions Tested](https://img.shields.io/endpoint?url=https%3A%2F%2Fshields.goodbytes.live%2Fshield%2Fsymfony-test%2F%255E5.3%2520%257C%2520%255E6.0&logoColor=FFF&style=flat)
+![Symfony Versions Supported](https://img.shields.io/endpoint?url=https%3A%2F%2Fshields.mrgoodbytes.dev%2Fshield%2Fsymfony%2F%255E5.3%2520%257C%2520%255E6.0&logoColor=FFF&style=flat)
+![Symfony Versions Tested](https://img.shields.io/endpoint?url=https%3A%2F%2Fshields.mrgoodbytes.dev%2Fshield%2Fsymfony-test%2F%255E5.3%2520%257C%2520%255E6.0&logoColor=FFF&style=flat)
 ![Packagist License](https://img.shields.io/packagist/l/mrgoodbytes8667/response-bundle?logo=creative-commons&logoColor=FFF&style=flat)  
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mrgoodbytes8667/response-bundle/release?label=stable&logo=github&logoColor=FFF&style=flat)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mrgoodbytes8667/response-bundle/tests?logo=github&logoColor=FFF&style=flat)
@@ -59,6 +59,6 @@ function calls remain in place but are deprecated, and will be removed in
 
 ## License
 [![License](https://i.creativecommons.org/l/by-nc/4.0/88x31.png)]("http://creativecommons.org/licenses/by-nc/4.0/)  
-response-bundle by [MrGoodBytes](https://www.goodbytes.live) is licensed under a
+response-bundle by [MrGoodBytes](https://www.mrgoodbytes.dev) is licensed under a
 [Creative Commons Attribution-NonCommercial 4.0 International License](http://creativecommons.org/licenses/by-nc/4.0/).  
 Based on a work at [https://github.com/mrgoodbytes8667/response-bundle](https://github.com/mrgoodbytes8667/response-bundle).
