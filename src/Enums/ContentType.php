@@ -6,6 +6,7 @@ namespace Bytes\ResponseBundle\Enums;
 
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
+use Bytes\ResponseBundle\Enums\FileExtension as Ext;
 use ValueError;
 
 enum ContentType: string implements StringBackedEnumInterface
@@ -42,13 +43,13 @@ enum ContentType: string implements StringBackedEnumInterface
      */
     public static function fromExtension($extension): ContentType
     {
-        return match (strtolower($extension)) {
-            'gif' => self::imageGif,
-            'jpg', 'jpeg', 'jpe', 'jif', 'jfif' => self::imageJpg,
-            'apng', 'png' => self::imagePng,
-            'svg' => self::imageSvg,
-            'webp' => self::imageWebP,
-            'json' => self::json,
+        return match (Ext::tryFrom(strtolower($extension))) {
+            Ext::GIF => self::imageGif,
+            Ext::JPG, Ext::JPEG, Ext::JPE, Ext::JIF, Ext::JFIF => self::imageJpg,
+            Ext::APNG, Ext::PNG => self::imagePng,
+            Ext::SVG => self::imageSvg,
+            Ext::WEBP => self::imageWebP,
+            Ext::JSON => self::json,
             default => throw new ValueError('The value is invalid.'),
         };
     }
