@@ -49,7 +49,7 @@ abstract class AbstractClient
      * @param string|null $defaultRegexp
      * @param bool $retryAuth
      */
-    public function __construct(protected HttpClientInterface $httpClient, protected EventDispatcherInterface $dispatcher, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, private bool $retryAuth = true)
+    public function __construct(protected HttpClientInterface $httpClient, protected EventDispatcherInterface $dispatcher, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, private bool $retryAuth = true, private $parseAuth = true)
     {
         // Add user agent if not already set
         if (!empty($userAgent)) {
@@ -152,7 +152,7 @@ abstract class AbstractClient
         if($method instanceof HttpMethods) {
             $method = $method->value;
         }
-        if(!empty($this->reader)) {
+        if($this->parseAuth && !empty($this->reader)) {
             if (!is_null($caller)) {
                 try {
                     if (is_string($caller)) {
