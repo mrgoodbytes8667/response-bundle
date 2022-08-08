@@ -8,6 +8,7 @@ use Bytes\HttpClient\Common\HttpClient\ConfigurableScopingHttpClient;
 use Bytes\ResponseBundle\Annotations\Auth;
 use Bytes\ResponseBundle\Annotations\Client;
 use Bytes\ResponseBundle\Enums\ContentType;
+use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\Event\DispatcherTrait;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
@@ -133,7 +134,7 @@ abstract class AbstractClient
      * @param \ReflectionMethod|string|null $caller
      * @param string|null $type
      * @param array $options = HttpClientInterface::OPTIONS_DEFAULTS
-     * @param string $method = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
+     * @param HttpMethods|string $method = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
      * @param ClientResponseInterface|string|null $responseClass
      * @param array $context Additional context for deserialize(), can be overloaded by deserialize()
      * @param callable|null $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
@@ -147,6 +148,9 @@ abstract class AbstractClient
     {
         if(is_null($caller)) {
             trigger_deprecation('mrgoodbytes8667/response-bundle', '2.0.0', 'Calling request() without the caller argument is deprecated and will cease working in a future version.');
+        }
+        if($method instanceof HttpMethods) {
+            $method = $method->value;
         }
         if(!empty($this->reader)) {
             if (!is_null($caller)) {

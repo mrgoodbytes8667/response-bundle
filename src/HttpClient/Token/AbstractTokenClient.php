@@ -247,7 +247,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @param \ReflectionMethod|string|null $caller
      * @param string|null $type
      * @param array $options = HttpClientInterface::OPTIONS_DEFAULTS
-     * @param string $method = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
+     * @param HttpMethods|string $method = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
      * @param ClientResponseInterface|string|null $responseClass
      * @param array $context Additional context for deserialize(), can be overloaded by deserialize()
      * @param callable|null $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
