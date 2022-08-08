@@ -157,7 +157,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ],
                 'body' => $body->toArray(),
-            ], method: HttpMethods::post(), responseClass: $responseClass, onDeserializeCallable: $onDeserializeCallable,
+            ], method: HttpMethods::post, responseClass: $responseClass, onDeserializeCallable: $onDeserializeCallable,
             onSuccessCallable: $onSuccessCallable, params: ['code' => $code]);
     }
 
