@@ -3,6 +3,7 @@
 namespace Bytes\ResponseBundle\Tests\HttpClient\Token;
 
 use Bytes\Common\Faker\TestFakerTrait;
+use Bytes\ResponseBundle\Enums\HttpMethods;
 use Bytes\ResponseBundle\HttpClient\Response\Response;
 use Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient;
 use Bytes\ResponseBundle\Routing\AbstractOAuth;
@@ -83,6 +84,29 @@ class AbstractTokenClientTest extends TestCase
         $this->assertResponseIsSuccessful($response);
         $this->assertResponseStatusCodeSame($response, Http::HTTP_NO_CONTENT);
         $this->assertResponseHasNoContent($response);
+    }
+
+    /**
+     * @dataProvider provideMethods
+     * @throws ClientExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestMethods($method)
+    {
+        $client = $this->getMockForAbstractClass(AbstractTokenClient::class, [MockClient::empty(), new EventDispatcher(), '', true, false]);
+        $client->setResponse(Response::make($this->serializer, new EventDispatcher()));
+        $response = $client->request($this->faker->url(), caller: __METHOD__, method: $method);
+        $this->assertResponseIsSuccessful($response);
+        $this->assertResponseStatusCodeSame($response, Http::HTTP_NO_CONTENT);
+        $this->assertResponseHasNoContent($response);
+    }
+
+    public function provideMethods() {
+        yield ['method' => 'GET'];
+        yield ['method' => HttpMethods::get];
+        yield ['method' => HttpMethods::get->value];
     }
 
     /**
