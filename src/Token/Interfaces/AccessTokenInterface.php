@@ -39,9 +39,9 @@ interface AccessTokenInterface
     public function getTokenType(): ?string;
 
     /**
-     * @return TokenSource|null
+     * @return TokenSource|string|null
      */
-    public function getTokenSource(): ?TokenSource;
+    public function getTokenSource();
 
     /**
      * @return string|null
