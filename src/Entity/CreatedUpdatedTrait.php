@@ -17,14 +17,14 @@ trait CreatedUpdatedTrait
 {
     /**
      * @var DateTimeInterface
-     * @ORM\Column(type="datetime")
      */
+    #[ORM\Column(type: 'datetime')]
     protected $createdAt;
 
     /**
      * @var DateTimeInterface
-     * @ORM\Column(type="datetime")
      */
+    #[ORM\Column(type: 'datetime')]
     protected $updatedAt;
 
     /**

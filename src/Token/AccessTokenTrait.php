@@ -29,71 +29,69 @@ trait AccessTokenTrait
 
     /**
      * @var Ulid
-     * @ORM\Id
-     * @ORM\Column(type="ulid", unique=true)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UlidGenerator::class)
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'ulid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     protected $id;
 
     /**
      * User access token
      * @var string|null
-     * @ORM\Column(type="string", length=512)
      */
+    #[ORM\Column(type: 'string', length: 512)]
     private $accessToken;
 
     /**
      * Refresh token
      * @var string|null
-     * @ORM\Column(type="string", length=512, nullable=true)
      */
+    #[ORM\Column(type: 'string', length: 512, nullable: true)]
     private $refreshToken;
 
     /**
      * Time (in seconds) until the access token expires
      * @var DateInterval|null
-     * @ORM\Column(type="dateinterval")
      */
+    #[ORM\Column(type: 'dateinterval')]
     private $expiresIn;
 
     /**
      * (Calculated) datetime when the access token expires
      * @var DateTimeInterface|null
-     * @ORM\Column(type="datetime")
      */
+    #[ORM\Column(type: 'datetime')]
     private $expiresAt;
 
     /**
      * Space separated scopes
      * @var string|array|null
-     * @ORM\Column(type="string", length=255)
-     * @Assert\AtLeastOneOf({
-     *     @Assert\Blank(),
-     *     @Assert\NotNull(),
-     *     @Assert\Length(
-     *         max = 255
-     *     )
-     * })
      */
+    #[Assert\AtLeastOneOf([
+        new Assert\Blank(),
+        new Assert\NotNull(),
+        new Assert\Length(max: 255),
+    ])]
+    #[ORM\Column(type: 'string', length: 255)]
     private $scope;
 
     /**
      * @var string|null
-     * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $tokenType;
 
     /**
      * @var string|null
-     * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $tokenSource;
 
     /**
      * @var string|null
-     * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $class;
 
     /**
@@ -175,6 +173,7 @@ trait AccessTokenTrait
             $now = new DateTimeImmutable();
             $this->setExpiresAt($now->add($expiresIn));
         }
+        
         $this->expiresIn = $expiresIn;
         return $this;
     }
@@ -218,6 +217,7 @@ trait AccessTokenTrait
         if (is_array($scope)) {
             $scope = implode(' ', $scope);
         }
+        
         $this->scope = $scope ?? '';
         return $this;
     }
@@ -267,6 +267,7 @@ trait AccessTokenTrait
                 $tokenSource = $tokenSource->value;
             }
         }
+        
         $this->tokenSource = $tokenSource;
         return $this;
     }
