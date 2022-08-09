@@ -6,6 +6,10 @@ namespace Bytes\ResponseBundle\Enums;
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 
+/**
+ * @since 5.0.0
+ * @version 5.0.0
+ */
 enum FileExtension: string implements StringBackedEnumInterface
 {
     use StringBackedEnumTrait;
