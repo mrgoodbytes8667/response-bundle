@@ -18,9 +18,19 @@ use LogicException;
  */
 class ComparableDateInterval extends DateInterval
 {
-
+    /**
+     * @var int
+     */
     const INSTANCE_GREATER_THAN = 1;
+
+    /**
+     * @var int
+     */
     const INSTANCE_EQUALS = 0;
+
+    /**
+     * @var int
+     */
     const INSTANCE_LESS_THAN = -1;
 
     /**
@@ -39,61 +49,17 @@ class ComparableDateInterval extends DateInterval
      * @return static
      * @throws Exception
      */
-    public static function create(DateInterval|string|int $intervalSpec)
+    public static function create(DateInterval|string|int $intervalSpec): static
     {
-        if($intervalSpec instanceof DateInterval)
-        {
+        if ($intervalSpec instanceof DateInterval) {
             $intervalSpec = ComparableDateInterval::getTotalSeconds($intervalSpec);
         }
+
         if (is_int($intervalSpec)) {
             $intervalSpec = sprintf('PT%dS', $intervalSpec);
         }
+
         return new static($intervalSpec);
-    }
-
-    /**
-     * @param int $seconds
-     * @return DateInterval
-     */
-    public static function secondsToInterval(int $seconds)
-    {
-        $dtF = new DateTime('@0');
-        $dtT = new DateTime("@$seconds");
-        return $dtF->diff($dtT);
-    }
-
-    /**
-     * Compares the instance DateInterval to the param DateInterval
-     * @param DateInterval $oDateInterval
-     * @return int Returns 1 if the param is greater, 0 if they are equal, -1 if it is less
-     */
-    public function compare(DateInterval $oDateInterval)
-    {
-        $oMyTotalSeconds = $this->getIntervalSeconds();
-        $oYourTotalSeconds = static::getTotalSeconds($oDateInterval);
-
-        if ($oMyTotalSeconds < $oYourTotalSeconds)
-            return self::INSTANCE_LESS_THAN;
-        elseif ($oMyTotalSeconds == $oYourTotalSeconds)
-            return self::INSTANCE_EQUALS;
-        return self::INSTANCE_GREATER_THAN;
-    }
-
-    /**
-     * @param DateInterval $interval
-     * @return bool
-     */
-    public function equals(DateInterval $interval): bool
-    {
-        return $this->compare($interval) === self::INSTANCE_EQUALS;
-    }
-
-    /**
-     * @return int
-     */
-    protected function getIntervalSeconds()
-    {
-        return static::getTotalSeconds($this);
     }
 
     /**
@@ -108,6 +74,7 @@ class ComparableDateInterval extends DateInterval
             if ($interval->m > 0 || $interval->y > 0) {
                 throw new LogicException(sprintf('The "%s" class cannot handle DateIntervals where there is a interval defined in months or years', __CLASS__));
             }
+
             $iSeconds = $interval->s + ($interval->i * 60) + ($interval->h * 3600);
 
             if ($interval->d > 0) {
@@ -126,5 +93,65 @@ class ComparableDateInterval extends DateInterval
         } else {
             return $interval;
         }
+    }
+
+    /**
+     * @param DateInterval|int $seconds
+     * @return DateInterval
+     */
+    public static function normalizeToDateInterval(DateInterval|int $seconds): DateInterval
+    {
+        if ($seconds instanceof DateInterval) {
+            return $seconds;
+        }
+
+        return ComparableDateInterval::secondsToInterval($seconds);
+    }
+
+    /**
+     * @param int $seconds
+     * @return DateInterval
+     */
+    public static function secondsToInterval(int $seconds): DateInterval
+    {
+        $dtF = new DateTime('@0');
+        $dtT = new DateTime("@$seconds");
+        return $dtF->diff($dtT);
+    }
+
+    /**
+     * @param DateInterval $interval
+     * @return bool
+     */
+    public function equals(DateInterval $interval): bool
+    {
+        return $this->compare($interval) === self::INSTANCE_EQUALS;
+    }
+
+    /**
+     * Compares the instance DateInterval to the param DateInterval
+     * @param DateInterval $oDateInterval
+     * @return int Returns 1 if the param is greater, 0 if they are equal, -1 if it is less
+     */
+    public function compare(DateInterval $oDateInterval)
+    {
+        $oMyTotalSeconds = $this->getIntervalSeconds();
+        $oYourTotalSeconds = static::getTotalSeconds($oDateInterval);
+
+        if ($oMyTotalSeconds < $oYourTotalSeconds) {
+            return self::INSTANCE_LESS_THAN;
+        } elseif ($oMyTotalSeconds == $oYourTotalSeconds) {
+            return self::INSTANCE_EQUALS;
+        }
+
+        return self::INSTANCE_GREATER_THAN;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getIntervalSeconds()
+    {
+        return static::getTotalSeconds($this);
     }
 }
