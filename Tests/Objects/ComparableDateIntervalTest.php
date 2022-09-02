@@ -35,7 +35,8 @@ class ComparableDateIntervalTest extends TestCase
     }
 
     /**
-     * @dataProvider provideIntervalCreateArgs
+     * @dataProvider provideIntervalCreateArgsNumberInterval
+     * @dataProvider provideIntervalCreateArgsString
      * @param $spec
      * @throws Exception
      */
@@ -55,7 +56,8 @@ class ComparableDateIntervalTest extends TestCase
     }
 
     /**
-     * @dataProvider provideIntervalCreateArgs
+     * @dataProvider provideIntervalCreateArgsNumberInterval
+     * @dataProvider provideIntervalCreateArgsString
      * @param $spec
      * @throws Exception
      */
@@ -78,12 +80,35 @@ class ComparableDateIntervalTest extends TestCase
      * @return Generator
      * @throws Exception
      */
-    public function provideIntervalCreateArgs()
+    public function provideIntervalCreateArgsNumberInterval()
     {
-        yield ['PT900S'];
         yield [900];
         yield [new DateInterval('PT900S')];
         yield [ComparableDateInterval::create(900)];
+    }
+
+    /**
+     * @return Generator
+     * @throws Exception
+     */
+    public function provideIntervalCreateArgsString()
+    {
+        yield ['PT900S'];
+    }
+
+    /**
+     * @dataProvider provideIntervalCreateArgsNumberInterval
+     * @param $spec
+     * @throws Exception
+     */
+    public function testNormalize($spec)
+    {
+        $interval = ComparableDateInterval::normalizeToDateInterval($spec);
+
+        $this->assertInstanceOf(DateInterval::class, $interval);
+
+        $testInterval = new DateInterval('PT900S');
+        $this->assertEquals(ComparableDateInterval::getTotalSeconds($testInterval), ComparableDateInterval::getTotalSeconds($interval));
     }
 
     /**
