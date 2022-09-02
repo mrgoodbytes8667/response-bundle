@@ -35,7 +35,8 @@ class ComparableDateIntervalTest extends TestCase
     }
 
     /**
-     * @dataProvider provideIntervalCreateArgs
+     * @dataProvider provideIntervalCreateArgsNumberInterval
+     * @dataProvider provideIntervalCreateArgsString
      * @param $spec
      * @throws Exception
      */
