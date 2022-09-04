@@ -2,12 +2,12 @@
 
 namespace Bytes\ResponseBundle\Tests\Objects;
 
+use Bytes\ResponseBundle\Exception\LargeDateIntervalException;
 use Bytes\ResponseBundle\Objects\ComparableDateInterval;
 use DateInterval;
 use Exception;
 use Faker\Factory;
 use Generator;
-use LogicException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -116,9 +116,22 @@ class ComparableDateIntervalTest extends TestCase
      */
     public function testLargeIntervals()
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(LargeDateIntervalException::class);
 
         ComparableDateInterval::getTotalSeconds(new DateInterval("P5YT50S"));
+    }
+
+    /**
+     *
+     */
+    public function testLargeIntervalHasIntervalSet()
+    {
+        $interval = new DateInterval("P5YT50S");
+        try {
+            ComparableDateInterval::getTotalSeconds($interval);
+        } catch (LargeDateIntervalException $exception) {
+            $this->assertEquals($interval, $exception->getInterval());
+        }
     }
 
     /**
