@@ -4,6 +4,7 @@
 namespace Bytes\ResponseBundle\Objects;
 
 
+use Bytes\ResponseBundle\Exception\LargeDateIntervalException;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -66,13 +67,15 @@ class ComparableDateInterval extends DateInterval
      * @param DateInterval|int $interval
      * @return float
      *
+     * @throws LargeDateIntervalException
+     *
      * @link https://stackoverflow.com/a/28418969/7906133
      */
     public static function getTotalSeconds(DateInterval|int $interval)
     {
         if ($interval instanceof DateInterval) {
             if ($interval->m > 0 || $interval->y > 0) {
-                throw new LogicException(sprintf('The "%s" class cannot handle DateIntervals where there is a interval defined in months or years', __CLASS__));
+                throw new LargeDateIntervalException($interval, sprintf('The "%s" class cannot handle DateIntervals where there is a interval defined in months or years', __CLASS__));
             }
 
             $iSeconds = $interval->s + ($interval->i * 60) + ($interval->h * 3600);
