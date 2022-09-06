@@ -16,6 +16,9 @@ use LogicException;
  * @package Bytes\ResponseBundle\Objects
  *
  * Adapted from a one time (excluded) PHP patch and some StackOverflow suggestions
+ *
+ * @method static DateInterval|int getTotalMinutes(DateInterval|int $interval, string $manipulator) Manipulator is a one argument function including round, ceiling, or floor.
+ * @method static DateInterval|int getTotalHours(DateInterval|int $interval, string $manipulator) Manipulator is a one argument function including round, ceiling, or floor.
  */
 class ComparableDateInterval extends DateInterval
 {
@@ -96,6 +99,52 @@ class ComparableDateInterval extends DateInterval
         } else {
             return $interval;
         }
+    }
+
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return DateInterval|int|void
+     */
+    public static function __callStatic(string $name, array $arguments)
+    {
+        switch (strtolower($name)) {
+            case 'gettotalminutes':
+                return static::getTotalByTimeType($arguments[0], 'MINUTES', $arguments[1]);
+                break;
+            case 'gettotalhours':
+                return static::getTotalByTimeType($arguments[0], 'HOURS', $arguments[1]);
+                break;
+        }
+    }
+
+    protected static function getTotalByTimeType(DateInterval|int $interval, string $type, string $manipulator = 'round'): DateInterval|int
+    {
+        $seconds = static::getTotalSeconds($interval);
+        if(is_float($seconds)) {
+            $seconds = (int) $seconds;
+        } elseif(!is_int($seconds)) {
+            return $seconds;
+        }
+
+        $divisor = 1;
+        switch (strtoupper($type)) {
+            case 'MINUTE':
+            case 'MINUTES':
+            case 'M':
+                $divisor = 60;
+                break;
+            case 'HOUR':
+            case 'HOURS':
+            case 'H':
+                $divisor = 60 * 60;
+                break;
+            default:
+                throw new \BadMethodCallException(sprintf('Type "%s" is not supported.', $type));
+                break;
+        }
+
+        return (int)$manipulator($seconds / $divisor);
     }
 
     /**

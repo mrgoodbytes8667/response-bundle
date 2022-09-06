@@ -137,6 +137,30 @@ class ComparableDateIntervalTest extends TestCase
     /**
      *
      */
+    public function testIntervalToMinutes()
+    {
+        $this->assertEquals(120, ComparableDateInterval::getTotalMinutes(new DateInterval('PT2H1S'), 'round'));
+        $this->assertEquals(125, ComparableDateInterval::getTotalMinutes(new DateInterval('PT2H4M51S'), 'round'));
+        $this->assertEquals(105, ComparableDateInterval::getTotalMinutes(new DateInterval('PT1H45M29S'), 'round'));
+        $this->assertEquals(62, ComparableDateInterval::getTotalMinutes(new DateInterval('PT1H1M1S'), 'ceil'));
+        $this->assertEquals(179, ComparableDateInterval::getTotalMinutes(new DateInterval('PT2H59M59S'), 'floor'));
+    }
+
+    /**
+     *
+     */
+    public function testIntervalToHours()
+    {
+        $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT2H'), 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT2H5M'), 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT1H45M'), 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT1H1M'), 'ceil'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT2H59M'), 'floor'));
+    }
+
+    /**
+     *
+     */
     public function testInvertedInterval()
     {
         $faker = Factory::create();
