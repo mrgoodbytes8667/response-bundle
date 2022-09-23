@@ -8,6 +8,7 @@ use Bytes\ResponseBundle\Exception\LargeDateIntervalException;
 use DateInterval;
 use DateTime;
 use Exception;
+use InvalidArgumentException;
 use LogicException;
 
 /**
@@ -108,6 +109,9 @@ class ComparableDateInterval extends DateInterval
      */
     public static function __callStatic(string $name, array $arguments)
     {
+        if(!array_key_exists(0, $arguments) || !array_key_exists(1, $arguments)) {
+            throw new InvalidArgumentException('Named arguments are not currently supported with the ' . __METHOD__ . ' method.');
+        }
         switch (strtolower($name)) {
             case 'gettotalminutes':
                 return static::getTotalByTimeType($arguments[0], 'MINUTES', $arguments[1]);

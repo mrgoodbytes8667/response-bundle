@@ -8,6 +8,7 @@ use DateInterval;
 use Exception;
 use Faker\Factory;
 use Generator;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -144,6 +145,46 @@ class ComparableDateIntervalTest extends TestCase
         $this->assertEquals(105, ComparableDateInterval::getTotalMinutes(new DateInterval('PT1H45M29S'), 'round'));
         $this->assertEquals(62, ComparableDateInterval::getTotalMinutes(new DateInterval('PT1H1M1S'), 'ceil'));
         $this->assertEquals(179, ComparableDateInterval::getTotalMinutes(new DateInterval('PT2H59M59S'), 'floor'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testIntervalToHoursMissingSecondArgument()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        ComparableDateInterval::getTotalHours(new DateInterval('PT15M'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testIntervalToMinutesMissingSecondArgument()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        ComparableDateInterval::getTotalMinutes(new DateInterval('PT15M'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testIntervalToHoursNamedSecondArgument()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        ComparableDateInterval::getTotalHours(new DateInterval('PT15M'), manipulator: 'ceil');
+    }
+
+    /**
+     * @return void
+     */
+    public function testIntervalToMinutesNamedSecondArgument()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        ComparableDateInterval::getTotalMinutes(new DateInterval('PT15M'), manipulator: 'ceil');
     }
 
     /**
