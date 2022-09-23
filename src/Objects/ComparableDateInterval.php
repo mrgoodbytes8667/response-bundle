@@ -109,15 +109,20 @@ class ComparableDateInterval extends DateInterval
      */
     public static function __callStatic(string $name, array $arguments)
     {
-        if(!array_key_exists(0, $arguments) || !array_key_exists(1, $arguments)) {
-            throw new InvalidArgumentException('Named arguments are not currently supported with the ' . __METHOD__ . ' method.');
+        if(count($arguments) !== 2) {
+            throw new InvalidArgumentException('Both an interval (DateInterval|int) and a manipulator function name (string, either ceil, floor, or round) are required arguments.');
+        }
+        $interval = array_shift($arguments);
+        $manipulator = array_shift($arguments);
+        if(!in_array($manipulator, ['ceil', 'floor', 'round'])) {
+            throw new InvalidArgumentException('The manipulator function name argument must be one of ceil, floor, or round.');
         }
         switch (strtolower($name)) {
             case 'gettotalminutes':
-                return static::getTotalByTimeType($arguments[0], 'MINUTES', $arguments[1]);
+                return static::getTotalByTimeType($interval, 'MINUTES', $manipulator);
                 break;
             case 'gettotalhours':
-                return static::getTotalByTimeType($arguments[0], 'HOURS', $arguments[1]);
+                return static::getTotalByTimeType($interval, 'HOURS', $manipulator);
                 break;
         }
     }
