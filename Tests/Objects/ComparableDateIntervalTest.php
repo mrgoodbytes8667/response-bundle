@@ -145,10 +145,15 @@ class ComparableDateIntervalTest extends TestCase
         $this->assertEquals(105, ComparableDateInterval::getTotalMinutes(new DateInterval('PT1H45M29S'), 'round'));
         $this->assertEquals(62, ComparableDateInterval::getTotalMinutes(new DateInterval('PT1H1M1S'), 'ceil'));
         $this->assertEquals(179, ComparableDateInterval::getTotalMinutes(new DateInterval('PT2H59M59S'), 'floor'));
+        $this->assertEquals(120, ComparableDateInterval::getTotalMinutes(new DateInterval('PT2H1S'), manipulator: 'round'));
+        $this->assertEquals(125, ComparableDateInterval::getTotalMinutes(new DateInterval('PT2H4M51S'), manipulator: 'round'));
+        $this->assertEquals(105, ComparableDateInterval::getTotalMinutes(new DateInterval('PT1H45M29S'), manipulator: 'round'));
+        $this->assertEquals(62, ComparableDateInterval::getTotalMinutes(new DateInterval('PT1H1M1S'), manipulator: 'ceil'));
+        $this->assertEquals(179, ComparableDateInterval::getTotalMinutes(new DateInterval('PT2H59M59S'), manipulator: 'floor'));
     }
 
     /**
-     * @return void
+     *
      */
     public function testIntervalToHoursMissingSecondArgument()
     {
@@ -158,7 +163,7 @@ class ComparableDateIntervalTest extends TestCase
     }
 
     /**
-     * @return void
+     *
      */
     public function testIntervalToMinutesMissingSecondArgument()
     {
@@ -168,23 +173,43 @@ class ComparableDateIntervalTest extends TestCase
     }
 
     /**
-     * @return void
+     *
      */
-    public function testIntervalToHoursNamedSecondArgument()
+    public function testIntervalToHoursAdditionalThirdArgument()
     {
         $this->expectException(InvalidArgumentException::class);
 
-        ComparableDateInterval::getTotalHours(new DateInterval('PT15M'), manipulator: 'ceil');
+        ComparableDateInterval::getTotalHours(new DateInterval('PT15M'), 'ceil', 3);
     }
 
     /**
-     * @return void
+     *
      */
-    public function testIntervalToMinutesNamedSecondArgument()
+    public function testIntervalToMinutesAdditionalThirdArgument()
     {
         $this->expectException(InvalidArgumentException::class);
 
-        ComparableDateInterval::getTotalMinutes(new DateInterval('PT15M'), manipulator: 'ceil');
+        ComparableDateInterval::getTotalMinutes(new DateInterval('PT15M'), 'ceil', 3);
+    }
+
+    /**
+     *
+     */
+    public function testIntervalToHoursInvalidManipulator()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        ComparableDateInterval::getTotalHours(new DateInterval('PT15M'), 'abc123');
+    }
+
+    /**
+     *
+     */
+    public function testIntervalToMinutesInvalidManipulator()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        ComparableDateInterval::getTotalMinutes(new DateInterval('PT15M'), 'abc123');
     }
 
     /**
@@ -197,6 +222,11 @@ class ComparableDateIntervalTest extends TestCase
         $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT1H45M'), 'round'));
         $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT1H1M'), 'ceil'));
         $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT2H59M'), 'floor'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT2H'), manipulator: 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT2H5M'), manipulator: 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT1H45M'), manipulator: 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT1H1M'), manipulator: 'ceil'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalHours(new DateInterval('PT2H59M'), manipulator: 'floor'));
     }
 
     /**
