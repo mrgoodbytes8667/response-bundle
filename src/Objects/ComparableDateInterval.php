@@ -4,12 +4,12 @@
 namespace Bytes\ResponseBundle\Objects;
 
 
+use BadMethodCallException;
 use Bytes\ResponseBundle\Exception\LargeDateIntervalException;
 use DateInterval;
 use DateTime;
 use Exception;
 use InvalidArgumentException;
-use LogicException;
 
 /**
  * Class ComparableDateInterval
@@ -78,12 +78,7 @@ class ComparableDateInterval extends DateInterval
     public static function getTotalSeconds(DateInterval|int $interval)
     {
         if ($interval instanceof DateInterval) {
-            if ($interval->m > 0 || $interval->y > 0) {
-                throw new LargeDateIntervalException($interval, sprintf('The "%s" class cannot handle DateIntervals where there is a interval defined in months or years', __CLASS__));
-            }
-
             $iSeconds = $interval->s + ($interval->i * 60) + ($interval->h * 3600);
-
             if ($interval->d > 0) {
                 $iSeconds += ($interval->d * 86400);
             }
@@ -91,6 +86,15 @@ class ComparableDateInterval extends DateInterval
             if ($interval->f > 0) {
                 $iSeconds += 1 / $interval->f;
             }
+            $bak = $iSeconds;
+
+            $iSeconds = static::parseSeconds($interval);
+            $iSeconds += static::parseYears($interval);
+            $iSeconds += static::parseMonths($interval);
+            $iSeconds += static::parseDays($interval);
+            $iSeconds += static::parseHours($interval);
+            $iSeconds += static::parseMinutes($interval);
+            $iSeconds += static::parseMicroseconds($interval);
 
             if ($interval->invert) {
                 $iSeconds *= -1;
@@ -103,18 +107,107 @@ class ComparableDateInterval extends DateInterval
     }
 
     /**
+     * @param DateInterval $interval
+     * @return int
+     */
+    protected static function parseSeconds(DateInterval $interval): int
+    {
+        return $interval->s;
+    }
+
+    /**
+     * @param DateInterval $interval
+     * @return int
+     * @throws LargeDateIntervalException
+     */
+    protected static function parseYears(DateInterval $interval): int
+    {
+        if ($interval->y > 0) {
+            throw new LargeDateIntervalException($interval, sprintf('The "%s" class cannot handle DateIntervals where there is a interval defined in months or years', __CLASS__));
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param DateInterval $interval
+     * @return int
+     * @throws LargeDateIntervalException
+     */
+    protected static function parseMonths(DateInterval $interval): int
+    {
+        if ($interval->m > 0) {
+            throw new LargeDateIntervalException($interval, sprintf('The "%s" class cannot handle DateIntervals where there is a interval defined in months or years', __CLASS__));
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param DateInterval $interval
+     * @return int
+     */
+    protected static function parseDays(DateInterval $interval): int
+    {
+        if ($interval->d > 0) {
+            return ($interval->d * 86400);
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param DateInterval $interval
+     * @return int
+     */
+    protected static function parseHours(DateInterval $interval): int
+    {
+        if ($interval->h > 0) {
+            return ($interval->h * 3600);
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param DateInterval $interval
+     * @return int
+     */
+    protected static function parseMinutes(DateInterval $interval): int
+    {
+        if ($interval->i > 0) {
+            return ($interval->i * 60);
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param DateInterval $interval
+     * @return float|int
+     */
+    protected static function parseMicroseconds(DateInterval $interval): float|int
+    {
+        if ($interval->f > 0) {
+            return 1 / $interval->f;
+        }
+
+        return 0;
+    }
+
+    /**
      * @param string $name
      * @param array $arguments
      * @return DateInterval|int|void
      */
     public static function __callStatic(string $name, array $arguments)
     {
-        if(count($arguments) !== 2) {
+        if (count($arguments) !== 2) {
             throw new InvalidArgumentException('Both an interval (DateInterval|int) and a manipulator function name (string, either ceil, floor, or round) are required arguments.');
         }
         $interval = array_shift($arguments);
         $manipulator = array_shift($arguments);
-        if(!in_array($manipulator, ['ceil', 'floor', 'round'])) {
+        if (!in_array($manipulator, ['ceil', 'floor', 'round'])) {
             throw new InvalidArgumentException('The manipulator function name argument must be one of ceil, floor, or round.');
         }
         switch (strtolower($name)) {
@@ -130,9 +223,9 @@ class ComparableDateInterval extends DateInterval
     protected static function getTotalByTimeType(DateInterval|int $interval, string $type, string $manipulator = 'round'): DateInterval|int
     {
         $seconds = static::getTotalSeconds($interval);
-        if(is_float($seconds)) {
-            $seconds = (int) $seconds;
-        } elseif(!is_int($seconds)) {
+        if (is_float($seconds)) {
+            $seconds = (int)$seconds;
+        } elseif (!is_int($seconds)) {
             return $seconds;
         }
 
@@ -149,7 +242,7 @@ class ComparableDateInterval extends DateInterval
                 $divisor = 60 * 60;
                 break;
             default:
-                throw new \BadMethodCallException(sprintf('Type "%s" is not supported.', $type));
+                throw new BadMethodCallException(sprintf('Type "%s" is not supported.', $type));
                 break;
         }
 
