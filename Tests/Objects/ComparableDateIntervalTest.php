@@ -232,6 +232,55 @@ class ComparableDateIntervalTest extends TestCase
     /**
      *
      */
+    public function testIntervalToDaysInvalidManipulator()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        ComparableDateInterval::getTotalDays(new DateInterval('PT15M'), 'abc123');
+    }
+
+    /**
+     *
+     */
+    public function testIntervalToDaysAdditionalThirdArgument()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        ComparableDateInterval::getTotalDays(new DateInterval('PT15M'), 'ceil', 3);
+    }
+
+    /**
+     *
+     */
+    public function testIntervalToDaysMissingSecondArgument()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        ComparableDateInterval::getTotalDays(new DateInterval('PT15M'));
+    }
+
+    /**
+     *
+     */
+    public function testIntervalToDays()
+    {
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P2D'), 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P2DT2H'), 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P2DT2H5M'), 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P1DT12H45M'), 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P1DT1H1M'), 'ceil'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P2DT23H59M'), 'floor'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P2D'), manipulator: 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P2DT2H'), manipulator: 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P2DT2H5M'), manipulator: 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P1DT12H45M'), manipulator: 'round'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P1DT1H1M'), manipulator: 'ceil'));
+        $this->assertEquals(2, ComparableDateInterval::getTotalDays(new DateInterval('P2DT23H59M'), manipulator: 'floor'));
+    }
+
+    /**
+     *
+     */
     public function testInvertedInterval()
     {
         $faker = Factory::create();
