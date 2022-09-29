@@ -20,6 +20,7 @@ use InvalidArgumentException;
  *
  * @method static DateInterval|int getTotalMinutes(DateInterval|int $interval, string $manipulator) Manipulator is a one argument function including round, ceiling, or floor.
  * @method static DateInterval|int getTotalHours(DateInterval|int $interval, string $manipulator) Manipulator is a one argument function including round, ceiling, or floor.
+ * @method static DateInterval|int getTotalDays(DateInterval|int $interval, string $manipulator) Manipulator is a one argument function including round, ceiling, or floor.
  */
 class ComparableDateInterval extends DateInterval
 {
@@ -217,6 +218,9 @@ class ComparableDateInterval extends DateInterval
             case 'gettotalhours':
                 return static::getTotalByTimeType($interval, 'HOURS', $manipulator);
                 break;
+            case 'gettotaldays':
+                return static::getTotalByTimeType($interval, 'DAYS', $manipulator);
+                break;
         }
     }
 
@@ -241,6 +245,11 @@ class ComparableDateInterval extends DateInterval
             case 'H':
                 $divisor = 60 * 60;
                 break;
+            case 'DAY':
+            case 'DAYS':
+            case 'D':
+                $divisor = 24 * 60 * 60;
+                break;
             default:
                 throw new BadMethodCallException(sprintf('Type "%s" is not supported.', $type));
                 break;
@@ -260,6 +269,19 @@ class ComparableDateInterval extends DateInterval
         }
 
         return ComparableDateInterval::secondsToInterval($seconds);
+    }
+
+    /**
+     * @param DateInterval|int $seconds
+     * @return int
+     */
+    public static function normalizeToSeconds(DateInterval|int $seconds): int
+    {
+        if(is_int($seconds)) {
+            return $seconds;
+        }
+
+        return ComparableDateInterval::getTotalSeconds($seconds);
     }
 
     /**

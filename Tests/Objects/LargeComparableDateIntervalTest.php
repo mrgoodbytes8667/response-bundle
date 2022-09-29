@@ -3,6 +3,7 @@
 namespace Bytes\ResponseBundle\Tests\Objects;
 
 use Bytes\ResponseBundle\Exception\LargeDateIntervalException;
+use Bytes\ResponseBundle\Objects\ComparableDateInterval;
 use Bytes\ResponseBundle\Objects\LargeComparableDateInterval;
 use DateInterval;
 use Exception;
@@ -209,5 +210,54 @@ class LargeComparableDateIntervalTest extends ComparableDateIntervalTest
     {
         $this->expectException(Exception::class);
         new LargeComparableDateInterval('abc123');
+    }
+
+    /**
+     *
+     */
+    public function testIntervalToDaysInvalidManipulator()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        LargeComparableDateInterval::getTotalDays(new DateInterval('PT15M'), 'abc123');
+    }
+
+    /**
+     *
+     */
+    public function testIntervalToDaysAdditionalThirdArgument()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        LargeComparableDateInterval::getTotalDays(new DateInterval('PT15M'), 'ceil', 3);
+    }
+
+    /**
+     *
+     */
+    public function testIntervalToDaysMissingSecondArgument()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        LargeComparableDateInterval::getTotalDays(new DateInterval('PT15M'));
+    }
+
+    /**
+     *
+     */
+    public function testIntervalToDays()
+    {
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P2D'), 'round'));
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P2DT2H'), 'round'));
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P2DT2H5M'), 'round'));
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P1DT12H45M'), 'round'));
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P1DT1H1M'), 'ceil'));
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P2DT23H59M'), 'floor'));
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P2D'), manipulator: 'round'));
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P2DT2H'), manipulator: 'round'));
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P2DT2H5M'), manipulator: 'round'));
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P1DT12H45M'), manipulator: 'round'));
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P1DT1H1M'), manipulator: 'ceil'));
+        $this->assertEquals(2, LargeComparableDateInterval::getTotalDays(new DateInterval('P2DT23H59M'), manipulator: 'floor'));
     }
 }
