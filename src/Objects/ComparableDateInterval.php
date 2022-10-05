@@ -123,7 +123,7 @@ class ComparableDateInterval extends DateInterval
      */
     protected static function parseYears(DateInterval $interval): int
     {
-        if ($interval->y > 0) {
+        if ($interval->y != 0) {
             throw new LargeDateIntervalException($interval, sprintf('The "%s" class cannot handle DateIntervals where there is a interval defined in months or years', __CLASS__));
         }
 
@@ -137,7 +137,7 @@ class ComparableDateInterval extends DateInterval
      */
     protected static function parseMonths(DateInterval $interval): int
     {
-        if ($interval->m > 0) {
+        if ($interval->m != 0) {
             throw new LargeDateIntervalException($interval, sprintf('The "%s" class cannot handle DateIntervals where there is a interval defined in months or years', __CLASS__));
         }
 
@@ -150,7 +150,7 @@ class ComparableDateInterval extends DateInterval
      */
     protected static function parseDays(DateInterval $interval): int
     {
-        if ($interval->d > 0) {
+        if ($interval->d != 0) {
             return ($interval->d * 86400);
         }
 
@@ -163,7 +163,7 @@ class ComparableDateInterval extends DateInterval
      */
     protected static function parseHours(DateInterval $interval): int
     {
-        if ($interval->h > 0) {
+        if ($interval->h != 0) {
             return ($interval->h * 3600);
         }
 
@@ -176,7 +176,7 @@ class ComparableDateInterval extends DateInterval
      */
     protected static function parseMinutes(DateInterval $interval): int
     {
-        if ($interval->i > 0) {
+        if ($interval->i != 0) {
             return ($interval->i * 60);
         }
 
@@ -189,7 +189,7 @@ class ComparableDateInterval extends DateInterval
      */
     protected static function parseMicroseconds(DateInterval $interval): float|int
     {
-        if ($interval->f > 0) {
+        if ($interval->f != 0) {
             return 1 / $interval->f;
         }
 

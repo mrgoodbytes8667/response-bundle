@@ -25,6 +25,22 @@ class ComparableDateIntervalTest extends TestCase
     {
         $this->assertEquals(900, ComparableDateInterval::getTotalSeconds(900));
         $this->assertEquals(900, ComparableDateInterval::getTotalSeconds(new DateInterval('PT900S')));
+        $this->assertEquals(900, ComparableDateInterval::getTotalSeconds(DateInterval::createFromDateString('15 minutes')));
+        $this->assertEquals(900, ComparableDateInterval::getTotalSeconds(DateInterval::createFromDateString('900 seconds')));
+        $this->assertEquals(90061, ComparableDateInterval::getTotalSeconds(DateInterval::createFromDateString('1 day, 1 hour, 1 minute, 1 second')));
+    }
+
+    /**
+     *
+     */
+    public function testGetTotalSecondsNegative()
+    {
+        $this->assertEquals(-900, ComparableDateInterval::getTotalSeconds(DateInterval::createFromDateString('15 minutes ago')));
+        $this->assertEquals(-900, ComparableDateInterval::getTotalSeconds(DateInterval::createFromDateString('900 seconds ago')));
+        $interval = new DateInterval('PT900S');
+        $interval->invert = 1;
+        $this->assertEquals(-900, ComparableDateInterval::getTotalSeconds($interval));
+        $this->assertEquals(-90061, ComparableDateInterval::getTotalSeconds(DateInterval::createFromDateString('1 day, 1 hour, 1 minute, 1 second ago')));
     }
 
     /**
