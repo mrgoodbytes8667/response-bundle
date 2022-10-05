@@ -79,16 +79,6 @@ class ComparableDateInterval extends DateInterval
     public static function getTotalSeconds(DateInterval|int $interval)
     {
         if ($interval instanceof DateInterval) {
-            $iSeconds = $interval->s + ($interval->i * 60) + ($interval->h * 3600);
-            if ($interval->d > 0) {
-                $iSeconds += ($interval->d * 86400);
-            }
-
-            if ($interval->f > 0) {
-                $iSeconds += 1 / $interval->f;
-            }
-            $bak = $iSeconds;
-
             $iSeconds = static::parseSeconds($interval);
             $iSeconds += static::parseYears($interval);
             $iSeconds += static::parseMonths($interval);
