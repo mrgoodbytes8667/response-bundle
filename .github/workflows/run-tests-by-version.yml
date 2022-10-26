@@ -41,3 +41,10 @@ jobs:
     with:
       phpUnitVersion: 9.5
       symfony: 6.1
+
+  symfony62:
+    uses: mrgoodbytes8667/workflows/.github/workflows/run-tests-by-version.yml@php8.1
+    with:
+      phpUnitVersion: 9.5
+      symfony: 6.2
+      minStability: 'dev'
