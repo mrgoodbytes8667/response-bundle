@@ -215,7 +215,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
         if (array_key_exists('add', $this->config[static::$endpoint]['scopes'])) {
             $add = $this->config[static::$endpoint]['scopes']['add'];
             if (count($add) > 0) {
-                array_walk($add, array('static', 'walkHydrateScopes'));
+                array_walk($add, array(static::class, 'walkHydrateScopes'));
                 $scopes = array_unique(array_merge($scopes, $add));
             }
         }
@@ -223,7 +223,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
         if (array_key_exists('remove', $this->config[static::$endpoint]['scopes'])) {
             $remove = $this->config[static::$endpoint]['scopes']['remove'];
             if (count($remove) > 0) {
-                array_walk($remove, array('static', 'walkHydrateScopes'));
+                array_walk($remove, array(static::class, 'walkHydrateScopes'));
 
                 $scopes = Arr::where($scopes, function ($value, $key) use ($remove) {
                     return !in_array($value, $remove);
