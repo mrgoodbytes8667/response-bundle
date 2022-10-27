@@ -13,7 +13,8 @@ use InvalidArgumentException;
 
 /**
  * Class ComparableDateInterval
- * Compares date intervals for days, hours, minutes, seconds, and microseconds
+ * Compares date intervals for days, hours, minutes, seconds, and microseconds. If interval is created via diff(), it can
+ * also support longer intervals.
  * @package Bytes\ResponseBundle\Objects
  *
  * Adapted from a one time (excluded) PHP patch and some StackOverflow suggestions
@@ -21,6 +22,8 @@ use InvalidArgumentException;
  * @method static DateInterval|int getTotalMinutes(DateInterval|int $interval, string $manipulator) Manipulator is a one argument function including round, ceiling, or floor.
  * @method static DateInterval|int getTotalHours(DateInterval|int $interval, string $manipulator) Manipulator is a one argument function including round, ceiling, or floor.
  * @method static DateInterval|int getTotalDays(DateInterval|int $interval, string $manipulator) Manipulator is a one argument function including round, ceiling, or floor.
+ *
+ * @see LargeComparableDateInterval For longer intervals (not created via diff()) that assumes a 30-day month and 365-day year
  */
 class ComparableDateInterval extends DateInterval
 {
@@ -113,7 +116,7 @@ class ComparableDateInterval extends DateInterval
      */
     protected static function parseYears(DateInterval $interval): int
     {
-        if ($interval->y != 0) {
+        if (!static::hasDaysVariable($interval) && $interval->y != 0) {
             throw new LargeDateIntervalException($interval, sprintf('The "%s" class cannot handle DateIntervals where there is a interval defined in months or years', __CLASS__));
         }
 
@@ -127,7 +130,7 @@ class ComparableDateInterval extends DateInterval
      */
     protected static function parseMonths(DateInterval $interval): int
     {
-        if ($interval->m != 0) {
+        if (!static::hasDaysVariable($interval) && $interval->m != 0) {
             throw new LargeDateIntervalException($interval, sprintf('The "%s" class cannot handle DateIntervals where there is a interval defined in months or years', __CLASS__));
         }
 
@@ -140,11 +143,19 @@ class ComparableDateInterval extends DateInterval
      */
     protected static function parseDays(DateInterval $interval): int
     {
+        if(is_int($interval->days)) {
+            return ($interval->days * 86400);
+        }
         if ($interval->d != 0) {
             return ($interval->d * 86400);
         }
 
         return 0;
+    }
+
+    protected static function hasDaysVariable(DateInterval $interval): bool
+    {
+        return (is_int($interval->days));
     }
 
     /**
