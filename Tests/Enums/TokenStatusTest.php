@@ -132,6 +132,6 @@ class TokenStatusTest extends TestCase
             'Refreshed' => 'refreshed',
             'Expired' => 'expired',
             'Revoked' => 'revoked',
-        ], TokenStatus::formChoices());
+        ], TokenStatus::provideFormChoices());
     }
 }
