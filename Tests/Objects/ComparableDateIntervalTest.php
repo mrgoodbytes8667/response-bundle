@@ -34,6 +34,21 @@ class ComparableDateIntervalTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function testNormalizeToSeconds()
+    {
+        $start = new DateTimeImmutable('2022-10-24T19:18:17+00:00');
+        $end = new DateTimeImmutable('2022-10-27T14:20:58+00:00');
+        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(900));
+        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(new DateInterval('PT900S')));
+        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('15 minutes')));
+        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('900 seconds')));
+        $this->assertEquals(90061, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('1 day, 1 hour, 1 minute, 1 second')));
+        $this->assertEquals(241361, ($this->getTestClass())::normalizeToSeconds($start->diff($end)));
+    }
+
+    /**
      * @return class-string<ComparableDateInterval>
      */
     public function getTestClass(): string
