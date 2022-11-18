@@ -23,6 +23,17 @@ class DayOfWeekTest extends TestCase
     }
 
     /**
+     * @return void
+     */
+    public function testAbbreviations(): void
+    {
+        $all = DayOfWeek::getAbbreviatedFormChoices();
+        $this->assertArrayHasKey('Su', $all);
+        $sunday = array_shift($all);
+        $this->assertEquals(0, $sunday);
+    }
+
+    /**
      * @return Generator
      */
     public function provideAll(): Generator
@@ -48,6 +59,7 @@ class DayOfWeekTest extends TestCase
      */
     public function testTryFromUnsuccessful(): void
     {
+        $this->assertNull(DayOfWeek::tryFrom(-1));
         $this->assertNull(DayOfWeek::tryFrom(7));
         $this->assertNull(DayOfWeek::tryFrom(8));
     }
