@@ -10,7 +10,7 @@ enum DayOfWeek: int implements BackedEnumInterface
 {
     use BackedEnumTrait;
 
-    case SUNDAY = 7;
+    case SUNDAY = 0;
     case MONDAY = 1;
     case TUESDAY = 2;
     case WEDNESDAY = 3;
