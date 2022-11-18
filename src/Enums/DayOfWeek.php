@@ -21,7 +21,7 @@ enum DayOfWeek: int implements BackedEnumInterface
     /**
      * @return array<string, string>
      */
-    public static function getAbbreviatedFormChoices(): array
+    public static function provideAbbreviatedFormChoices(): array
     {
         return [
             'Su' => DayOfWeek::getFormChoiceValue(DayOfWeek::SUNDAY),
