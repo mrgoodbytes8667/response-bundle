@@ -48,7 +48,7 @@ class DayOfWeekTest extends TestCase
      */
     public function testTryFromUnsuccessful(): void
     {
-        $this->assertNull(DayOfWeek::tryFrom(0));
+        $this->assertNull(DayOfWeek::tryFrom(7));
         $this->assertNull(DayOfWeek::tryFrom(8));
     }
 }
