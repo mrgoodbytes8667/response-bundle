@@ -27,7 +27,7 @@ class DayOfWeekTest extends TestCase
      */
     public function testAbbreviations(): void
     {
-        $all = DayOfWeek::getAbbreviatedFormChoices();
+        $all = DayOfWeek::provideAbbreviatedFormChoices();
         $this->assertArrayHasKey('Su', $all);
         $sunday = array_shift($all);
         $this->assertEquals(0, $sunday);
