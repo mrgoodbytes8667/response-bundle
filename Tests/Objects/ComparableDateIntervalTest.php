@@ -42,10 +42,32 @@ class ComparableDateIntervalTest extends TestCase
         $end = new DateTimeImmutable('2022-10-27T14:20:58+00:00');
         $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(900));
         $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(new DateInterval('PT900S')));
+        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds('PT900S'));
         $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('15 minutes')));
         $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('900 seconds')));
         $this->assertEquals(90061, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('1 day, 1 hour, 1 minute, 1 second')));
         $this->assertEquals(241361, ($this->getTestClass())::normalizeToSeconds($start->diff($end)));
+    }
+
+    /**
+     * @dataProvider provideIntervalCreateArgsNumberInterval
+     * @dataProvider provideIntervalCreateArgsString
+     * @param $spec
+     */
+    public function testNormalizeToSecondsSpec($spec)
+    {
+        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds($spec));
+    }
+
+    /**
+     * @dataProvider provideIntervalCreateArgsNumberInterval
+     * @dataProvider provideIntervalCreateArgsString
+     * @param $spec
+     */
+    public function testNormalizeToDateIntervalSpec($spec)
+    {
+        $testInterval = ($this->getTestClass())::normalizeToSeconds(new DateInterval('PT900S'));
+        $this->assertEquals($testInterval, ($this->getTestClass())::normalizeToSeconds(($this->getTestClass())::normalizeToDateInterval($spec)));
     }
 
     /**
