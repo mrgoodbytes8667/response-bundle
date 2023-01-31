@@ -146,6 +146,7 @@ class ComparableDateInterval extends DateInterval
         if(is_int($interval->days)) {
             return ($interval->days * 86400);
         }
+
         if ($interval->d != 0) {
             return ($interval->d * 86400);
         }
@@ -207,11 +208,13 @@ class ComparableDateInterval extends DateInterval
         if (count($arguments) !== 2) {
             throw new InvalidArgumentException('Both an interval (DateInterval|int) and a manipulator function name (string, either ceil, floor, or round) are required arguments.');
         }
+
         $interval = array_shift($arguments);
         $manipulator = array_shift($arguments);
         if (!in_array($manipulator, ['ceil', 'floor', 'round'])) {
             throw new InvalidArgumentException('The manipulator function name argument must be one of ceil, floor, or round.');
         }
+
         switch (strtolower($name)) {
             case 'gettotalminutes':
                 return static::getTotalByTimeType($interval, 'MINUTES', $manipulator);
@@ -260,26 +263,36 @@ class ComparableDateInterval extends DateInterval
     }
 
     /**
-     * @param DateInterval|int $seconds
+     * @param DateInterval|int|string $seconds
      * @return DateInterval
+     * @throws Exception
      */
-    public static function normalizeToDateInterval(DateInterval|int $seconds): DateInterval
+    public static function normalizeToDateInterval(DateInterval|int|string $seconds): DateInterval
     {
         if ($seconds instanceof DateInterval) {
             return $seconds;
+        }
+
+        if (is_string($seconds)) {
+            return new DateInterval($seconds);
         }
 
         return ComparableDateInterval::secondsToInterval($seconds);
     }
 
     /**
-     * @param DateInterval|int $seconds
+     * @param DateInterval|int|string $seconds
      * @return int
+     * @throws Exception
      */
-    public static function normalizeToSeconds(DateInterval|int $seconds): int
+    public static function normalizeToSeconds(DateInterval|int|string $seconds): int
     {
-        if(is_int($seconds)) {
+        if (is_int($seconds)) {
             return $seconds;
+        }
+
+        if (is_string($seconds)) {
+            $seconds = new DateInterval($seconds);
         }
 
         return ComparableDateInterval::getTotalSeconds($seconds);
