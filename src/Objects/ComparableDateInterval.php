@@ -68,6 +68,10 @@ class ComparableDateInterval extends DateInterval
             $intervalSpec = sprintf('PT%dS', $intervalSpec);
         }
 
+        if (is_numeric($intervalSpec)) {
+            $intervalSpec = sprintf('PT%dS', (int) $intervalSpec);
+        }
+
         return new static($intervalSpec);
     }
 
@@ -274,6 +278,10 @@ class ComparableDateInterval extends DateInterval
         }
 
         if (is_string($seconds)) {
+            if (is_numeric($seconds)) {
+                return ComparableDateInterval::secondsToInterval((int) $seconds);
+            }
+            
             return new DateInterval($seconds);
         }
 
@@ -292,6 +300,10 @@ class ComparableDateInterval extends DateInterval
         }
 
         if (is_string($seconds)) {
+            if (is_numeric($seconds)) {
+                return (int) $seconds;
+            }
+            
             $seconds = new DateInterval($seconds);
         }
 

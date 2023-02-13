@@ -153,6 +153,7 @@ class ComparableDateIntervalTest extends TestCase
         yield [900];
         yield [new DateInterval('PT900S')];
         yield [ComparableDateInterval::create(900)];
+        yield ['900'];
     }
 
     /**
