@@ -5,7 +5,7 @@ namespace Bytes\ResponseBundle\Security;
 
 
 use LogicException;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**

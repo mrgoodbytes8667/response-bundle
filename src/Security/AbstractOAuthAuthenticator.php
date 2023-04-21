@@ -13,6 +13,7 @@ use Bytes\ResponseBundle\Token\Interfaces\TokenValidationResponseInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +22,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -30,6 +30,7 @@ use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -47,11 +48,13 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
 
     /**
      * Error message for a invalid user at login
+     * @var string
      */
     const REDIRECT_TO_REGISTRATION = 'redirect_to_registration';
 
     /**
      * Error message for a duplicate user
+     * @var string
      */
     const REDIRECT_TO_LOGOUT = 'You are already registered. Please login.';
 
@@ -173,6 +176,7 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
             if (!$this->validateRegistrationState($state, $user)) {
                 throw new InvalidCsrfTokenException();
             }
+
             $oauthTag = $oauthTag->append('-USER');
         } else {
             $oauthTag = $oauthTag->append('-LOGIN');
@@ -201,7 +205,7 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
 
         // check credentials - e.g. make sure the password is valid
 
-        $passport = new SelfValidatingPassport(new UserBadge($user->getUsername()));
+        $passport = new SelfValidatingPassport(new UserBadge($user->getUserIdentifier()));
         $passport->setAttribute('accessToken', $tokenResponse);
         $passport->setAttribute('tokenIdentifier', $tokenResponse->getIdentifier());
         return $passport;
@@ -234,6 +238,7 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
         if (empty($validate)) {
             throw new AuthenticationException();
         }
+
         return $validate;
     }
 
@@ -291,7 +296,7 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         if ($request->hasSession()) {
-            $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+            $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
             $request->getSession()->getFlashBag()->add('error', $exception->getMessage());
         }
 
