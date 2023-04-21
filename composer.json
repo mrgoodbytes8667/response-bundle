@@ -11,6 +11,7 @@
         "mrgoodbytes8667/enum-serializer-bundle": "^3.0 | ^4.0",
         "mrgoodbytes8667/http-client-common": "^0.2.3",
         "symfony/console": "^6.2",
+        "symfony/security-bundle": "^6.2",
         "symfony/security-core": "^6.2",
         "symfony/security-csrf": "^6.2",
         "symfony/security-http": "^6.2",
@@ -47,7 +48,7 @@
         }
     },
     "conflict": {
-        "phpunit/phpunit": "<9.5 || 9.5.8",
+        "phpunit/phpunit": "<9.5 | 9.5.8 | >=10",
         "symfony/http-client": "<5.2.1"
     },
     "minimum-stability": "dev"
