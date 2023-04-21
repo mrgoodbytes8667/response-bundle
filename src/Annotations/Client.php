@@ -27,6 +27,7 @@ class Client
             $values['identifier'] = $values['value'];
             unset($values['value']);
         }
+        
         $this->set(...$values);
     }
 

@@ -31,6 +31,7 @@ trait DispatcherTrait
         if(empty($eventName)) {
             $eventName = get_class($event);
         }
+        
         return $this->dispatcher->dispatch($event, $eventName);
     }
 

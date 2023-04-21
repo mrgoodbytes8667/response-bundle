@@ -27,6 +27,7 @@ trait TokenSourceIdentifierTrait
         if(property_exists(static::class, 'identifier')) {
             return static::$identifier;
         }
+        
         return null;
     }
 

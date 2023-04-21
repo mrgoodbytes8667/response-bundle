@@ -31,6 +31,7 @@ class Auth
             $values['scopes'] = $values['value'];
             unset($values['value']);
         }
+        
         $this->set(...$values);
     }
 

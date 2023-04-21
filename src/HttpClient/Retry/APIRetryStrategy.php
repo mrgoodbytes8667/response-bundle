@@ -21,26 +21,31 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
 {
     /**
      * Default amount of time to delay (or the initial value when multiplier is used)
+     * @var int
      */
     const DEFAULT_DELAY_MS = 1000;
 
     /**
      * Default multiplier to apply to the delay each time a retry occurs
+     * @var float
      */
     const DEFAULT_MULTIPLIER = 2.0;
 
     /**
      * Default maximum delay to allow (0 means no maximum)
+     * @var int
      */
     const DEFAULT_MAX_DELAY_MS = 0;
 
     /**
      * Default probability of randomness int delay (0 = none, 1 = 100% random)
+     * @var float
      */
     const DEFAULT_JITTER = 0.1;
 
     /**
      * Default number of times to retry before failing
+     * @var int
      */
     const DEFAULT_MAX_RETRIES = 3;
 
@@ -114,6 +119,7 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if ($delayMs < 0) {
             throw new InvalidArgumentException(sprintf('Delay must be greater than or equal to zero: "%s" given.', $delayMs));
         }
+        
         $this->delayMs = $delayMs;
         return $this;
     }
@@ -127,6 +133,7 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if ($multiplier < 1) {
             throw new InvalidArgumentException(sprintf('Multiplier must be greater than or equal to one: "%s" given.', $multiplier));
         }
+        
         $this->multiplier = $multiplier;
         return $this;
     }
@@ -140,6 +147,7 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if ($maxDelayMs < 0) {
             throw new InvalidArgumentException(sprintf('Max delay must be greater than or equal to zero: "%s" given.', $maxDelayMs));
         }
+        
         $this->maxDelayMs = $maxDelayMs;
         return $this;
     }
@@ -153,6 +161,7 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if ($jitter < 0 || $jitter > 1) {
             throw new InvalidArgumentException(sprintf('Jitter must be between 0 and 1: "%s" given.', $jitter));
         }
+        
         $this->jitter = $jitter;
         return $this;
     }
@@ -209,9 +218,11 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if (in_array($statusCode, $this->statusCodes, true)) {
             return true;
         }
+        
         if (isset($this->statusCodes[$statusCode]) && is_array($this->statusCodes[$statusCode])) {
             return in_array($context->getInfo('http_method'), $this->statusCodes[$statusCode], true);
         }
+        
         if (null === $exception) {
             return false;
         }
@@ -219,6 +230,7 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if (in_array(0, $this->statusCodes, true)) {
             return true;
         }
+        
         if (isset($this->statusCodes[0]) && is_array($this->statusCodes[0])) {
             return in_array($context->getInfo('http_method'), $this->statusCodes[0], true);
         }
@@ -248,6 +260,7 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
                 $delay = $this->calculateDelay($context, $exception);
                 break;
         }
+        
         return $this->standardizeDelay((int)$delay);
     }
 
@@ -272,6 +285,7 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
                 return $headers[$key][0];
             }
         }
+        
         throw new \InvalidArgumentException(sprintf('The header "%s" does not exist or does not have a key "0".', $key));
     }
 
@@ -340,6 +354,7 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if ($maxRetries < 0) {
             throw new InvalidArgumentException(sprintf('Max retries must be greater than or equal to zero: "%s" given.', $maxRetries));
         }
+        
         $this->maxRetries = $maxRetries;
         return $this;
     }

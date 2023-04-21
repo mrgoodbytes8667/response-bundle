@@ -91,6 +91,7 @@ class Push
             unset($this->array[$key]);
             $this->resetCachedArrays();
         }
+        
         return $this;
     }
 
@@ -103,6 +104,7 @@ class Push
         if(isset($this->array[$key])) {
             return $this->array[$key];
         }
+        
         throw new \InvalidArgumentException(sprintf('The key "%s" does not exist.', $key));
     }
 

@@ -25,6 +25,7 @@ class IdNormalizer
         if ($allowNull && is_null($object)) {
             return null;
         }
+        
         if (empty($message)) {
             if (is_object($object)) {
                 $message = sprintf('The "%s" argument is required.', get_class($object));
@@ -32,10 +33,12 @@ class IdNormalizer
                 $message = 'The argument is required.';
             }
         }
+        
         $id = null;
         if (is_null($object)) {
             throw new InvalidArgumentException($message);
         }
+        
         if ($object instanceof IdInterface) {
             $id = $object->getId();
         } elseif (is_string($object)) {
@@ -44,9 +47,11 @@ class IdNormalizer
         {
             $id = (string)$object;
         }
+        
         if (empty($id) && !$allowNull) {
             throw new InvalidArgumentException($message);
         }
+        
         return $id;
     }
 }

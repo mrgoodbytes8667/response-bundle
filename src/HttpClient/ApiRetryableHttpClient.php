@@ -38,14 +38,17 @@ class ApiRetryableHttpClient implements HttpClientInterface
      * @var GenericRetryStrategy|RetryStrategyInterface
      */
     private $strategy;
+    
     /**
      * @var int
      */
     private $maxRetries;
+    
     /**
      * @var LoggerInterface|NullLogger
      */
     private $logger;
+    
     /**
      * @var EventDispatcherInterface
      */
@@ -96,6 +99,7 @@ class ApiRetryableHttpClient implements HttpClientInterface
             } catch (TransportExceptionInterface $exception) {
                 // catch TransportExceptionInterface to send it to the strategy
             }
+            
             if (null !== $exception) {
                 // always retry request that fail to resolve DNS
                 if ('' !== $context->getInfo('primary_ip')) {
@@ -113,6 +117,7 @@ class ApiRetryableHttpClient implements HttpClientInterface
                         } else {
                             yield $chunk;
                         }
+                        
                         $content = '';
 
                         return;
@@ -165,6 +170,7 @@ class ApiRetryableHttpClient implements HttpClientInterface
 
                         return;
                     }
+                    
                     $options = $event->getOptions();
                 }
             }

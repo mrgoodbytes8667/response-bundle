@@ -29,7 +29,7 @@ class DuplicateAccountException extends AuthenticationException
      *
      * @return string
      */
-    public function getMessageKey()
+    public function getMessageKey(): string
     {
         return 'Account is already associated with another user.';
     }

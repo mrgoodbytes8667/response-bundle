@@ -40,6 +40,7 @@ trait ApiAuthenticationTrait
         {
             $this->resetToken();
         }
+        
         if(!empty($this->token))
         {
             return $this->token;
@@ -100,6 +101,7 @@ trait ApiAuthenticationTrait
         } else {
             $token = $this->getToken($auth);
         }
+        
         if(!empty($token))
         {
             return ['auth_bearer' => $token->getAccessToken()];

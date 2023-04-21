@@ -36,9 +36,11 @@ class ConfigNormalizer
             if (!isset($config['endpoints'][$index]['redirects'])) {
                 $config['endpoints'][$index]['redirects'] = [];
             }
+            
             if (!isset($config['endpoints'][$index]['redirects']['method'])) {
                 $config['endpoints'][$index]['redirects']['method'] = 'route_name';
             }
+            
             foreach (['route_name', 'url'] as $redirects) {
                 if (!isset($config['endpoints'][$index]['redirects'][$redirects])) {
                     $config['endpoints'][$index]['redirects'][$redirects] = '';
@@ -57,6 +59,7 @@ class ConfigNormalizer
                 if (!isset($config['endpoints'][$index][$subIndex])) {
                     $config['endpoints'][$index][$subIndex] = [];
                 }
+                
                 foreach (['add', 'remove'] as $addRemove) {
                     if (!isset($config['endpoints'][$index][$subIndex][$addRemove])) {
                         $config['endpoints'][$index][$subIndex][$addRemove] = [];

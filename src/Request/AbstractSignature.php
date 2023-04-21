@@ -54,6 +54,7 @@ abstract class AbstractSignature implements LocatorInterface
                 return false;
             }
         }
+        
         list($algo, $hash) = explode('=', $headers->get(static::getSignatureField()), 2) + array('', '');
         if (!in_array($algo, hash_algos(), TRUE)) {
             if ($throw) {

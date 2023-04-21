@@ -31,6 +31,9 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
 {
     use SecurityTrait, UrlGeneratorTrait, ValidatorTrait;
 
+    /**
+     * @var string
+     */
     const RESPONSE_TYPE = 'code';
 
     /**
@@ -91,15 +94,19 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
         if (!isset(static::$endpoint)) {
             throw new LogicException('The static property "$endpoint" must be set by the child class.');
         }
+        
         if (!isset(static::$promptKey)) {
             throw new LogicException('The static property "$promptKey" must be set by the child class.');
         }
+        
         if (!isset(static::$baseAuthorizationCodeGrantURL)) {
             throw new LogicException('The static property "$baseAuthorizationCodeGrantURL" must be set by the child class.');
         }
+        
         if (!isset($this->config[static::$endpoint])) {
             throw new LogicException('The config parameter must include the key for "$endpoint".');
         }
+        
         $this->defaultScopes = $this->getDefaultScopes();
     }
 
@@ -157,6 +164,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
             $prompt = $options['prompt'];
             unset($options['prompt']);
         }
+        
         return $this->getAuthorizationCodeGrantURL($this->getRedirect(), $this->defaultScopes, $state, self::RESPONSE_TYPE, $prompt, ...$options);
     }
 
@@ -197,6 +205,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
         {
             return $this->scopes;
         }
+        
         $this->scopes = $this->normalizeScopes(!empty($scopes) ? $scopes : $this->defaultScopes);
         return $this->scopes;
     }
@@ -212,6 +221,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
         {
             $this->config[static::$endpoint]['scopes'] = [];
         }
+        
         if (array_key_exists('add', $this->config[static::$endpoint]['scopes'])) {
             $add = $this->config[static::$endpoint]['scopes']['add'];
             if (count($add) > 0) {
@@ -247,6 +257,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
                 $userId = $user?->getId();
             }
         }
+        
         $userId ??= (string)new Ulid();
         return u($userId)->append($this->csrfTokenManager->getToken($userId))->toString();
     }
@@ -300,6 +311,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
         {
             throw new LogicException('ValidatorInterface cannot be null when getting redirects');
         }
+        
         return $redirect;
     }
 
@@ -311,6 +323,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
         if (!array_key_exists(static::$endpoint, $this->config)) {
             throw new InvalidArgumentException(sprintf('The key "%s" was not present in the configuration', (string)static::$endpoint));
         }
+        
         if (!array_key_exists('redirects', $this->config[static::$endpoint])) {
             throw new InvalidArgumentException(sprintf('The configuration for key "%s" was not valid', (string)static::$endpoint));
         }
@@ -320,11 +333,13 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
                 if (empty($this->urlGenerator)) {
                     throw new InvalidArgumentException('URLGeneratorInterface cannot be null when a route name is passed');
                 }
+                
                 try {
                     $redirect = $this->urlGenerator->generate($this->config[static::$endpoint]['redirects']['route_name'], [], UrlGeneratorInterface::ABSOLUTE_URL);
                 } catch (RouteNotFoundException $routeNotFoundException) {
                     throw new RouteNotFoundException(sprintf('In "%s", the configured route cannot be generated. %s', static::class, $routeNotFoundException->getMessage()), $routeNotFoundException->getCode(), $routeNotFoundException);
                 }
+                
                 break;
             case 'url':
                 $redirect = $this->config[static::$endpoint]['redirects']['url'];

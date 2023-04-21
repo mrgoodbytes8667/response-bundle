@@ -29,6 +29,7 @@ class HttpClientLocator extends Locator
         {
             return $this->locator->get($tag);
         }
+        
         return null;
     }
 

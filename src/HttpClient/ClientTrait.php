@@ -35,6 +35,7 @@ trait ClientTrait
         {
             throw new \LogicException('"setReader()" must be called before attempting to load client annotations.');
         }
+        
         $reflectionClass = new \ReflectionClass(static::class);
         /** @var Client $annotations */
         $annotations = $this->reader->getClassAnnotation($reflectionClass, Client::class);
@@ -58,6 +59,7 @@ trait ClientTrait
         {
             $this->setClientAnnotations();
         }
+        
         return $this->cachedIdentifier;
     }
 
@@ -71,10 +73,12 @@ trait ClientTrait
                 $this->cachedTokenSource = TokenSource::from(static::$tokenSource);
             }
         }
+        
         if(is_null($this->cachedTokenSource))
         {
             $this->setClientAnnotations();
         }
+        
         return $this->cachedTokenSource;
     }
 

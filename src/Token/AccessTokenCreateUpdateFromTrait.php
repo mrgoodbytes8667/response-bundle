@@ -28,6 +28,7 @@ trait AccessTokenCreateUpdateFromTrait
         } else {
             $static->setAccessToken($token);
         }
+        
         return $static;
     }
 

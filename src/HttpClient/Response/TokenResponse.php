@@ -53,9 +53,11 @@ class TokenResponse extends Response implements ClientTokenResponseInterface
             if ($results instanceof AccessTokenInterface && method_exists($results, 'setIdentifier') && !empty($this->getIdentifier())) {
                 $results->setIdentifier($this->getIdentifier());
             }
+            
             if ($results instanceof AccessTokenInterface && method_exists($results, 'setTokenSource') && !empty($this->getTokenSource())) {
                 $results->setTokenSource($this->getTokenSource());
             }
+            
             return $results;
         });
         return parent::deserialize($throw, $context, $type);

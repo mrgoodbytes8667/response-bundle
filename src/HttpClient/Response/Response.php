@@ -120,6 +120,7 @@ class Response implements ClientResponseInterface
 
         return $new;
     }
+    
     //endregion
 
     //region Getters/Setters
@@ -139,9 +140,11 @@ class Response implements ClientResponseInterface
                 if (empty($this->getExtraParams())) {
                     return null;
                 }
+                
                 if (!array_key_exists($param, $this->getExtraParams())) {
                     return null;
                 }
+                
                 return $this->getExtraParams()[$param];
             }
         }
@@ -252,6 +255,7 @@ class Response implements ClientResponseInterface
         if (!is_null($onDeserializeCallables) && !is_array($onDeserializeCallables)) {
             $onDeserializeCallables = [$onDeserializeCallables];
         }
+        
         $this->onDeserializeCallables = $onDeserializeCallables ?: [];
         return $this;
     }
@@ -265,6 +269,7 @@ class Response implements ClientResponseInterface
         if (!in_array($onDeserializeCallable, $this->onDeserializeCallables ?: [])) {
             $this->onDeserializeCallables[] = $onDeserializeCallable;
         }
+        
         return $this;
     }
 
@@ -277,6 +282,7 @@ class Response implements ClientResponseInterface
         if (!in_array($onDeserializeCallable, $this->onDeserializeCallables ?: [])) {
             array_unshift($this->onDeserializeCallables, $onDeserializeCallable);
         }
+        
         return $this;
     }
 
@@ -347,9 +353,11 @@ class Response implements ClientResponseInterface
         if (empty($type)) {
             $type = $type ?? $this->type;
         }
+        
         if (empty($type)) {
             throw new InvalidArgumentException(sprintf('The argument "$type" must be provided to %s if the type property is not set.', __METHOD__));
         }
+        
         $throw = $this->deserializeGetThrow($throw, $type);
         try {
             $content = $this->response->getContent();
@@ -357,20 +365,24 @@ class Response implements ClientResponseInterface
             if ($throw) {
                 throw $exception;
             }
+            
             // If our content is empty, we cannot deserialize. Re-throw the original exception.
             $content = $exception->getResponse()->getContent(false);
             if(empty($content))
             {
                 throw $exception;
             }
+            
             list('continue' => $continue, 'content' => $content) = $this->deserializeOnError($context, $content, $type);
             if (!$continue) {
                 return $content;
             }
         }
+        
         if ($this->throwOnDeserializationWhenContentEmpty && empty($content)) {
             throw new EmptyContentException($this->response);
         }
+        
         $this->results = $this->onDeserializeCallback($this->doDeserializeContent($content, $type, $context));
 
         $this->onSuccessCallback();
@@ -412,6 +424,7 @@ class Response implements ClientResponseInterface
             $this->callbackExecuted = true;
             call_user_func($this->onSuccessCallable, $this, $this->results);
         }
+        
         return $this;
     }
 
@@ -426,8 +439,10 @@ class Response implements ClientResponseInterface
                 $results = call_user_func($onDeserializeCallable, $this, $results);
             }
         }
+        
         return $results;
     }
+    
     //endregion
 
     //region Response Helpers
@@ -477,6 +492,7 @@ class Response implements ClientResponseInterface
     {
         return $this->response?->getContent($throw);
     }
+    
     //endregion
 
     //region Deserialization Overloads
@@ -525,5 +541,6 @@ class Response implements ClientResponseInterface
     {
         return $this->serializer->deserialize($content, $type, 'json', $context ?: $this->deserializeContext);
     }
+    
     //endregion
 }

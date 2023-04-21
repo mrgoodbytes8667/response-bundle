@@ -62,6 +62,7 @@ class BytesResponseExtension extends Extension implements ExtensionInterface, Pr
                             if (!empty($clientConfig)) {
                                 $container->prependExtensionConfig($name, $clientConfig);
                             }
+                            
                             break;
                     }
                 }
@@ -79,6 +80,7 @@ class BytesResponseExtension extends Extension implements ExtensionInterface, Pr
         if(!isset($values['connections'][$key])) {
             return [];
         }
+        
         $config = $values['connections'][$key];
 
         $userAgent = self::getUserAgent($values, $key);
@@ -99,9 +101,11 @@ class BytesResponseExtension extends Extension implements ExtensionInterface, Pr
         if(isset($config['connections'][$section]['user_agent'])) {
             return $config['connections'][$section]['user_agent'];
         }
+        
         if(isset($config['defaults']['user_agent'])) {
             return $config['defaults']['user_agent'];
         }
+        
         return '';
     }
 }

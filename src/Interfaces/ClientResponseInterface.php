@@ -61,6 +61,7 @@ interface ClientResponseInterface
      * @return $this
      */
     public function onSuccessCallback(bool $rerunIfAlreadyRun = false);
+    
     //endregion
 
     //region Getters/Setters
@@ -113,6 +114,7 @@ interface ClientResponseInterface
      * @return $this
      */
     public function setOnSuccessCallable(?callable $onSuccessCallable);
+    
     //endregion
 
     /**
@@ -174,5 +176,6 @@ interface ClientResponseInterface
      * @throws TransportExceptionInterface When a network error occurs
      */
     public function getContent(bool $throw = true): ?string;
+    
     //endregion
 }

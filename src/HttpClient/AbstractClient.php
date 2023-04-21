@@ -57,11 +57,13 @@ abstract class AbstractClient
                 if (!array_key_exists('headers', $defaultOptionsByRegexp[$index])) {
                     $defaultOptionsByRegexp[$index]['headers']['User-Agent'] = $userAgent;
                 }
+                
                 if (!array_key_exists('User-Agent', $defaultOptionsByRegexp[$index]['headers'])) {
                     $defaultOptionsByRegexp[$index]['headers']['User-Agent'] = $userAgent;
                 }
             }
         }
+        
         $this->httpClient = new ConfigurableScopingHttpClient($httpClient, $defaultOptionsByRegexp, ['query', 'body'], $defaultRegexp);
     }
 
@@ -88,9 +90,11 @@ abstract class AbstractClient
         if (empty($token)) {
             return self::normalizeTokenForNulls(null, $allowNull, $message);
         }
+        
         if ($token instanceof AccessTokenInterface) {
             return self::normalizeTokenForNulls($token->{$function}() ?? null, $allowNull, $message);
         }
+        
         return self::normalizeTokenForNulls($token, $allowNull, $message);
     }
 
@@ -105,6 +109,7 @@ abstract class AbstractClient
         if (!empty($token) || $allowNull) {
             return $token;
         }
+        
         throw new UnexpectedValueException($message);
     }
 
@@ -149,15 +154,18 @@ abstract class AbstractClient
         if(is_null($caller)) {
             trigger_deprecation('mrgoodbytes8667/response-bundle', '2.0.0', 'Calling request() without the caller argument is deprecated and will cease working in a future version.');
         }
+        
         if($method instanceof HttpMethods) {
             $method = $method->value;
         }
+        
         if($this->parseAuth && !empty($this->reader)) {
             if (!is_null($caller)) {
                 try {
                     if (is_string($caller)) {
                         $caller = new \ReflectionMethod($caller);
                     }
+                    
                     /** @var Auth $auth */
                     $auth = $this->reader->getMethodAnnotation($caller, Auth::class);
                     $auth?->setIdentifier($this->getIdentifier());
@@ -167,12 +175,15 @@ abstract class AbstractClient
                 }
             }
         }
+        
         if (is_array($url)) {
             $url = implode('/', $url);
         }
+        
         if (empty($url) || !is_string($url)) {
             throw new InvalidArgumentException();
         }
+        
         $options = $this->mergeAuth($auth ?? null, $options);
         if (!is_null($responseClass)) {
             if (is_string($responseClass) && is_subclass_of($responseClass, ClientResponseInterface::class)) {
@@ -184,6 +195,7 @@ abstract class AbstractClient
             $response = clone $this->response;
             $response->setExtraParams($params);
         }
+        
         $return = $this->httpClient->request($method, $this->buildURL($url), $options);
         return $response->withResponse($return, $type, $context, $onDeserializeCallable, $onSuccessCallable);
     }
@@ -228,8 +240,10 @@ abstract class AbstractClient
             {
                 unset($options['auth_bearer']);
             }
+            
             $options = array_merge_recursive($options, $authHeader);
         }
+        
         return $options;
     }
 

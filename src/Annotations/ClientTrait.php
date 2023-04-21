@@ -57,6 +57,7 @@ trait ClientTrait
         if (!is_null($tokenSource) && !($tokenSource instanceof TokenSource)) {
             $tokenSource = TokenSource::from($tokenSource);
         }
+        
         $this->tokenSource = $tokenSource;
         return $this;
     }

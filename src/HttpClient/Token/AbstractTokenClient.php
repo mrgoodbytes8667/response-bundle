@@ -120,6 +120,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
         } else {
             throw new BadMethodCallException('Either $route or $url must be provided.');
         }
+        
         $errors = $this->validator->validate($redirect, [
             new NotBlank(),
             new Url()
@@ -190,6 +191,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
         if (empty(static::$tokenExchangeBaseUri)) {
             throw new LogicException(sprintf('You must instantiate "$tokenExchangeBaseUri" or override the "%s" method.', __METHOD__));
         }
+        
         return static::$tokenExchangeBaseUri;
     }
 
@@ -201,6 +203,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
         if (empty(static::$tokenExchangeDeserializationClass)) {
             throw new LogicException(sprintf('You must instantiate "$tokenExchangeDeserializationClass" or override the "%s" method.', __METHOD__));
         }
+        
         return static::$tokenExchangeDeserializationClass;
     }
 

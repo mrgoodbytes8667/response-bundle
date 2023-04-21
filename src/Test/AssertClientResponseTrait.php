@@ -32,6 +32,7 @@ trait AssertClientResponseTrait
         if ($response instanceof ClientResponseInterface) {
             $response = $response->getResponse();
         }
+        
         self::assertThat(
             $response->getStatusCode(),
             self::logicalAnd(
@@ -52,6 +53,7 @@ trait AssertClientResponseTrait
         if ($response instanceof ClientResponseInterface) {
             $response = $response->getResponse();
         }
+        
         self::assertThatForResponse($response, new ResponseStatusCodeSame($expectedCode), $message);
     }
 
@@ -69,6 +71,7 @@ trait AssertClientResponseTrait
         if ($response instanceof ClientResponseInterface) {
             $response = $response->getResponse();
         }
+        
         try {
             self::assertThat($response, $constraint, $message);
         } catch (ExpectationFailedException $exception) {
@@ -95,6 +98,7 @@ trait AssertClientResponseTrait
         if ($response instanceof ClientResponseInterface) {
             $response = $response->getResponse();
         }
+        
         self::assertThatForResponse($response, static::logicalNot(new ResponseStatusCodeSame($expectedCode)), $message);
     }
 
@@ -112,6 +116,7 @@ trait AssertClientResponseTrait
         if ($response instanceof ClientResponseInterface) {
             $response = $response->getResponse();
         }
+        
         self::assertThatForResponse($response, new ResponseConstraint\ResponseHasHeader($headerName), $message);
     }
 
@@ -128,6 +133,7 @@ trait AssertClientResponseTrait
         if ($response instanceof ClientResponseInterface) {
             $response = $response->getResponse();
         }
+        
         static::assertThat($response->getContent(false), static::logicalNot(static::isEmpty()), $message);
     }
 
@@ -144,6 +150,7 @@ trait AssertClientResponseTrait
         if ($response instanceof ClientResponseInterface) {
             $response = $response->getResponse();
         }
+        
         static::assertThat($response->getContent(false), static::logicalAnd(static::isEmpty()), $message);
     }
 
@@ -161,6 +168,7 @@ trait AssertClientResponseTrait
         if ($response instanceof ClientResponseInterface) {
             $response = $response->getResponse();
         }
+        
         self::assertThatForResponse($response, new ResponseContentSame($content), $message);
     }
 }
