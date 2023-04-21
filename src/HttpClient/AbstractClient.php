@@ -206,7 +206,7 @@ abstract class AbstractClient
      */
     public function jsonRequest($url, \ReflectionMethod|string $caller = null, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
     {
-        $options['headers']['Content-Type'] = ContentType::json()->value;
+        $options['headers']['Content-Type'] = ContentType::json->value;
         return $this->request(url: $url, caller: $caller, type: $type, options: $options, method: $method,
             responseClass: $responseClass, context: $context, onDeserializeCallable: $onDeserializeCallable,
             onSuccessCallable: $onSuccessCallable, params: $params);
