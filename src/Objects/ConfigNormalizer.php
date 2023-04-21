@@ -17,9 +17,11 @@ class ConfigNormalizer
      * @param array $config
      * @param string[] $endpoints = ['app', 'bot', 'eventsub_subscribe', 'login', 'slash', user']
      * @param array $addRemoveParents = ['permissions', 'scopes']
+     * @param bool $revokeOnRefresh = false
+     * @param bool $fireRevokeOnRefresh = false
      * @return array
      */
-    public static function normalizeEndpoints(array $config, array $endpoints, array $addRemoveParents = ['permissions', 'scopes'])
+    public static function normalizeEndpoints(array $config, array $endpoints, array $addRemoveParents = ['permissions', 'scopes'], bool $revokeOnRefresh = false, bool $fireRevokeOnRefresh = false)
     {
         // Remove any $config['endpoints'] not in the $endpoints argument
         foreach ($config['endpoints'] as $index => $endpoint) {
@@ -52,6 +54,15 @@ class ConfigNormalizer
             foreach ($config['endpoints'][$index] as $subIndex => $endpoint) {
                 if (!in_array($subIndex, $ignore)) {
                     unset($config['endpoints'][$index][$subIndex]);
+                }
+            }
+
+            foreach ($config['endpoints'][$index] as $endpoint) {
+                if(!isset($config['endpoints'][$index]['revoke_on_refresh'])) {
+                    $config['endpoints'][$index]['revoke_on_refresh'] = $revokeOnRefresh;
+                }
+                if(!isset($config['endpoints'][$index]['fire_revoke_on_refresh'])) {
+                    $config['endpoints'][$index]['fire_revoke_on_refresh'] = $fireRevokeOnRefresh;
                 }
             }
 
