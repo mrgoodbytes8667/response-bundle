@@ -18,7 +18,6 @@ use Faker\Provider\Company;
 use Faker\Provider\DateTime;
 use Faker\Provider\File;
 use Faker\Provider\HtmlLorem;
-use Faker\Provider\Image;
 use Faker\Provider\Internet;
 use Faker\Provider\Lorem;
 use Faker\Provider\Medical;
@@ -33,10 +32,10 @@ use Generator;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
@@ -49,7 +48,7 @@ class AbstractOAuthTest extends TestCase
     use TestFullValidatorTrait;
 
     /**
-     * @var FakerGenerator|MiscProvider|Address|Barcode|Biased|Color|Company|DateTime|File|HtmlLorem|Image|Internet|Lorem|Medical|Miscellaneous|Payment|Person|PhoneNumber|Text|UserAgent|Uuid
+     * @var FakerGenerator|MiscProvider|Address|Barcode|Biased|Color|Company|DateTime|File|HtmlLorem|Internet|Lorem|Medical|Miscellaneous|Payment|Person|PhoneNumber|Text|UserAgent|Uuid
      */
     protected $faker;
     /**
