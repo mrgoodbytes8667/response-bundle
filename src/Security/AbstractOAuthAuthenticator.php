@@ -28,7 +28,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -64,6 +64,7 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
      * @param Locator $httpClientOAuthLocator
      * @param TokenClientInterface $client
      * @param CsrfTokenManagerInterface $csrfTokenManager
+     * @param TokenStorageInterface $tokenStorage
      * @param string $userIdField
      * @param string $loginRoute
      * @param string $loginSuccessRoute
@@ -110,6 +111,35 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
     }
 
     /**
+     * The $credentials argument is the value returned by getCredentials().
+     * Your job is to return an object that implements UserInterface. If you
+     * do, then checkCredentials() will be called. If you return null (or
+     * throw an AuthenticationException) authentication will fail.
+     *
+     * @param AccessTokenInterface $tokenResponse
+     * @param TokenValidationResponseInterface $validationResponse
+     *
+     * @return UserInterface|null
+     *
+     * @throws AuthenticationException
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws UserNotFoundException
+     */
+    protected function getUser(AccessTokenInterface $tokenResponse, TokenValidationResponseInterface $validationResponse): ?UserInterface
+    {
+        $user = $this->userRepository->findOneBy([$this->userIdField => $validationResponse->getUserId()]);
+
+        if (empty($user)) {
+            // Technically this should be a UserNotFoundException, but that gets sanitized out. We know the user is
+            // a valid oauth token at this point, so redirect them back to the registration page.
+            throw new AuthenticationException(self::REDIRECT_TO_REGISTRATION);
+        }
+
+        return $user;
+    }
+
+    /**
      * Create a passport for the current request.
      *
      * The passport contains the user, credentials and any additional information
@@ -121,13 +151,13 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
      * a UserNotFoundException when the user cannot be found).
      *
      * @param Request $request
-     * @return PassportInterface
+     * @return Passport
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      * @throws ClientExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function authenticate(Request $request): PassportInterface
+    public function authenticate(Request $request): Passport
     {
         $oauthTag = u($this->getOAuthTag());
         $incomingState = u($request->query->get('state'));
@@ -244,35 +274,6 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
      * @return UserInterface
      */
     abstract protected function setUserDetails(UserInterface $user, AccessTokenInterface $tokenResponse, TokenValidationResponseInterface $validationResponse): UserInterface;
-
-    /**
-     * The $credentials argument is the value returned by getCredentials().
-     * Your job is to return an object that implements UserInterface. If you
-     * do, then checkCredentials() will be called. If you return null (or
-     * throw an AuthenticationException) authentication will fail.
-     *
-     * @param AccessTokenInterface $tokenResponse
-     * @param TokenValidationResponseInterface $validationResponse
-     *
-     * @return UserInterface|null
-     *
-     * @throws AuthenticationException
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws UserNotFoundException
-     */
-    protected function getUser(AccessTokenInterface $tokenResponse, TokenValidationResponseInterface $validationResponse): ?UserInterface
-    {
-        $user = $this->userRepository->findOneBy([$this->userIdField => $validationResponse->getUserId()]);
-
-        if (empty($user)) {
-            // Technically this should be a UserNotFoundException, but that gets sanitized out. We know the user is
-            // a valid oauth token at this point, so redirect them back to the registration page.
-            throw new AuthenticationException(self::REDIRECT_TO_REGISTRATION);
-        }
-
-        return $user;
-    }
 
     /**
      * Called when authentication executed, but failed (e.g. wrong username password).
