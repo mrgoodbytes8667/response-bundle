@@ -6,10 +6,11 @@
     "require": {
         "php": "^8.1",
         "ext-json": "*",
+        "doctrine/annotations": "^1.0 | ^2.0",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.8",
         "mrgoodbytes8667/enum-serializer-bundle": "^3.0 | ^4.0",
-        "mrgoodbytes8667/http-client-common": "^0.2.3",
+        "mrgoodbytes8667/http-client-common": "^0.3",
         "symfony/console": "^6.2",
         "symfony/security-bundle": "^6.2",
         "symfony/security-core": "^6.2",
