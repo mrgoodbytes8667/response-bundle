@@ -14,27 +14,29 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
+use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
-use TypeError;
+use ValueError;
 
 /**
  * Trait AccessTokenTrait
  * @package Bytes\ResponseBundle\Token
+ *
+ * Note: if you receive serialization errors due to the Ulid, a simple fix can be adding a property annotation to the
+ * class using this trait
+ * @example @property ?\Symfony\Component\Uid\Ulid $id
  */
 trait AccessTokenTrait
 {
     use CreatedUpdatedTrait;
 
-    /**
-     * @var Ulid
-     */
     #[ORM\Id]
-    #[ORM\Column(type: 'ulid', unique: true)]
+    #[ORM\Column(type: UlidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
-    protected $id;
+    protected ?Ulid $id = null;
 
     /**
      * User access token
@@ -173,7 +175,7 @@ trait AccessTokenTrait
             $now = new DateTimeImmutable();
             $this->setExpiresAt($now->add($expiresIn));
         }
-        
+
         $this->expiresIn = $expiresIn;
         return $this;
     }
@@ -217,7 +219,7 @@ trait AccessTokenTrait
         if (is_array($scope)) {
             $scope = implode(' ', $scope);
         }
-        
+
         $this->scope = $scope ?? '';
         return $this;
     }
@@ -245,13 +247,13 @@ trait AccessTokenTrait
      */
     public function getTokenSource(): ?TokenSource
     {
-        if(is_null($this->tokenSource)) {
+        if (is_null($this->tokenSource)) {
             return null;
         }
-        
+
         try {
             return TokenSource::from($this->tokenSource);
-        } catch (\ValueError $exception) {
+        } catch (ValueError $exception) {
             return null;
         }
     }
@@ -262,12 +264,10 @@ trait AccessTokenTrait
      */
     public function setTokenSource(TokenSource|string|null $tokenSource): self
     {
-        if (!empty($tokenSource)) {
-            if ($tokenSource instanceof TokenSource) {
-                $tokenSource = $tokenSource->value;
-            }
+        if (!empty($tokenSource) && $tokenSource instanceof TokenSource) {
+            $tokenSource = $tokenSource->value;
         }
-        
+
         $this->tokenSource = $tokenSource;
         return $this;
     }
