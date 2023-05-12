@@ -30,15 +30,15 @@ class TokenValidatedEventTest extends TestCase
         $user2 = $this->getMockBuilder(UserInterface::class)->getMock();
         $event = TokenValidatedEvent::new($token, $validation, $user);
 
-        $this->assertEquals($token, $event->getToken());
-        $this->assertEquals($validation, $event->getValidation());
-        $this->assertEquals($user, $event->getUser());
-        $this->assertInstanceOf(TokenValidatedEvent::class, $event->setToken($token2));
-        $this->assertInstanceOf(TokenValidatedEvent::class, $event->setValidation($validation2));
-        $this->assertInstanceOf(TokenValidatedEvent::class, $event->setUser($user2));
-        $this->assertEquals($token2, $event->getToken());
-        $this->assertEquals($validation2, $event->getValidation());
-        $this->assertEquals($user2, $event->getUser());
+        self::assertEquals($token, $event->getToken());
+        self::assertEquals($validation, $event->getValidation());
+        self::assertEquals($user, $event->getUser());
+        self::assertInstanceOf(TokenValidatedEvent::class, $event->setToken($token2));
+        self::assertInstanceOf(TokenValidatedEvent::class, $event->setValidation($validation2));
+        self::assertInstanceOf(TokenValidatedEvent::class, $event->setUser($user2));
+        self::assertEquals($token2, $event->getToken());
+        self::assertEquals($validation2, $event->getValidation());
+        self::assertEquals($user2, $event->getUser());
     }
 
     public function testNewWithUserFromToken()
@@ -50,8 +50,8 @@ class TokenValidatedEventTest extends TestCase
         $validation = $this->getMockBuilder(TokenValidationResponseInterface::class)->getMock();
 
         $event = TokenValidatedEvent::new($token, $validation);
-        $this->assertEquals($token, $event->getToken());
-        $this->assertEquals($validation, $event->getValidation());
-        $this->assertEquals($user, $event->getUser());
+        self::assertEquals($token, $event->getToken());
+        self::assertEquals($validation, $event->getValidation());
+        self::assertEquals($user, $event->getUser());
     }
 }

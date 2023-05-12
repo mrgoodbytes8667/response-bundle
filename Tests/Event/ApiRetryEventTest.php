@@ -59,10 +59,10 @@ class ApiRetryEventTest extends TestCase
         $retryCount = $this->faker->randomDigit();
         $options = $this->faker->words(3);
         $retry = ApiRetryEvent::new(client: $apiClient, method: $method, url: $url, options: $options, context: $context, responseContent: $content);
-        $this->assertInstanceOf(ApiRetryEvent::class, $retry);
+        self::assertInstanceOf(ApiRetryEvent::class, $retry);
 
         $retry = ApiRetryEvent::new(client: $apiClient, method: $method, url: $url, options: $options, context: $context, responseContent: $content, retryCount: $retryCount);
-        $this->assertInstanceOf(ApiRetryEvent::class, $retry);
+        self::assertInstanceOf(ApiRetryEvent::class, $retry);
 
         return [
             'retry' => $retry,
@@ -85,13 +85,13 @@ class ApiRetryEventTest extends TestCase
         /** @var ApiRetryEvent $retry */
         extract($args);
 
-        $this->assertEquals($apiClient, $retry->getClient());
-        $this->assertEquals($method, $retry->getMethod());
-        $this->assertEquals($url, $retry->getUrl());
-        $this->assertCount(3, $retry->getOptions());
-        $this->assertEquals($context, $retry->getContext());
-        $this->assertEquals($content, $retry->getResponseContent());
-        $this->assertEquals($retryCount, $retry->getRetryCount());
+        self::assertEquals($apiClient, $retry->getClient());
+        self::assertEquals($method, $retry->getMethod());
+        self::assertEquals($url, $retry->getUrl());
+        self::assertCount(3, $retry->getOptions());
+        self::assertEquals($context, $retry->getContext());
+        self::assertEquals($content, $retry->getResponseContent());
+        self::assertEquals($retryCount, $retry->getRetryCount());
 
         extract((array)$this->provideClient());
 
@@ -102,24 +102,24 @@ class ApiRetryEventTest extends TestCase
         $options = $this->faker->words(3);
         $shouldRetry = $this->faker->boolean();
 
-        $this->assertInstanceOf(ApiRetryEvent::class, $retry->setMethod($method));
-        $this->assertInstanceOf(ApiRetryEvent::class, $retry->setUrl($url));
-        $this->assertInstanceOf(ApiRetryEvent::class, $retry->setOptions($options));
-        $this->assertInstanceOf(ApiRetryEvent::class, $retry->setContext($context));
-        $this->assertInstanceOf(ApiRetryEvent::class, $retry->setResponseContent($content));
-        $this->assertInstanceOf(ApiRetryEvent::class, $retry->setRetryCount($retryCount));
-        $this->assertInstanceOf(ApiRetryEvent::class, $retry->setRetryCount($retryCount));
-        $this->assertInstanceOf(ApiRetryEvent::class, $retry->setClient($apiClient));
-        $this->assertInstanceOf(ApiRetryEvent::class, $retry->setShouldRetry($shouldRetry));
+        self::assertInstanceOf(ApiRetryEvent::class, $retry->setMethod($method));
+        self::assertInstanceOf(ApiRetryEvent::class, $retry->setUrl($url));
+        self::assertInstanceOf(ApiRetryEvent::class, $retry->setOptions($options));
+        self::assertInstanceOf(ApiRetryEvent::class, $retry->setContext($context));
+        self::assertInstanceOf(ApiRetryEvent::class, $retry->setResponseContent($content));
+        self::assertInstanceOf(ApiRetryEvent::class, $retry->setRetryCount($retryCount));
+        self::assertInstanceOf(ApiRetryEvent::class, $retry->setRetryCount($retryCount));
+        self::assertInstanceOf(ApiRetryEvent::class, $retry->setClient($apiClient));
+        self::assertInstanceOf(ApiRetryEvent::class, $retry->setShouldRetry($shouldRetry));
 
-        $this->assertEquals($apiClient, $retry->getClient());
-        $this->assertEquals($method, $retry->getMethod());
-        $this->assertEquals($url, $retry->getUrl());
-        $this->assertCount(3, $retry->getOptions());
-        $this->assertEquals($context, $retry->getContext());
-        $this->assertEquals($content, $retry->getResponseContent());
-        $this->assertEquals($retryCount, $retry->getRetryCount());
-        $this->assertEquals($shouldRetry, $retry->getShouldRetry());
+        self::assertEquals($apiClient, $retry->getClient());
+        self::assertEquals($method, $retry->getMethod());
+        self::assertEquals($url, $retry->getUrl());
+        self::assertCount(3, $retry->getOptions());
+        self::assertEquals($context, $retry->getContext());
+        self::assertEquals($content, $retry->getResponseContent());
+        self::assertEquals($retryCount, $retry->getRetryCount());
+        self::assertEquals($shouldRetry, $retry->getShouldRetry());
 
 
     }

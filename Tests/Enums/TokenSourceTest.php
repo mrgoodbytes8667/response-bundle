@@ -20,7 +20,7 @@ class TokenSourceTest extends TestCase
     public function testEnum($label, $value)
     {
         $enum = TokenSource::from($value);
-        $this->assertEquals($value, $enum->value);
+        self::assertEquals($value, $enum->value);
     }
 
     /**
@@ -35,7 +35,7 @@ class TokenSourceTest extends TestCase
 
         $output = $serializer->serialize($enum, 'json');
 
-        $this->assertEquals(json_encode([
+        self::assertEquals(json_encode([
             'label' => $label,
             'value' => $value
         ]), $output);
@@ -56,7 +56,7 @@ class TokenSourceTest extends TestCase
      */
     public function testFormChoices()
     {
-        $this->assertEquals([
+        self::assertEquals([
             'ID' => 'id',
             'User' => 'user',
             'App' => 'app',

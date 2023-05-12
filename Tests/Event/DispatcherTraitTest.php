@@ -25,11 +25,11 @@ class DispatcherTraitTest extends TestCase
     {
         $mock = new Dispatcher();
 
-        $this->assertNotNull($mock);
+        self::assertNotNull($mock);
 
         $event = new Event();
 
-        $this->assertInstanceOf(Event::class, $mock->triggerFakeEvent($event));
+        self::assertInstanceOf(Event::class, $mock->triggerFakeEvent($event));
     }
 
     public function testTokenArgDispatches()
@@ -42,16 +42,16 @@ class DispatcherTraitTest extends TestCase
         $mock = new Dispatcher();
 
         $results = $mock->dispatchTokenEvents($token);
-        $this->assertCount(6, $results);
+        self::assertCount(6, $results);
         foreach($results as $i)
         {
-            $this->assertInstanceOf(Event::class, $i);
+            self::assertInstanceOf(Event::class, $i);
         }
 
-        $this->assertInstanceOf(Event::class, $mock->dispatchObtainValidToken($this->faker->word(), TokenSource::app, null, []));
+        self::assertInstanceOf(Event::class, $mock->dispatchObtainValidToken($this->faker->word(), TokenSource::app, null, []));
 
         $validation = $this->getMockBuilder(TokenValidationResponseInterface::class)->getMock();
 
-        $this->assertInstanceOf(Event::class, $mock->dispatchTokenValidated($token, $validation));
+        self::assertInstanceOf(Event::class, $mock->dispatchTokenValidated($token, $validation));
     }
 }

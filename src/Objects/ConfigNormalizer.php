@@ -61,6 +61,7 @@ class ConfigNormalizer
                 if(!isset($config['endpoints'][$index]['revoke_on_refresh'])) {
                     $config['endpoints'][$index]['revoke_on_refresh'] = $revokeOnRefresh;
                 }
+                
                 if(!isset($config['endpoints'][$index]['fire_revoke_on_refresh'])) {
                     $config['endpoints'][$index]['fire_revoke_on_refresh'] = $fireRevokeOnRefresh;
                 }

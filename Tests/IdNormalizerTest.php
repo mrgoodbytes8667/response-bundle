@@ -27,7 +27,7 @@ class IdNormalizerTest extends TestCase
         $message = $this->faker->sentence();
         $result = IdNormalizer::normalizeIdArgument($object, $message, true);
 
-        $this->assertEquals($id, $result);
+        self::assertEquals($id, $result);
     }
 
     /**
@@ -38,7 +38,7 @@ class IdNormalizerTest extends TestCase
         $message = $this->faker->sentence();
         $result = IdNormalizer::normalizeIdArgument(123, $message, false);
 
-        $this->assertEquals('123', $result);
+        self::assertEquals('123', $result);
     }
 
     /**
@@ -50,7 +50,7 @@ class IdNormalizerTest extends TestCase
         $message = $this->faker->sentence();
         $result = IdNormalizer::normalizeIdArgument($input, $message, true);
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     /**
@@ -80,7 +80,7 @@ class IdNormalizerTest extends TestCase
         $this->expectExceptionMessage($message);
         $result = IdNormalizer::normalizeIdArgument($input, $message);
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     /**
@@ -96,7 +96,7 @@ class IdNormalizerTest extends TestCase
 
         $result = IdNormalizer::normalizeIdArgument($object, '', true);
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     /**
@@ -106,7 +106,7 @@ class IdNormalizerTest extends TestCase
     {
         $result = IdNormalizer::normalizeIdArgument('', '', true);
 
-        $this->assertEmpty($result);
+        self::assertEmpty($result);
     }
 
     /**

@@ -22,7 +22,7 @@ class TokenRevokeException extends RuntimeException implements ClientExceptionIn
      * @param string|null $message
      * @throws TransportExceptionInterface
      */
-    public function __construct(private ResponseInterface $response, ?string $message = 'Token could not be revoked')
+    public function __construct(private readonly ResponseInterface $response, ?string $message = 'Token could not be revoked')
     {
         parent::__construct($message, $response?->getStatusCode() ?? 0);
     }

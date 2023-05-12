@@ -21,7 +21,7 @@ class EmptyContentException extends RuntimeException implements ClientExceptionI
      * @param ResponseInterface $response
      * @throws TransportExceptionInterface
      */
-    public function __construct(private ResponseInterface $response)
+    public function __construct(private readonly ResponseInterface $response)
     {
         parent::__construct('Content is empty and cannot be deserialized', $response?->getStatusCode() ?? 0);
     }

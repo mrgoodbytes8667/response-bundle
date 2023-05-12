@@ -18,6 +18,6 @@ class AbstractRevokeTokenSubscriberTest extends TestCase
     {
         $subscriber = $this->getMockForAbstractClass(AbstractRevokeTokenSubscriber::class);
 
-        $this->assertCount(1, $subscriber->getSubscribedEvents());
+        self::assertCount(1, $subscriber->getSubscribedEvents());
     }
 }

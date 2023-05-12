@@ -21,11 +21,18 @@ class EventSubSignatureTest extends TestCase
 
     /**
      *
+     * @var string
      */
     const TWITCH_HUB_SECRET = 'abc123';
 
+    /**
+     * @var string
+     */
     const TWITCH_MESSAGE_ID = '5AL_vgZc1wZ7ZqDcU6SYRJyw7ijry1tMaM6_CEiS1zo=';
 
+    /**
+     * @var string
+     */
     const TWITCH_TIMESTAMP = '2020-11-21T03:33:53Z';
 
     /**
@@ -41,9 +48,9 @@ class EventSubSignatureTest extends TestCase
         $headers = $this->buildHeaders($content);
 
         $signature = new EventSubSignature(self::TWITCH_HUB_SECRET);
-        $this->assertTrue($signature->validateHubSignature($headers, $content, false));
-        $this->assertFalse($signature->validateHubSignature($headers, 'non-matching-content', false));
-        $this->assertTrue($signature->validateHubSignature($headers, $content, true));
+        self::assertTrue($signature->validateHubSignature($headers, $content, false));
+        self::assertFalse($signature->validateHubSignature($headers, 'non-matching-content', false));
+        self::assertTrue($signature->validateHubSignature($headers, $content, true));
 
         $this->expectException(AccessDeniedHttpException::class);
         $signature->validateHubSignature($headers, 'non-matching-content', true);
@@ -86,7 +93,7 @@ class EventSubSignatureTest extends TestCase
 
         $signature = new EventSubSignature(self::TWITCH_HUB_SECRET);
 
-        $this->assertFalse($signature->validateHubSignature($headers, $content, false));
+        self::assertFalse($signature->validateHubSignature($headers, $content, false));
         $this->expectException(AccessDeniedHttpException::class);
         $signature->validateHubSignature($headers, $content, true);
     }
@@ -97,7 +104,7 @@ class EventSubSignatureTest extends TestCase
     protected function setUp(): void
     {
         if (!(extension_loaded('hash'))) {
-            $this->markTestSkipped('The hash extension is not available.');
+            self::markTestSkipped('The hash extension is not available.');
         }
     }
 }

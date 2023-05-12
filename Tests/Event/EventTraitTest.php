@@ -16,8 +16,8 @@ class EventTraitTest extends TestCase
     public function testPropagation()
     {
         $event = $this->getMockForTrait(EventTrait::class);
-        $this->assertFalse($event->isPropagationStopped());
+        self::assertFalse($event->isPropagationStopped());
         $event->stopPropagation();
-        $this->assertTrue($event->isPropagationStopped());
+        self::assertTrue($event->isPropagationStopped());
     }
 }

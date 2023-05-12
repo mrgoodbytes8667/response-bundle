@@ -39,7 +39,7 @@ class ResponseTest extends TestCase
     public function testGetOnSuccessCallable($response, $headers)
     {
         // To cover getOnSuccessCallable() in DiscordResponse
-        $this->assertNull($response->getOnSuccessCallable());
+        self::assertNull($response->getOnSuccessCallable());
     }
 
     /**
@@ -50,7 +50,7 @@ class ResponseTest extends TestCase
     public function testGetDeserializeContext($response, $headers)
     {
         // To cover getDeserializeContext() in DiscordResponse
-        $this->assertEmpty($response->getDeserializeContext());
+        self::assertEmpty($response->getDeserializeContext());
     }
 
     /**
@@ -65,11 +65,11 @@ class ResponseTest extends TestCase
         $providedHeaderValue = array_shift($providedHeaders);
 
         $headers = $response->getHeaders();
-        $this->assertCount($count, $headers);
-        $this->assertArrayHasKey($providedHeaderKey, $headers);
+        self::assertCount($count, $headers);
+        self::assertArrayHasKey($providedHeaderKey, $headers);
         $header = array_shift($headers);
         $header = array_shift($header);
-        $this->assertEquals($providedHeaderValue, $header);
+        self::assertEquals($providedHeaderValue, $header);
     }
 
     /**
@@ -80,9 +80,9 @@ class ResponseTest extends TestCase
     public function testPassthroughMethods($response, $headers)
     {
         // To cover getStatusCode() in DiscordResponse
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        self::assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
-        $this->assertCount(1, $response->getHeaders());
+        self::assertCount(1, $response->getHeaders());
     }
 
     /**
@@ -118,7 +118,7 @@ class ResponseTest extends TestCase
 
         $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, null);
 
-        $this->assertTrue($discordResponse->isSuccess());
+        self::assertTrue($discordResponse->isSuccess());
     }
 
     /**
@@ -139,7 +139,7 @@ class ResponseTest extends TestCase
 
         $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, null);
 
-        $this->assertFalse($discordResponse->isSuccess());
+        self::assertFalse($discordResponse->isSuccess());
     }
 
     /**
@@ -155,7 +155,7 @@ class ResponseTest extends TestCase
 
         $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, null);
 
-        $this->assertFalse($discordResponse->isSuccess());
+        self::assertFalse($discordResponse->isSuccess());
     }
 
     /**
@@ -166,7 +166,7 @@ class ResponseTest extends TestCase
     public function testGetType($response, $headers)
     {
         // To cover getType() in DiscordResponse
-        $this->assertNull($response->getType());
+        self::assertNull($response->getType());
     }
 
     /**
@@ -208,7 +208,7 @@ class ResponseTest extends TestCase
     {
         $discordResponse = DiscordResponse::makeFrom($clientResponse);
 
-        $this->assertInstanceOf(DiscordResponse::class, $discordResponse);
+        self::assertInstanceOf(DiscordResponse::class, $discordResponse);
     }
 
     /**
@@ -223,8 +223,8 @@ class ResponseTest extends TestCase
 
         /** @var DiscordResponse $discordResponse */
         $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, Model::class, onSuccessCallable: function ($self, $results) {
-            $this->assertInstanceOf(DiscordResponse::class, $self);
-            $this->assertInstanceOf(Model::class, $results);
+            self::assertInstanceOf(DiscordResponse::class, $self);
+            self::assertInstanceOf(Model::class, $results);
         });
         $discordResponse->deserialize();
         $discordResponse->onSuccessCallback()->onSuccessCallback(true);
@@ -239,8 +239,8 @@ class ResponseTest extends TestCase
 
         /** @var Model $discordResponse */
         $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, Model::class, onSuccessCallable: function ($self, $results) {
-            $this->assertInstanceOf(DiscordResponse::class, $self);
-            $this->assertNull($results);
+            self::assertInstanceOf(DiscordResponse::class, $self);
+            self::assertNull($results);
         })->onSuccessCallback()->onSuccessCallback()->onSuccessCallback(true);
     }
 
@@ -250,7 +250,7 @@ class ResponseTest extends TestCase
      */
     public function testGetResponse(DiscordResponse $clientResponse)
     {
-        $this->assertInstanceOf(ResponseInterface::class, $clientResponse->getResponse());
+        self::assertInstanceOf(ResponseInterface::class, $clientResponse->getResponse());
     }
 
     /**
@@ -259,7 +259,7 @@ class ResponseTest extends TestCase
      */
     public function testGetSerializer(DiscordResponse $clientResponse)
     {
-        $this->assertInstanceOf(SerializerInterface::class, $clientResponse->getSerializer());
+        self::assertInstanceOf(SerializerInterface::class, $clientResponse->getSerializer());
     }
 
     /**
@@ -284,9 +284,9 @@ class ResponseTest extends TestCase
 
         /** @var Model $discordResponse */
         $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, Model::class)->deserialize();
-        $this->assertInstanceOf(Model::class, $discordResponse);
-        $this->assertEquals('foo', $discordResponse->foo);
-        $this->assertEquals('bar', $discordResponse->getBar());
+        self::assertInstanceOf(Model::class, $discordResponse);
+        self::assertEquals('foo', $discordResponse->foo);
+        self::assertEquals('bar', $discordResponse->getBar());
     }
 
 
@@ -305,7 +305,7 @@ class ResponseTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The argument "$type" must be provided');
 
-        $this->assertTrue($test->deserialize());
+        self::assertTrue($test->deserialize());
     }
 
     /**
@@ -340,9 +340,9 @@ class ResponseTest extends TestCase
         /** @var Model $discordResponse */
         $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, Model::class)->deserialize(false);
 
-        $this->assertInstanceOf(Model::class, $discordResponse);
-        $this->assertEquals('foo', $discordResponse->foo);
-        $this->assertEquals('bar', $discordResponse->getBar());
+        self::assertInstanceOf(Model::class, $discordResponse);
+        self::assertEquals('foo', $discordResponse->foo);
+        self::assertEquals('bar', $discordResponse->getBar());
     }
 
     /**
@@ -360,9 +360,9 @@ class ResponseTest extends TestCase
 
         $discordResponse = array_shift($discordResponses);
 
-        $this->assertInstanceOf(Model::class, $discordResponse);
-        $this->assertEquals('foo', $discordResponse->foo);
-        $this->assertEquals('bar', $discordResponse->getBar());
+        self::assertInstanceOf(Model::class, $discordResponse);
+        self::assertEquals('foo', $discordResponse->foo);
+        self::assertEquals('bar', $discordResponse->getBar());
     }
 
     /**
@@ -371,7 +371,7 @@ class ResponseTest extends TestCase
      */
     public function testGetResults(DiscordResponse $clientResponse)
     {
-        $this->assertNull($clientResponse->getResults());
+        self::assertNull($clientResponse->getResults());
     }
 
     /**
@@ -380,7 +380,7 @@ class ResponseTest extends TestCase
      */
     public function testGetExtraParams(DiscordResponse $clientResponse)
     {
-        $this->assertEmpty($clientResponse->getExtraParams());
+        self::assertEmpty($clientResponse->getExtraParams());
     }
 
     /**
@@ -391,7 +391,7 @@ class ResponseTest extends TestCase
     public function testGetContent($response, $headers)
     {
         // To cover getContent() in DiscordResponse
-        $this->assertEmpty($response->getContent());
+        self::assertEmpty($response->getContent());
     }
 
     /**
@@ -407,7 +407,7 @@ class ResponseTest extends TestCase
 
         $discordResponse = DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($response, null);
 
-        $this->assertInstanceOf(DiscordResponse::class, $discordResponse);
+        self::assertInstanceOf(DiscordResponse::class, $discordResponse);
 
         return $discordResponse;
     }
@@ -419,12 +419,12 @@ class ResponseTest extends TestCase
     {
         $response = new DiscordResponse($this->serializer);
 
-        $this->assertNull($response->getNoResultsExpected());
+        self::assertNull($response->getNoResultsExpected());
 
         $response->setExtraParams(['abc' => 123]);
 
-        $this->assertEquals(123, $response->getAbc());
+        self::assertEquals(123, $response->getAbc());
 
-        $this->assertNull($response->getNoResultsExpected());
+        self::assertNull($response->getNoResultsExpected());
     }
 }

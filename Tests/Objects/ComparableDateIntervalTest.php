@@ -25,12 +25,12 @@ class ComparableDateIntervalTest extends TestCase
     {
         $start = new DateTimeImmutable('2022-10-24T19:18:17+00:00');
         $end = new DateTimeImmutable('2022-10-27T14:20:58+00:00');
-        $this->assertEquals(900, ($this->getTestClass())::getTotalSeconds(900));
-        $this->assertEquals(900, ($this->getTestClass())::getTotalSeconds(new DateInterval('PT900S')));
-        $this->assertEquals(900, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('15 minutes')));
-        $this->assertEquals(900, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('900 seconds')));
-        $this->assertEquals(90061, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('1 day, 1 hour, 1 minute, 1 second')));
-        $this->assertEquals(241361, ($this->getTestClass())::getTotalSeconds($start->diff($end)));
+        self::assertEquals(900, ($this->getTestClass())::getTotalSeconds(900));
+        self::assertEquals(900, ($this->getTestClass())::getTotalSeconds(new DateInterval('PT900S')));
+        self::assertEquals(900, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('15 minutes')));
+        self::assertEquals(900, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('900 seconds')));
+        self::assertEquals(90061, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('1 day, 1 hour, 1 minute, 1 second')));
+        self::assertEquals(241361, ($this->getTestClass())::getTotalSeconds($start->diff($end)));
     }
 
     /**
@@ -40,13 +40,13 @@ class ComparableDateIntervalTest extends TestCase
     {
         $start = new DateTimeImmutable('2022-10-24T19:18:17+00:00');
         $end = new DateTimeImmutable('2022-10-27T14:20:58+00:00');
-        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(900));
-        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(new DateInterval('PT900S')));
-        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds('PT900S'));
-        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('15 minutes')));
-        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('900 seconds')));
-        $this->assertEquals(90061, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('1 day, 1 hour, 1 minute, 1 second')));
-        $this->assertEquals(241361, ($this->getTestClass())::normalizeToSeconds($start->diff($end)));
+        self::assertEquals(900, ($this->getTestClass())::normalizeToSeconds(900));
+        self::assertEquals(900, ($this->getTestClass())::normalizeToSeconds(new DateInterval('PT900S')));
+        self::assertEquals(900, ($this->getTestClass())::normalizeToSeconds('PT900S'));
+        self::assertEquals(900, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('15 minutes')));
+        self::assertEquals(900, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('900 seconds')));
+        self::assertEquals(90061, ($this->getTestClass())::normalizeToSeconds(DateInterval::createFromDateString('1 day, 1 hour, 1 minute, 1 second')));
+        self::assertEquals(241361, ($this->getTestClass())::normalizeToSeconds($start->diff($end)));
     }
 
     /**
@@ -56,7 +56,7 @@ class ComparableDateIntervalTest extends TestCase
      */
     public function testNormalizeToSecondsSpec($spec)
     {
-        $this->assertEquals(900, ($this->getTestClass())::normalizeToSeconds($spec));
+        self::assertEquals(900, ($this->getTestClass())::normalizeToSeconds($spec));
     }
 
     /**
@@ -67,7 +67,7 @@ class ComparableDateIntervalTest extends TestCase
     public function testNormalizeToDateIntervalSpec($spec)
     {
         $testInterval = ($this->getTestClass())::normalizeToSeconds(new DateInterval('PT900S'));
-        $this->assertEquals($testInterval, ($this->getTestClass())::normalizeToSeconds(($this->getTestClass())::normalizeToDateInterval($spec)));
+        self::assertEquals($testInterval, ($this->getTestClass())::normalizeToSeconds(($this->getTestClass())::normalizeToDateInterval($spec)));
     }
 
     /**
@@ -83,7 +83,7 @@ class ComparableDateIntervalTest extends TestCase
      */
     public function testSecondsToInterval()
     {
-        $this->assertEquals(15, ($this->getTestClass())::secondsToInterval(900)->i);
+        self::assertEquals(15, ($this->getTestClass())::secondsToInterval(900)->i);
     }
 
     /**
@@ -93,13 +93,13 @@ class ComparableDateIntervalTest extends TestCase
     {
         $start = new DateTimeImmutable('2022-10-24T19:18:17+00:00');
         $end = new DateTimeImmutable('2022-10-27T14:20:58+00:00');
-        $this->assertEquals(-900, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('15 minutes ago')));
-        $this->assertEquals(-900, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('900 seconds ago')));
+        self::assertEquals(-900, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('15 minutes ago')));
+        self::assertEquals(-900, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('900 seconds ago')));
         $interval = new DateInterval('PT900S');
         $interval->invert = 1;
-        $this->assertEquals(-900, ($this->getTestClass())::getTotalSeconds($interval));
-        $this->assertEquals(-90061, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('1 day, 1 hour, 1 minute, 1 second ago')));
-        $this->assertEquals(-241361, ($this->getTestClass())::getTotalSeconds($end->diff($start)));
+        self::assertEquals(-900, ($this->getTestClass())::getTotalSeconds($interval));
+        self::assertEquals(-90061, ($this->getTestClass())::getTotalSeconds(DateInterval::createFromDateString('1 day, 1 hour, 1 minute, 1 second ago')));
+        self::assertEquals(-241361, ($this->getTestClass())::getTotalSeconds($end->diff($start)));
     }
 
     /**
@@ -112,15 +112,15 @@ class ComparableDateIntervalTest extends TestCase
     {
         $interval = ($this->getTestClass())::create($spec);
 
-        $this->assertEquals(ComparableDateInterval::INSTANCE_GREATER_THAN, $interval->compare(new DateInterval('PT30S')));
-        $this->assertEquals(ComparableDateInterval::INSTANCE_GREATER_THAN, $interval->compare(DateInterval::createFromDateString('yesterday')));
-        $this->assertEquals(ComparableDateInterval::INSTANCE_EQUALS, $interval->compare(new DateInterval('PT900S')));
-        $this->assertEquals(ComparableDateInterval::INSTANCE_EQUALS, $interval->compare(new DateInterval('PT15M')));
-        $this->assertEquals(ComparableDateInterval::INSTANCE_LESS_THAN, $interval->compare(new DateInterval('PT30M')));
+        self::assertEquals(ComparableDateInterval::INSTANCE_GREATER_THAN, $interval->compare(new DateInterval('PT30S')));
+        self::assertEquals(ComparableDateInterval::INSTANCE_GREATER_THAN, $interval->compare(DateInterval::createFromDateString('yesterday')));
+        self::assertEquals(ComparableDateInterval::INSTANCE_EQUALS, $interval->compare(new DateInterval('PT900S')));
+        self::assertEquals(ComparableDateInterval::INSTANCE_EQUALS, $interval->compare(new DateInterval('PT15M')));
+        self::assertEquals(ComparableDateInterval::INSTANCE_LESS_THAN, $interval->compare(new DateInterval('PT30M')));
 
         $testInterval = new DateInterval('PT900S');
         $testInterval->f = 500;
-        $this->assertEquals(ComparableDateInterval::INSTANCE_LESS_THAN, $interval->compare($testInterval));
+        self::assertEquals(ComparableDateInterval::INSTANCE_LESS_THAN, $interval->compare($testInterval));
     }
 
     /**
@@ -133,15 +133,15 @@ class ComparableDateIntervalTest extends TestCase
     {
         $interval = ($this->getTestClass())::create($spec);
 
-        $this->assertFalse($interval->equals(new DateInterval('PT30S')));
-        $this->assertFalse($interval->equals(DateInterval::createFromDateString('yesterday')));
-        $this->assertTrue($interval->equals(new DateInterval('PT900S')));
-        $this->assertTrue($interval->equals(new DateInterval('PT15M')));
-        $this->assertFalse($interval->equals(new DateInterval('PT30M')));
+        self::assertFalse($interval->equals(new DateInterval('PT30S')));
+        self::assertFalse($interval->equals(DateInterval::createFromDateString('yesterday')));
+        self::assertTrue($interval->equals(new DateInterval('PT900S')));
+        self::assertTrue($interval->equals(new DateInterval('PT15M')));
+        self::assertFalse($interval->equals(new DateInterval('PT30M')));
 
         $testInterval = new DateInterval('PT900S');
         $testInterval->f = 500;
-        $this->assertFalse($interval->equals($testInterval));
+        self::assertFalse($interval->equals($testInterval));
     }
 
     /**
@@ -174,10 +174,10 @@ class ComparableDateIntervalTest extends TestCase
     {
         $interval = ($this->getTestClass())::normalizeToDateInterval($spec);
 
-        $this->assertInstanceOf(DateInterval::class, $interval);
+        self::assertInstanceOf(DateInterval::class, $interval);
 
         $testInterval = new DateInterval('PT900S');
-        $this->assertEquals(($this->getTestClass())::getTotalSeconds($testInterval), ($this->getTestClass())::getTotalSeconds($interval));
+        self::assertEquals(($this->getTestClass())::getTotalSeconds($testInterval), ($this->getTestClass())::getTotalSeconds($interval));
     }
 
     /**
@@ -207,7 +207,7 @@ class ComparableDateIntervalTest extends TestCase
     {
         $start = new DateTimeImmutable('2010-10-24T19:18:17+00:00');
         $end = new DateTimeImmutable('2021-11-27T14:20:58+00:00');
-        $this->assertEquals(350074961, ComparableDateInterval::getTotalSeconds($start->diff($end)));
+        self::assertEquals(350074961, ComparableDateInterval::getTotalSeconds($start->diff($end)));
     }
 
     /**
@@ -219,7 +219,7 @@ class ComparableDateIntervalTest extends TestCase
         try {
             ComparableDateInterval::getTotalSeconds($interval);
         } catch (LargeDateIntervalException $exception) {
-            $this->assertEquals($interval, $exception->getInterval());
+            self::assertEquals($interval, $exception->getInterval());
         }
     }
 
@@ -228,16 +228,16 @@ class ComparableDateIntervalTest extends TestCase
      */
     public function testIntervalToMinutes()
     {
-        $this->assertEquals(120, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H1S'), 'round'));
-        $this->assertEquals(125, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H4M51S'), 'round'));
-        $this->assertEquals(105, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT1H45M29S'), 'round'));
-        $this->assertEquals(62, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT1H1M1S'), 'ceil'));
-        $this->assertEquals(179, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H59M59S'), 'floor'));
-        $this->assertEquals(120, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H1S'), manipulator: 'round'));
-        $this->assertEquals(125, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H4M51S'), manipulator: 'round'));
-        $this->assertEquals(105, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT1H45M29S'), manipulator: 'round'));
-        $this->assertEquals(62, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT1H1M1S'), manipulator: 'ceil'));
-        $this->assertEquals(179, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H59M59S'), manipulator: 'floor'));
+        self::assertEquals(120, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H1S'), 'round'));
+        self::assertEquals(125, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H4M51S'), 'round'));
+        self::assertEquals(105, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT1H45M29S'), 'round'));
+        self::assertEquals(62, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT1H1M1S'), 'ceil'));
+        self::assertEquals(179, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H59M59S'), 'floor'));
+        self::assertEquals(120, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H1S'), manipulator: 'round'));
+        self::assertEquals(125, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H4M51S'), manipulator: 'round'));
+        self::assertEquals(105, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT1H45M29S'), manipulator: 'round'));
+        self::assertEquals(62, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT1H1M1S'), manipulator: 'ceil'));
+        self::assertEquals(179, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H59M59S'), manipulator: 'floor'));
     }
 
     /**
@@ -305,16 +305,16 @@ class ComparableDateIntervalTest extends TestCase
      */
     public function testIntervalToHours()
     {
-        $this->assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H'), 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H5M'), 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT1H45M'), 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT1H1M'), 'ceil'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H59M'), 'floor'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H'), manipulator: 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H5M'), manipulator: 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT1H45M'), manipulator: 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT1H1M'), manipulator: 'ceil'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H59M'), manipulator: 'floor'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H'), 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H5M'), 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT1H45M'), 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT1H1M'), 'ceil'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H59M'), 'floor'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H'), manipulator: 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H5M'), manipulator: 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT1H45M'), manipulator: 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT1H1M'), manipulator: 'ceil'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H59M'), manipulator: 'floor'));
     }
 
     /**
@@ -352,18 +352,18 @@ class ComparableDateIntervalTest extends TestCase
      */
     public function testIntervalToDays()
     {
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2D'), 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT2H'), 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT2H5M'), 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P1DT12H45M'), 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P1DT1H1M'), 'ceil'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT23H59M'), 'floor'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2D'), manipulator: 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT2H'), manipulator: 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT2H5M'), manipulator: 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P1DT12H45M'), manipulator: 'round'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P1DT1H1M'), manipulator: 'ceil'));
-        $this->assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT23H59M'), manipulator: 'floor'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2D'), 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT2H'), 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT2H5M'), 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P1DT12H45M'), 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P1DT1H1M'), 'ceil'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT23H59M'), 'floor'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2D'), manipulator: 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT2H'), manipulator: 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT2H5M'), manipulator: 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P1DT12H45M'), manipulator: 'round'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P1DT1H1M'), manipulator: 'ceil'));
+        self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT23H59M'), manipulator: 'floor'));
     }
 
     /**
@@ -377,7 +377,7 @@ class ComparableDateIntervalTest extends TestCase
         $interval = $d2->diff($d1);
 
         $seconds = ($this->getTestClass())::getTotalSeconds($interval);
-        $this->assertLessThan(0, $seconds);
+        self::assertLessThan(0, $seconds);
     }
 
     public function testInvalidConstructor()

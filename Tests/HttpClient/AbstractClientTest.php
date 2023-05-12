@@ -28,9 +28,9 @@ class AbstractClientTest extends TestCase
      */
     public function testNormalizeAccessToken($token, $accessToken, $refreshToken)
     {
-        $this->assertEquals($accessToken, AbstractClient::normalizeAccessToken($token));
-        $this->assertEquals($accessToken, AbstractApiClient::normalizeAccessToken($token));
-        $this->assertEquals($accessToken, \Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient::normalizeAccessToken($token));
+        self::assertEquals($accessToken, AbstractClient::normalizeAccessToken($token));
+        self::assertEquals($accessToken, AbstractApiClient::normalizeAccessToken($token));
+        self::assertEquals($accessToken, \Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient::normalizeAccessToken($token));
     }
 
     /**
@@ -70,9 +70,9 @@ class AbstractClientTest extends TestCase
      */
     public function testNormalizeRefreshToken($token, $accessToken, $refreshToken)
     {
-        $this->assertEquals($refreshToken, AbstractClient::normalizeRefreshToken($token));
-        $this->assertEquals($refreshToken, AbstractApiClient::normalizeRefreshToken($token));
-        $this->assertEquals($refreshToken, AbstractTokenClient::normalizeRefreshToken($token));
+        self::assertEquals($refreshToken, AbstractClient::normalizeRefreshToken($token));
+        self::assertEquals($refreshToken, AbstractApiClient::normalizeRefreshToken($token));
+        self::assertEquals($refreshToken, AbstractTokenClient::normalizeRefreshToken($token));
     }
 
     /**

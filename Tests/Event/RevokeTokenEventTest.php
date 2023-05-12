@@ -24,8 +24,8 @@ class RevokeTokenEventTest extends TestCase
         $token2 = $this->getMockBuilder(AccessTokenInterface::class)->getMock();
         $event = RevokeTokenEvent::new($token);
 
-        $this->assertEquals($token, $event->getToken());
-        $this->assertInstanceOf(RevokeTokenEvent::class, $event->setToken($token2));
-        $this->assertEquals($token2, $event->getToken());
+        self::assertEquals($token, $event->getToken());
+        self::assertInstanceOf(RevokeTokenEvent::class, $event->setToken($token2));
+        self::assertEquals($token2, $event->getToken());
     }
 }

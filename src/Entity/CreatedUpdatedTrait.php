@@ -7,7 +7,6 @@ namespace Bytes\ResponseBundle\Entity;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Deprecated;
 
 /**
  * Trait CreatedUpdatedTrait
@@ -16,16 +15,16 @@ use JetBrains\PhpStorm\Deprecated;
 trait CreatedUpdatedTrait
 {
     /**
-     * @var DateTimeInterface
+     * @var DateTimeInterface|null
      */
     #[ORM\Column(type: 'datetime')]
-    protected $createdAt;
+    protected ?\DateTimeInterface $createdAt = null;
 
     /**
-     * @var DateTimeInterface
+     * @var DateTimeInterface|null
      */
     #[ORM\Column(type: 'datetime')]
-    protected $updatedAt;
+    protected ?\DateTimeInterface $updatedAt = null;
 
     /**
      * @return DateTimeInterface|null

@@ -25,15 +25,9 @@ use function Symfony\Component\String\u;
  */
 class Response implements ClientResponseInterface
 {
-    /**
-     * @var ResponseInterface
-     */
-    private $response;
+    private \Symfony\Contracts\HttpClient\ResponseInterface $response;
 
-    /**
-     * @var string
-     */
-    private $type;
+    private ?string $type = null;
 
     /**
      * @var array|null
@@ -73,7 +67,7 @@ class Response implements ClientResponseInterface
      * @param EventDispatcherInterface|null $dispatcher
      * @param bool $throwOnDeserializationWhenContentEmpty
      */
-    public function __construct(private SerializerInterface $serializer, private ?EventDispatcherInterface $dispatcher = null, protected bool $throwOnDeserializationWhenContentEmpty = false)
+    public function __construct(private readonly SerializerInterface $serializer, private readonly ?EventDispatcherInterface $dispatcher = null, protected bool $throwOnDeserializationWhenContentEmpty = false)
     {
     }
 

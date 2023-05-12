@@ -19,6 +19,6 @@ class EventDispatcherTraitTest extends TestCase
     {
         $mock = $this->getMockForTrait(EventDispatcherTrait::class);
 
-        $this->assertNotNull($mock->setDispatcher(new EventDispatcher()));
+        self::assertNotNull($mock->setDispatcher(new EventDispatcher()));
     }
 }

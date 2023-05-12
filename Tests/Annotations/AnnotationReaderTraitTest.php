@@ -19,6 +19,6 @@ class AnnotationReaderTraitTest extends TestCase
     {
         $mock = $this->getMockForTrait(AnnotationReaderTrait::class);
 
-        $this->assertNotNull($mock->setReader(new AnnotationReader()));
+        self::assertNotNull($mock->setReader(new AnnotationReader()));
     }
 }

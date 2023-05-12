@@ -18,8 +18,8 @@ class LargeComparableDateIntervalTest extends ComparableDateIntervalTest
      */
     public function testLargeIntervalsYears()
     {
-        $this->assertEquals(157680050, LargeComparableDateInterval::getTotalSeconds(new DateInterval("P5YT50S")));
-        $this->assertEquals(166665650, LargeComparableDateInterval::getTotalSeconds(new DateInterval("P5Y3M2WT50S")));
+        self::assertEquals(157680050, LargeComparableDateInterval::getTotalSeconds(new DateInterval("P5YT50S")));
+        self::assertEquals(166665650, LargeComparableDateInterval::getTotalSeconds(new DateInterval("P5Y3M2WT50S")));
     }
 
     /**
@@ -27,7 +27,7 @@ class LargeComparableDateIntervalTest extends ComparableDateIntervalTest
      */
     public function testLargeIntervalsMonths()
     {
-        $this->assertEquals(12960050, LargeComparableDateInterval::getTotalSeconds(new DateInterval("P5MT50S")));
+        self::assertEquals(12960050, LargeComparableDateInterval::getTotalSeconds(new DateInterval("P5MT50S")));
     }
 
     /**
@@ -38,10 +38,10 @@ class LargeComparableDateIntervalTest extends ComparableDateIntervalTest
         $start = new DateTimeImmutable('2010-10-24T19:18:17+00:00');
         $end = new DateTimeImmutable('2021-11-27T14:20:58+00:00');
 
-        $this->assertEquals(350074961, LargeComparableDateInterval::getTotalSeconds($start->diff($end)));
+        self::assertEquals(350074961, LargeComparableDateInterval::getTotalSeconds($start->diff($end)));
 
         $interval = new DateInterval('P11Y1M2DT19H2M41S');
-        $this->assertEquals(349729361, LargeComparableDateInterval::getTotalSeconds($interval));
+        self::assertEquals(349729361, LargeComparableDateInterval::getTotalSeconds($interval));
     }
 
     /**

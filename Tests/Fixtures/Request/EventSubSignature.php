@@ -10,8 +10,19 @@ use Symfony\Component\HttpFoundation\HeaderBag;
 
 class EventSubSignature extends AbstractSignature implements SignatureInterface
 {
+    /**
+     * @var string
+     */
     const SIGNATURE_FIELD = 'twitch-eventsub-message-signature';
+    
+    /**
+     * @var string
+     */
     const TWITCH_EVENTSUB_MESSAGE_ID = 'twitch-eventsub-message-id';
+    
+    /**
+     * @var string
+     */
     const TWITCH_EVENTSUB_MESSAGE_TIMESTAMP = 'twitch-eventsub-message-timestamp';
 
     public static function getSignatureField(): string

@@ -57,27 +57,27 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
     /**
      * @var int Amount of time to delay (or the initial value when multiplier is used)
      */
-    private $delayMs;
+    private int $delayMs;
 
     /**
      * @var float Multiplier to apply to the delay each time a retry occurs
      */
-    private $multiplier;
+    private float $multiplier;
 
     /**
      * @var int Maximum delay to allow (0 means no maximum)
      */
-    private $maxDelayMs;
+    private int $maxDelayMs;
 
     /**
      * @var float Probability of randomness int delay (0 = none, 1 = 100% random)
      */
-    private $jitter;
+    private float $jitter;
 
     /**
      * @var int Number of times to retry before failing
      */
-    private $maxRetries;
+    private int $maxRetries;
 
     /**
      * @param array $statusCodes List of HTTP status codes that trigger a retry

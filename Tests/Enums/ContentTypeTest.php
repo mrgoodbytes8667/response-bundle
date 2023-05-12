@@ -20,8 +20,8 @@ class ContentTypeTest extends TestCase
     public function testEnum($label, $value, $extension)
     {
         $enum = ContentType::from($value);
-        $this->assertEquals($value, $enum->value);
-        $this->assertEquals($extension, $enum->getExtension());
+        self::assertEquals($value, $enum->value);
+        self::assertEquals($extension, $enum->getExtension());
     }
 
     /**
@@ -33,7 +33,7 @@ class ContentTypeTest extends TestCase
     public function testEnumFromExtension($label, $value, $extension)
     {
         $enum = ContentType::from($value);
-        $this->assertEquals($enum, ContentType::fromExtension($extension));
+        self::assertEquals($enum, ContentType::fromExtension($extension));
     }
 
     /**
@@ -48,7 +48,7 @@ class ContentTypeTest extends TestCase
 
         $output = $serializer->serialize($enum, 'json');
 
-        $this->assertEquals(json_encode([
+        self::assertEquals(json_encode([
             'label' => $label,
             'value' => $value
         ]), $output);
