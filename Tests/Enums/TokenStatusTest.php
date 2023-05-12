@@ -24,7 +24,7 @@ class TokenStatusTest extends TestCase
     public function testEnum($label, $value)
     {
         $enum = TokenStatus::from($value);
-        $this->assertEquals($value, $enum->value);
+        self::assertEquals($value, $enum->value);
     }
 
     /**
@@ -40,7 +40,7 @@ class TokenStatusTest extends TestCase
 
         $output = $serializer->serialize($enum, 'json');
 
-        $this->assertEquals(json_encode([
+        self::assertEquals(json_encode([
             'label' => $label,
             'value' => $value
         ]), $output);
@@ -80,10 +80,10 @@ class TokenStatusTest extends TestCase
      */
     public function testIsActive($label, $value)
     {
-        $this->assertTrue(TokenStatus::isActive($label));
-        $this->assertTrue(TokenStatus::isActive(TokenStatus::from($label)));
-        $this->assertTrue(TokenStatus::isActive($value));
-        $this->assertTrue(TokenStatus::isActive(TokenStatus::from($value)));
+        self::assertTrue(TokenStatus::isActive($label));
+        self::assertTrue(TokenStatus::isActive(TokenStatus::from($label)));
+        self::assertTrue(TokenStatus::isActive($value));
+        self::assertTrue(TokenStatus::isActive(TokenStatus::from($value)));
     }
 
     /**
@@ -93,10 +93,10 @@ class TokenStatusTest extends TestCase
      */
     public function testIsNotActive($label, $value)
     {
-        $this->assertFalse(TokenStatus::isActive($label));
-        $this->assertFalse(TokenStatus::isActive(TokenStatus::from($label)));
-        $this->assertFalse(TokenStatus::isActive($value));
-        $this->assertFalse(TokenStatus::isActive(TokenStatus::from($value)));
+        self::assertFalse(TokenStatus::isActive($label));
+        self::assertFalse(TokenStatus::isActive(TokenStatus::from($label)));
+        self::assertFalse(TokenStatus::isActive($value));
+        self::assertFalse(TokenStatus::isActive(TokenStatus::from($value)));
     }
 
     /**
@@ -107,8 +107,8 @@ class TokenStatusTest extends TestCase
      */
     public function testIsNotActiveInvalid($label, $value)
     {
-        $this->assertFalse(TokenStatus::isActive($label));
-        $this->assertFalse(TokenStatus::isActive($value));
+        self::assertFalse(TokenStatus::isActive($label));
+        self::assertFalse(TokenStatus::isActive($value));
     }
 
     /**
@@ -119,7 +119,7 @@ class TokenStatusTest extends TestCase
     public function testMakeInvalidValue($label, $value)
     {
         $this->expectException(ValueError::class);
-        $this->assertFalse(TokenStatus::isActive(TokenStatus::from($value)));
+        self::assertFalse(TokenStatus::isActive(TokenStatus::from($value)));
     }
 
     /**
@@ -127,7 +127,7 @@ class TokenStatusTest extends TestCase
      */
     public function testFormChoices()
     {
-        $this->assertEquals([
+        self::assertEquals([
             'Granted' => 'granted',
             'Refreshed' => 'refreshed',
             'Expired' => 'expired',

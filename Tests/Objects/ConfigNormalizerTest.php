@@ -32,12 +32,12 @@ class ConfigNormalizerTest extends TestCase
         ];
 
         $normalized = ConfigNormalizer::normalizeEndpoints($config, [$endpointKey1, $endpointKey2]);
-        $this->assertArrayHasKey('sample', $normalized);
-        $this->assertArrayHasKey('endpoints', $normalized);
+        self::assertArrayHasKey('sample', $normalized);
+        self::assertArrayHasKey('endpoints', $normalized);
 
         $normalized = $normalized['endpoints'];
 
-        $this->assertArrayNotHasKey($endpointExtraKey, $normalized);
+        self::assertArrayNotHasKey($endpointExtraKey, $normalized);
 
         $this->extracted($endpointKey1, $normalized, ['permissions', 'scopes']);
         $this->extracted($endpointKey2, $normalized, ['permissions', 'scopes']);
@@ -51,17 +51,17 @@ class ConfigNormalizerTest extends TestCase
      */
     protected function extracted(string $key, mixed $normalized, array $addRemoveParentKeys): void
     {
-        $this->assertArrayHasKey($key, $normalized);
+        self::assertArrayHasKey($key, $normalized);
 
-        $this->assertArrayHasKey('redirects', $normalized[$key]);
-        $this->assertArrayHasKey('method', $normalized[$key]['redirects']);
-        $this->assertArrayHasKey('route_name', $normalized[$key]['redirects']);
-        $this->assertArrayHasKey('url', $normalized[$key]['redirects']);
+        self::assertArrayHasKey('redirects', $normalized[$key]);
+        self::assertArrayHasKey('method', $normalized[$key]['redirects']);
+        self::assertArrayHasKey('route_name', $normalized[$key]['redirects']);
+        self::assertArrayHasKey('url', $normalized[$key]['redirects']);
 
         foreach ($addRemoveParentKeys as $addRemoveParentKey) {
-            $this->assertArrayHasKey($addRemoveParentKey, $normalized[$key]);
-            $this->assertArrayHasKey('add', $normalized[$key][$addRemoveParentKey]);
-            $this->assertArrayHasKey('remove', $normalized[$key][$addRemoveParentKey]);
+            self::assertArrayHasKey($addRemoveParentKey, $normalized[$key]);
+            self::assertArrayHasKey('add', $normalized[$key][$addRemoveParentKey]);
+            self::assertArrayHasKey('remove', $normalized[$key][$addRemoveParentKey]);
         }
     }
 
@@ -89,17 +89,17 @@ class ConfigNormalizerTest extends TestCase
         ];
 
         $normalized = ConfigNormalizer::normalizeEndpoints($config, [$endpointKey1, $endpointKey2], $addRemoveParentKeys);
-        $this->assertArrayHasKey('sample', $normalized);
-        $this->assertArrayHasKey('endpoints', $normalized);
+        self::assertArrayHasKey('sample', $normalized);
+        self::assertArrayHasKey('endpoints', $normalized);
 
         $normalized = $normalized['endpoints'];
 
-        $this->assertArrayNotHasKey($endpointExtraKey, $normalized);
+        self::assertArrayNotHasKey($endpointExtraKey, $normalized);
 
         $this->extracted($endpointKey1, $normalized, $addRemoveParentKeys);
         $this->extracted($endpointKey2, $normalized, $addRemoveParentKeys);
 
         // Verify extra addRemove key is gone
-        $this->assertArrayNotHasKey($addRemoveParentExtraKey, $normalized[$endpointKey1]);
+        self::assertArrayNotHasKey($addRemoveParentExtraKey, $normalized[$endpointKey1]);
     }
 }

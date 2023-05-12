@@ -39,15 +39,15 @@ class AccessTokenTraitTest extends TestCase
         $accessToken = $this->faker->randomAlphanumericString();
 
         $token = $this->getMockForTrait(AccessTokenTrait::class);
-        $this->assertNull($token->getAccessToken());
+        self::assertNull($token->getAccessToken());
 
         $token->setAccessToken(null);
-        $this->assertNull($token->getAccessToken());
+        self::assertNull($token->getAccessToken());
 
         $token->setAccessToken($accessToken);
-        $this->assertEquals($accessToken, $token->getAccessToken());
+        self::assertEquals($accessToken, $token->getAccessToken());
 
-        $this->assertNotEquals($token, $token->getAccessToken(true));
+        self::assertNotEquals($token, $token->getAccessToken(true));
     }
 
     /**
@@ -66,15 +66,15 @@ class AccessTokenTraitTest extends TestCase
     public function testGetSetIdentifier()
     {
         $token = $this->getMockForTrait(AccessTokenTrait::class);
-        $this->assertNull($token->getIdentifier());
+        self::assertNull($token->getIdentifier());
 
         $class = $token::class;
 
         $token->setIdentifier(null);
-        $this->assertEquals($class, $token->getIdentifier());
+        self::assertEquals($class, $token->getIdentifier());
 
         $token->setIdentifier($class);
-        $this->assertEquals($class, $token->getIdentifier());
+        self::assertEquals($class, $token->getIdentifier());
     }
 
     /**
@@ -85,13 +85,13 @@ class AccessTokenTraitTest extends TestCase
         $tokenType = $this->faker->word();
 
         $token = $this->getMockForTrait(AccessTokenTrait::class);
-        $this->assertNull($token->getTokenType());
+        self::assertNull($token->getTokenType());
 
         $token->setTokenType(null);
-        $this->assertNull($token->getTokenType());
+        self::assertNull($token->getTokenType());
 
         $token->setTokenType($tokenType);
-        $this->assertEquals($tokenType, $token->getTokenType());
+        self::assertEquals($tokenType, $token->getTokenType());
     }
 
     /**
@@ -103,13 +103,13 @@ class AccessTokenTraitTest extends TestCase
         $tokenSource = $this->faker->randomEnum(TokenSource::class);
 
         $token = $this->getMockForTrait(AccessTokenTrait::class);
-        $this->assertNull($token->getTokenSource());
+        self::assertNull($token->getTokenSource());
 
         $token->setTokenSource(null);
-        $this->assertNull($token->getTokenSource());
+        self::assertNull($token->getTokenSource());
 
         $token->setTokenSource($tokenSource);
-        $this->assertEquals($tokenSource, $token->getTokenSource());
+        self::assertEquals($tokenSource, $token->getTokenSource());
     }
 
     /**
@@ -120,15 +120,15 @@ class AccessTokenTraitTest extends TestCase
         $refreshToken = $this->faker->randomAlphanumericString();
 
         $token = $this->getMockForTrait(AccessTokenTrait::class);
-        $this->assertNull($token->getRefreshToken());
+        self::assertNull($token->getRefreshToken());
 
         $token->setRefreshToken(null);
-        $this->assertNull($token->getRefreshToken());
+        self::assertNull($token->getRefreshToken());
 
         $token->setRefreshToken($refreshToken);
-        $this->assertEquals($refreshToken, $token->getRefreshToken());
+        self::assertEquals($refreshToken, $token->getRefreshToken());
 
-        $this->assertNotEquals($token, $token->getRefreshToken(true));
+        self::assertNotEquals($token, $token->getRefreshToken(true));
     }
 
     /**
@@ -139,16 +139,16 @@ class AccessTokenTraitTest extends TestCase
     public function testGetSetScope($scope, $expected)
     {
         $token = $this->getMockForTrait(AccessTokenTrait::class);
-        $this->assertEmpty($token->getScope());
+        self::assertEmpty($token->getScope());
 
         $token->setScope('');
-        $this->assertEmpty($token->getScope());
+        self::assertEmpty($token->getScope());
 
         $token->setScope([]);
-        $this->assertEmpty($token->getScope());
+        self::assertEmpty($token->getScope());
 
         $token->setScope($scope);
-        $this->assertEquals($expected, $token->getScope());
+        self::assertEquals($expected, $token->getScope());
     }
 
     /**
@@ -168,13 +168,13 @@ class AccessTokenTraitTest extends TestCase
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
         $token = $this->getMockForTrait(AccessTokenTrait::class);
-        $this->assertNull($token->getUser());
+        self::assertNull($token->getUser());
 
         $token->setUser(null);
-        $this->assertNull($token->getUser());
+        self::assertNull($token->getUser());
 
         $token->setUser($user);
-        $this->assertEquals($user, $token->getUser());
+        self::assertEquals($user, $token->getUser());
     }
 
     /**
@@ -188,13 +188,13 @@ class AccessTokenTraitTest extends TestCase
         $expiresIn = $interval;
 
         $token = $this->getMockForTrait(AccessTokenTrait::class);
-        $this->assertNull($token->getExpiresIn());
+        self::assertNull($token->getExpiresIn());
 
         $token->setExpiresIn(null);
-        $this->assertNull($token->getExpiresIn());
+        self::assertNull($token->getExpiresIn());
 
         $token->setExpiresIn($expiresIn);
-        $this->assertEquals($expiresIn, $token->getExpiresIn());
+        self::assertEquals($expiresIn, $token->getExpiresIn());
     }
 
     /**
@@ -207,15 +207,15 @@ class AccessTokenTraitTest extends TestCase
     {
 
         $token = $this->getMockForTrait(AccessTokenTrait::class);
-        $this->assertNull($token->getExpiresIn());
+        self::assertNull($token->getExpiresIn());
 
         $token->setExpiresIn(null);
-        $this->assertNull($token->getExpiresIn());
+        self::assertNull($token->getExpiresIn());
 
         $token->setExpiresIn($seconds);
-        $this->assertEquals(ComparableDateInterval::getTotalSeconds($interval), ComparableDateInterval::getTotalSeconds($token->getExpiresIn()));
-        $this->assertEquals($seconds, ComparableDateInterval::getTotalSeconds($token->getExpiresIn()));
-        $this->assertEquals(ComparableDateInterval::secondsToInterval($seconds), $token->getExpiresIn());
+        self::assertEquals(ComparableDateInterval::getTotalSeconds($interval), ComparableDateInterval::getTotalSeconds($token->getExpiresIn()));
+        self::assertEquals($seconds, ComparableDateInterval::getTotalSeconds($token->getExpiresIn()));
+        self::assertEquals(ComparableDateInterval::secondsToInterval($seconds), $token->getExpiresIn());
     }
 
     /**
@@ -234,10 +234,10 @@ class AccessTokenTraitTest extends TestCase
     public function testGetSetExpiresAt($expiresAt)
     {
         $token = $this->getMockForTrait(AccessTokenTrait::class);
-        $this->assertNull($token->getExpiresAt());
+        self::assertNull($token->getExpiresAt());
 
         $token->setExpiresAt($expiresAt);
-        $this->assertEquals($expiresAt, $token->getExpiresAt());
+        self::assertEquals($expiresAt, $token->getExpiresAt());
     }
 
     /**

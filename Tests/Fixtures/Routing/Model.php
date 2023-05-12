@@ -59,12 +59,14 @@ class Model extends \Bytes\ResponseBundle\Routing\AbstractOAuth
         $value = (string)$value;
     }
 
+    private array $localDefaultScopes = [];
+
     /**
      * @return array
      */
     protected function getDefaultScopes(): array
     {
-        return $this->defaultScopes;
+        return $this->localDefaultScopes;
     }
 
     /**
@@ -81,7 +83,8 @@ class Model extends \Bytes\ResponseBundle\Routing\AbstractOAuth
     }
 
     /**
-     * AbstractOAuth constructor.
+     * @param $faker
+     * @param array $defaultScopes
      * @param string|null $clientId
      * @param array $config
      * @param array $options
@@ -89,14 +92,10 @@ class Model extends \Bytes\ResponseBundle\Routing\AbstractOAuth
     public function __construct($faker, array $defaultScopes, ?string $clientId, array $config, array $options = [])
     {
         $this->faker = $faker;
-        $this->defaultScopes = $defaultScopes;
+        $this->localDefaultScopes = $defaultScopes;
+        $this->setDefaultScopes($defaultScopes);
         parent::__construct($clientId, $config, $options);
     }
-
-    /**
-     * @var string[]
-     */
-    private $defaultScopes;
 
     /**
      * Return the OAuth name

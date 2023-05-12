@@ -44,7 +44,7 @@ class EmptyContentExceptionTest extends TestCase
         try {
             $response->deserialize();
         } catch (EmptyContentException $exception) {
-            $this->assertInstanceOf(ResponseInterface::class, $exception->getResponse());
+            self::assertInstanceOf(ResponseInterface::class, $exception->getResponse());
         }
     }
 

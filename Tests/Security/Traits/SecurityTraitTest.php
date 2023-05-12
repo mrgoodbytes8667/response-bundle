@@ -21,7 +21,7 @@ class SecurityTraitTest extends TestCase
     {
         $trait = $this->getMockForTrait(SecurityTrait::class);
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
-        $this->assertNotNull($trait->setTokenUser($user));
+        self::assertNotNull($trait->setTokenUser($user));
     }
 
     /**
@@ -32,6 +32,6 @@ class SecurityTraitTest extends TestCase
         $trait = $this->getMockForTrait(SecurityTrait::class);
         $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $security = new Security($container);
-        $this->assertNotNull($trait->setSecurity($security));
+        self::assertNotNull($trait->setSecurity($security));
     }
 }

@@ -166,8 +166,8 @@ class ApiRetryableHttpClientTest extends TestCase
 
         $response = $client->request('GET', 'http://example.com/foo-bar');
 
-        foreach ($client->stream($response) as $chunk) {
-            if ($chunk->isFirst()) {
+        foreach ($client->stream($response) as $responseStream) {
+            if ($responseStream->isFirst()) {
                 self::assertSame(500, $response->getStatusCode());
             }
         }
@@ -192,10 +192,11 @@ class ApiRetryableHttpClientTest extends TestCase
         try {
             $response->getHeaders();
         } catch (TransportExceptionInterface $e) {
-            $this->assertSame('Could not resolve host "does.not.exists".', $e->getMessage());
+            self::assertSame('Could not resolve host "does.not.exists".', $e->getMessage());
         }
-        $this->assertCount(2, $logger->logs);
-        $this->assertSame('Try #{count} after {delay}ms: Could not resolve host "does.not.exists".', $logger->logs[0]);
+        
+        self::assertCount(2, $logger->logs);
+        self::assertSame('Try #{count} after {delay}ms: Could not resolve host "does.not.exists".', $logger->logs[0]);
     }
 
     public function testRetryEvent()

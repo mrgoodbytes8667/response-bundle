@@ -51,10 +51,12 @@ class AbstractOAuthTest extends TestCase
      * @var FakerGenerator|MiscProvider|Address|Barcode|Biased|Color|Company|DateTime|File|HtmlLorem|Internet|Lorem|Medical|Miscellaneous|Payment|Person|PhoneNumber|Text|UserAgent|Uuid
      */
     protected $faker;
+    
     /**
      * @var string[]
      */
     private $defaultScopes;
+    
     /**
      * @var string
      */
@@ -67,6 +69,7 @@ class AbstractOAuthTest extends TestCase
     {
         $this->faker = Factory::create();
         $this->faker->addProvider(new MiscProvider($this->faker));
+        
         $this->defaultScopes = $this->faker->unique()->words(3);
     }
 
@@ -87,14 +90,14 @@ class AbstractOAuthTest extends TestCase
 
         $output = $oauth->getAuthorizationURL();
 
-        $this->assertNotEmpty($output);
-        $this->assertStringContainsString('client_id=' . $this->clientId, $output);
-        $this->assertStringContainsString('response_type=code', $output);
-        $this->assertStringContainsString('scope=' . urlencode(implode(' ', $this->defaultScopes)), $output);
-        $this->assertStringContainsString('random=normalizedPrompt', $output);
-        $this->assertStringStartsWith('?', $output);
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('client_id=' . $this->clientId, $output);
+        self::assertStringContainsString('response_type=code', $output);
+        self::assertStringContainsString('scope=' . urlencode(implode(' ', $this->defaultScopes)), $output);
+        self::assertStringContainsString('random=normalizedPrompt', $output);
+        self::assertStringStartsWith('?', $output);
         $query = explode('&', $output);
-        $this->assertCount(6, $query);
+        self::assertCount(6, $query);
 
     }
 
@@ -125,6 +128,7 @@ class AbstractOAuthTest extends TestCase
         if ($setValidator) {
             $mock->setValidator($this->validator);
         }
+        
         $token = new CsrfToken('', 'abc123');
         $csrf = $this->getMockBuilder(CsrfTokenManagerInterface::class)->getMock();
         $csrf->method('getToken')->willReturn($token);
@@ -144,14 +148,14 @@ class AbstractOAuthTest extends TestCase
 
         $output = $oauth->getAuthorizationURL(prompt: $this->faker->word());
 
-        $this->assertNotEmpty($output);
-        $this->assertStringContainsString('client_id=' . $this->clientId, $output);
-        $this->assertStringContainsString('response_type=code', $output);
-        $this->assertStringContainsString('scope=' . urlencode(implode(' ', $this->defaultScopes)), $output);
-        $this->assertStringContainsString('random=normalizedPrompt', $output);
-        $this->assertStringStartsWith('?', $output);
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('client_id=' . $this->clientId, $output);
+        self::assertStringContainsString('response_type=code', $output);
+        self::assertStringContainsString('scope=' . urlencode(implode(' ', $this->defaultScopes)), $output);
+        self::assertStringContainsString('random=normalizedPrompt', $output);
+        self::assertStringStartsWith('?', $output);
         $query = explode('&', $output);
-        $this->assertCount(6, $query);
+        self::assertCount(6, $query);
 
     }
 
@@ -162,7 +166,7 @@ class AbstractOAuthTest extends TestCase
     {
         $oauth = $this->setupOAuth();
         $redirect = $oauth->getRedirect();
-        $this->assertEquals('https://www.example.com', $redirect);
+        self::assertEquals('https://www.example.com', $redirect);
     }
 
     /**
@@ -244,8 +248,9 @@ class AbstractOAuthTest extends TestCase
 
         $oauth = $this->setupOAuth(['model' => ['redirects' => ['method' => 'route_name', 'route_name' => $this->faker->word()]]]);
         $oauth->setUrlGenerator($urlGenerator);
+        
         $redirect = $oauth->getRedirect();
-        $this->assertEquals($expectedRedirect, $redirect);
+        self::assertEquals($expectedRedirect, $redirect);
     }
 
     /**
@@ -265,21 +270,23 @@ class AbstractOAuthTest extends TestCase
     {
         $oauth = $this->setupOAuth();
 
-        $this->assertCount(3, $oauth->getScopes($this->faker->valid(function ($values) {
+        self::assertCount(3, $oauth->getScopes($this->faker->valid(function ($values) {
             foreach ($values as $value) {
                 if (in_array($value, $this->defaultScopes)) {
                     return false;
                 }
             }
+            
             return true;
         })->words(3)));
 
-        $this->assertCount(3, $oauth->getScopes($this->faker->valid(function ($values) {
+        self::assertCount(3, $oauth->getScopes($this->faker->valid(function ($values) {
             foreach ($values as $value) {
                 if (in_array($value, $this->defaultScopes)) {
                     return false;
                 }
             }
+            
             return true;
         })->words(3)));
     }
@@ -290,10 +297,10 @@ class AbstractOAuthTest extends TestCase
      */
     public function testGetScopes2($index)
     {
-        foreach ($this->provideScopes() as $scope) {
-            $add = $scope['add'];
-            $remove = $scope['remove'];
-            $scopes = $scope['scopes'];
+        foreach ($this->provideScopes() as $generator) {
+            $add = $generator['add'];
+            $remove = $generator['remove'];
+            $scopes = $generator['scopes'];
 
             $oauth = $this->setupOAuth([
                 'model' => [
@@ -306,7 +313,7 @@ class AbstractOAuthTest extends TestCase
 
             $normalizedScopes = $oauth->getScopes($scopes);
 
-            $this->assertCount(6, $normalizedScopes);
+            self::assertCount(6, $normalizedScopes);
         }
     }
 
@@ -364,12 +371,13 @@ class AbstractOAuthTest extends TestCase
     {
         $oauth = $this->setupOAuth(['model' => []]);
 
-        $this->assertCount(3, $oauth->getScopes($this->faker->valid(function ($values) {
+        self::assertCount(3, $oauth->getScopes($this->faker->valid(function ($values) {
             foreach ($values as $value) {
                 if (in_array($value, $this->defaultScopes)) {
                     return false;
                 }
             }
+            
             return true;
         })->words(3)));
     }
@@ -385,16 +393,16 @@ class AbstractOAuthTest extends TestCase
         $state = $this->faker->randomAlphanumericString();
         $output = $oauth->getAuthorizationCodeGrantURL($redirect, $this->defaultScopes, $state);
 
-        $this->assertNotEmpty($output);
-        $this->assertStringContainsString('client_id=' . $this->clientId, $output);
-        $this->assertStringContainsString('redirect_uri=' . urlencode($redirect), $output);
-        $this->assertStringContainsString('response_type=code', $output);
-        $this->assertStringContainsString('scope=' . urlencode(implode(' ', $this->defaultScopes)), $output);
-        $this->assertStringContainsString('state=' . $state, $output);
-        $this->assertStringContainsString('random=normalizedPrompt', $output);
-        $this->assertStringStartsWith('?', $output);
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('client_id=' . $this->clientId, $output);
+        self::assertStringContainsString('redirect_uri=' . urlencode($redirect), $output);
+        self::assertStringContainsString('response_type=code', $output);
+        self::assertStringContainsString('scope=' . urlencode(implode(' ', $this->defaultScopes)), $output);
+        self::assertStringContainsString('state=' . $state, $output);
+        self::assertStringContainsString('random=normalizedPrompt', $output);
+        self::assertStringStartsWith('?', $output);
         $query = explode('&', $output);
-        $this->assertCount(6, $query);
+        self::assertCount(6, $query);
     }
 
     /**
@@ -422,16 +430,16 @@ class AbstractOAuthTest extends TestCase
         $state = $userId;
         $output = $oauth->getAuthorizationCodeGrantURL($redirect, $this->defaultScopes, null);
 
-        $this->assertNotEmpty($output);
-        $this->assertStringContainsString('client_id=' . $this->clientId, $output);
-        $this->assertStringContainsString('redirect_uri=' . urlencode($redirect), $output);
-        $this->assertStringContainsString('response_type=code', $output);
-        $this->assertStringContainsString('scope=' . urlencode(implode(' ', $this->defaultScopes)), $output);
-        $this->assertStringContainsString('state=' . $state, $output);
-        $this->assertStringContainsString('random=normalizedPrompt', $output);
-        $this->assertStringStartsWith('?', $output);
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('client_id=' . $this->clientId, $output);
+        self::assertStringContainsString('redirect_uri=' . urlencode($redirect), $output);
+        self::assertStringContainsString('response_type=code', $output);
+        self::assertStringContainsString('scope=' . urlencode(implode(' ', $this->defaultScopes)), $output);
+        self::assertStringContainsString('state=' . $state, $output);
+        self::assertStringContainsString('random=normalizedPrompt', $output);
+        self::assertStringStartsWith('?', $output);
         $query = explode('&', $output);
-        $this->assertCount(6, $query);
+        self::assertCount(6, $query);
     }
 
     /**
@@ -440,6 +448,6 @@ class AbstractOAuthTest extends TestCase
     public function testSetSecurity()
     {
         $oauth = $this->setupOAuth();
-        $this->assertInstanceOf(AbstractOAuth::class, $oauth->setSecurity(null));
+        self::assertInstanceOf(AbstractOAuth::class, $oauth->setSecurity(null));
     }
 }

@@ -53,15 +53,15 @@ class ClientTraitTest extends TestCase
 
         $mock = $this->getMockForTrait(ClientTrait::class);
 
-        $this->assertNull($mock->getIdentifier());
+        self::assertNull($mock->getIdentifier());
         $mock->setIdentifier($identifier);
-        $this->assertEquals($identifier, $mock->getIdentifier());
+        self::assertEquals($identifier, $mock->getIdentifier());
 
-        $this->assertNull($mock->getTokenSource());
+        self::assertNull($mock->getTokenSource());
         $mock->setTokenSource($tokenSource);
-        $this->assertEquals($tokenSource, $mock->getTokenSource());
+        self::assertEquals($tokenSource, $mock->getTokenSource());
 
         $mock->setTokenSource($tokenSource2string);
-        $this->assertEquals($tokenSource2, $mock->getTokenSource());
+        self::assertEquals($tokenSource2, $mock->getTokenSource());
     }
 }

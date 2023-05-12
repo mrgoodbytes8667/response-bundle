@@ -23,9 +23,9 @@ class TokenRefreshedEventTest extends TestCase
         $token2 = $this->getMockBuilder(AccessTokenInterface::class)->getMock();
         $event = TokenRefreshedEvent::new($token);
 
-        $this->assertEquals($token, $event->getToken());
-        $this->assertInstanceOf(TokenRefreshedEvent::class, $event->setToken($token2));
-        $this->assertEquals($token2, $event->getToken());
+        self::assertEquals($token, $event->getToken());
+        self::assertInstanceOf(TokenRefreshedEvent::class, $event->setToken($token2));
+        self::assertEquals($token2, $event->getToken());
     }
 
     /**
@@ -39,11 +39,11 @@ class TokenRefreshedEventTest extends TestCase
         $tokenOld2 = $this->getMockBuilder(AccessTokenInterface::class)->getMock();
         $event = TokenRefreshedEvent::new($token, $tokenOld);
 
-        $this->assertEquals($token, $event->getToken());
-        $this->assertEquals($tokenOld, $event->getOldToken());
-        $this->assertInstanceOf(TokenRefreshedEvent::class, $event->setToken($token2));
-        $this->assertInstanceOf(TokenRefreshedEvent::class, $event->setOldToken($tokenOld2));
-        $this->assertEquals($token2, $event->getToken());
-        $this->assertEquals($tokenOld2, $event->getOldToken());
+        self::assertEquals($token, $event->getToken());
+        self::assertEquals($tokenOld, $event->getOldToken());
+        self::assertInstanceOf(TokenRefreshedEvent::class, $event->setToken($token2));
+        self::assertInstanceOf(TokenRefreshedEvent::class, $event->setOldToken($tokenOld2));
+        self::assertEquals($token2, $event->getToken());
+        self::assertEquals($tokenOld2, $event->getOldToken());
     }
 }

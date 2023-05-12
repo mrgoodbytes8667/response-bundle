@@ -27,7 +27,7 @@ class AccessTokenCreateUpdateFromTraitTest extends TestCase
 
         $token = $token::createFromAccessToken($accessToken);
 
-        $this->assertEquals($accessToken, $token->getAccessToken());
+        self::assertEquals($accessToken, $token->getAccessToken());
     }
 
     /**
@@ -39,7 +39,7 @@ class AccessTokenCreateUpdateFromTraitTest extends TestCase
 
         $token = $this->getMockForTrait(AccessTokenCreateUpdateFromTrait::class);
         $token->method('updateFromAccessToken')
-            ->will($this->returnSelf());
+            ->will(self::returnSelf());
 
         $token->setAccessToken($this->faker->randomAlphanumericString())
             ->setRefreshToken($this->faker->randomAlphanumericString())

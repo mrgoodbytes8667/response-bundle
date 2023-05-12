@@ -34,7 +34,7 @@ class AbstractTokenClientTest extends TestCase
     public function testClient()
     {
         $client = $this->getMockForAbstractClass(AbstractTokenClient::class, [HttpClient::create(), new EventDispatcher(), '', true, false]);
-        $this->assertInstanceOf(AbstractTokenClient::class, $client);
+        self::assertInstanceOf(AbstractTokenClient::class, $client);
     }
 
     /**
@@ -44,7 +44,7 @@ class AbstractTokenClientTest extends TestCase
      */
     public function testBuildOAuthString($scopes, $expected)
     {
-        $this->assertEquals($expected, AbstractTokenClient::buildOAuthString($scopes));
+        self::assertEquals($expected, AbstractTokenClient::buildOAuthString($scopes));
     }
 
     /**
@@ -65,9 +65,9 @@ class AbstractTokenClientTest extends TestCase
         $redirect = 'https://www.example.com';
         $oauth = $this->getMockForAbstractClass(AbstractOAuth::class, callOriginalConstructor: false);
 
-        $this->assertNull($client->getOAuth());
+        self::assertNull($client->getOAuth());
         $client->setOAuth($oauth);
-        $this->assertEquals($oauth, $client->getOAuth());
+        self::assertEquals($oauth, $client->getOAuth());
     }
 
     /**
@@ -80,10 +80,11 @@ class AbstractTokenClientTest extends TestCase
     {
         $client = $this->getMockForAbstractClass(AbstractTokenClient::class, [MockClient::empty(), new EventDispatcher(), '', true, false]);
         $client->setResponse(Response::make($this->serializer, new EventDispatcher()));
+        
         $response = $client->request($this->faker->url(), caller: __METHOD__);
-        $this->assertResponseIsSuccessful($response);
-        $this->assertResponseStatusCodeSame($response, Http::HTTP_NO_CONTENT);
-        $this->assertResponseHasNoContent($response);
+        self::assertResponseIsSuccessful($response);
+        self::assertResponseStatusCodeSame($response, Http::HTTP_NO_CONTENT);
+        self::assertResponseHasNoContent($response);
     }
 
     /**
@@ -97,10 +98,11 @@ class AbstractTokenClientTest extends TestCase
     {
         $client = $this->getMockForAbstractClass(AbstractTokenClient::class, [MockClient::empty(), new EventDispatcher(), '', true, false]);
         $client->setResponse(Response::make($this->serializer, new EventDispatcher()));
+        
         $response = $client->request($this->faker->url(), caller: __METHOD__, method: $method);
-        $this->assertResponseIsSuccessful($response);
-        $this->assertResponseStatusCodeSame($response, Http::HTTP_NO_CONTENT);
-        $this->assertResponseHasNoContent($response);
+        self::assertResponseIsSuccessful($response);
+        self::assertResponseStatusCodeSame($response, Http::HTTP_NO_CONTENT);
+        self::assertResponseHasNoContent($response);
     }
 
     public function provideMethods() {
@@ -118,9 +120,9 @@ class AbstractTokenClientTest extends TestCase
 
         // mergeAuth
         $options = $this->faker->words(3);
-        $this->assertEquals($options, $client->mergeAuth(options: $options));
+        self::assertEquals($options, $client->mergeAuth(options: $options));
 
         // getAuthenticationOption
-        $this->assertCount(0, $client->getAuthenticationOption());
+        self::assertCount(0, $client->getAuthenticationOption());
     }
 }
