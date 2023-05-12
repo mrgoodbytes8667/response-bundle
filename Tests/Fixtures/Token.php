@@ -20,7 +20,7 @@ class Token implements AccessTokenInterface
     /**
      * @var UserInterface|null
      */
-    private $user;
+    private ?UserInterface $user = null;
 
     /**
      * @param ...$args

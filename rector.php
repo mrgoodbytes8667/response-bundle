@@ -24,6 +24,7 @@ use Rector\Doctrine\Rector\Property\CorrectDefaultTypesOnEntityPropertyRector;
 use Rector\Doctrine\Rector\Property\DoctrineTargetEntityStringToClassConstantRector;
 use Rector\Doctrine\Rector\Property\ImproveDoctrineCollectionDocTypeInEntityRector;
 use Rector\Doctrine\Rector\Property\MakeEntityDateTimePropertyDateTimeInterfaceRector;
+use Rector\Doctrine\Rector\Property\TypedPropertyFromColumnTypeRector;
 use Rector\Doctrine\Rector\Property\TypedPropertyFromDoctrineCollectionRector;
 use Rector\Doctrine\Rector\Property\TypedPropertyFromToManyRelationTypeRector;
 use Rector\Doctrine\Rector\Property\TypedPropertyFromToOneRelationTypeRector;
@@ -127,6 +128,7 @@ return static function (RectorConfig $rectorConfig): void {
         MakeEntityDateTimePropertyDateTimeInterfaceRector::class,
         MakeEntitySetterNullabilityInSyncWithPropertyRector::class,
         ManagerRegistryGetManagerToEntityManagerRector::class,
+        TypedPropertyFromColumnTypeRector::class, // https://github.com/rectorphp/rector-doctrine/blob/main/docs/rector_rules_overview.md#typedpropertyfromcolumntyperector
         TypedPropertyFromDoctrineCollectionRector::class,
         TypedPropertyFromToManyRelationTypeRector::class,
         TypedPropertyFromToOneRelationTypeRector::class,
