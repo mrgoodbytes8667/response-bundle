@@ -43,14 +43,14 @@ trait AccessTokenTrait
      * @var string|null
      */
     #[ORM\Column(type: 'string', length: 512)]
-    private $accessToken;
+    private ?string $accessToken = null;
 
     /**
      * Refresh token
      * @var string|null
      */
     #[ORM\Column(type: 'string', length: 512, nullable: true)]
-    private $refreshToken;
+    private ?string $refreshToken = null;
 
     /**
      * Time (in seconds) until the access token expires
@@ -64,7 +64,7 @@ trait AccessTokenTrait
      * @var DateTimeInterface|null
      */
     #[ORM\Column(type: 'datetime')]
-    private $expiresAt;
+    private ?DateTimeInterface $expiresAt = null;
 
     /**
      * Space separated scopes
@@ -76,30 +76,30 @@ trait AccessTokenTrait
         new Assert\Length(max: 255),
     ])]
     #[ORM\Column(type: 'string', length: 255)]
-    private $scope;
+    private ?string $scope = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $tokenType;
+    private ?string $tokenType = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $tokenSource;
+    private ?string $tokenSource = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $class;
+    private ?string $class = null;
 
     /**
      * @var UserInterface|null
      */
-    private $user;
+    private ?UserInterface $user = null;
 
     /**
      * @return Ulid
