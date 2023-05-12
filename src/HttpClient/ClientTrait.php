@@ -68,10 +68,8 @@ trait ClientTrait
      */
     public function getTokenSource(): ?TokenSource
     {
-        if(property_exists(static::class, 'tokenSource')) {
-            if(!empty(static::$tokenSource) && is_string(static::$tokenSource) && TokenSource::isValid(static::$tokenSource)) {
-                $this->cachedTokenSource = TokenSource::from(static::$tokenSource);
-            }
+        if(property_exists(static::class, 'tokenSource') && (!empty(static::$tokenSource) && is_string(static::$tokenSource) && TokenSource::isValid(static::$tokenSource))) {
+            $this->cachedTokenSource = TokenSource::from(static::$tokenSource);
         }
         
         if(is_null($this->cachedTokenSource))

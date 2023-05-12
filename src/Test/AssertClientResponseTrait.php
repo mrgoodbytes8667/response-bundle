@@ -76,12 +76,10 @@ trait AssertClientResponseTrait
             self::assertThat($response, $constraint, $message);
         } catch (ExpectationFailedException $exception) {
             $headers = $response->getHeaders(false);
-            if (array_key_exists('X-Debug-Exception', $headers) && array_key_exists('X-Debug-Exception-File', $headers)) {
-                if (($serverExceptionMessage = $headers['X-Debug-Exception'][0])
-                    && ($serverExceptionFile = $headers['X-Debug-Exception-File'][0])) {
-                    $serverExceptionFile = explode(':', $serverExceptionFile);
-                    $exception->__construct($exception->getMessage(), $exception->getComparisonFailure(), new ErrorException(rawurldecode($serverExceptionMessage), 0, 1, rawurldecode($serverExceptionFile[0]), $serverExceptionFile[1]), $exception->getPrevious());
-                }
+            if (array_key_exists('X-Debug-Exception', $headers) && array_key_exists('X-Debug-Exception-File', $headers) && (($serverExceptionMessage = $headers['X-Debug-Exception'][0])
+                && ($serverExceptionFile = $headers['X-Debug-Exception-File'][0]))) {
+                $serverExceptionFile = explode(':', $serverExceptionFile);
+                $exception->__construct($exception->getMessage(), $exception->getComparisonFailure(), new ErrorException(rawurldecode($serverExceptionMessage), 0, 1, rawurldecode($serverExceptionFile[0]), $serverExceptionFile[1]), $exception->getPrevious());
             }
 
             throw $exception;

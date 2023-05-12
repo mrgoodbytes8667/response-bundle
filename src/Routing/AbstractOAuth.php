@@ -66,7 +66,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
     /**
      * @var array
      */
-    private $defaultScopes;
+    private array $defaultScopes = [];
 
     /**
      * @var array

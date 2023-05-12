@@ -18,10 +18,7 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class ValidateTokenEvent extends Event
 {
-    /**
-     * @var TokenValidationResponseInterface|null
-     */
-    private $validation;
+    private ?\Bytes\ResponseBundle\Token\Interfaces\TokenValidationResponseInterface $validation = null;
 
     /**
      * ValidateTokenEvent constructor.

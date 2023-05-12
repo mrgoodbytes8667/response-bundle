@@ -37,27 +37,21 @@ class ApiRetryableHttpClient implements HttpClientInterface
     /**
      * @var GenericRetryStrategy|RetryStrategyInterface
      */
-    private $strategy;
+    private readonly \Symfony\Component\HttpClient\Retry\RetryStrategyInterface|\Symfony\Component\HttpClient\Retry\GenericRetryStrategy $strategy;
     
-    /**
-     * @var int
-     */
-    private $maxRetries;
+    private readonly int $maxRetries;
     
     /**
      * @var LoggerInterface|NullLogger
      */
-    private $logger;
+    private readonly \Psr\Log\LoggerInterface|\Psr\Log\NullLogger $logger;
     
     /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
 
-    /**
-     * @var ApiClientInterface|null
-     */
-    private $apiClient;
+    private readonly ?\Bytes\ResponseBundle\HttpClient\ApiClientInterface $apiClient;
 
     /**
      * @param int $maxRetries The maximum number of times to retry
