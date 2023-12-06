@@ -13,6 +13,7 @@ use Bytes\ResponseBundle\Enums\TokenSource;
  * @Annotation
  * @Target({"CLASS"})
  */
+#[\Attribute(\Attribute::TARGET_CLASS)]
 class Client
 {
     use ClientTrait;
