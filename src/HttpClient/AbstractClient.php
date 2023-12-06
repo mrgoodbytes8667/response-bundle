@@ -11,9 +11,14 @@ use Bytes\ResponseBundle\Event\DispatcherTrait;
 use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 use Bytes\ResponseBundle\Token\Exceptions\NoTokenException;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
+use InvalidArgumentException;
+use ReflectionAttribute;
+use ReflectionException;
+use ReflectionMethod;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use UnexpectedValueException;
 
 /**
  * Class AbstractClient.
@@ -81,7 +86,7 @@ abstract class AbstractClient
             return $token;
         }
 
-        throw new \UnexpectedValueException($message);
+        throw new UnexpectedValueException($message);
     }
 
     /**
@@ -116,7 +121,7 @@ abstract class AbstractClient
      * @throws TransportExceptionInterface
      * @throws NoTokenException
      */
-    public function request($url, \ReflectionMethod|string $caller = null, string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string $responseClass = null, array $context = [], callable $onDeserializeCallable = null, callable $onSuccessCallable = null, array $params = [])
+    public function request($url, ReflectionMethod|string $caller = null, string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string $responseClass = null, array $context = [], callable $onDeserializeCallable = null, callable $onSuccessCallable = null, array $params = [])
     {
         if (is_null($caller)) {
             trigger_deprecation('mrgoodbytes8667/response-bundle', '2.0.0', 'Calling request() without the caller argument is deprecated and will cease working in a future version.');
@@ -129,10 +134,10 @@ abstract class AbstractClient
         if ($this->parseAuth && !is_null($caller)) {
             try {
                 if (is_string($caller)) {
-                    $caller = new \ReflectionMethod($caller);
+                    $caller = new ReflectionMethod($caller);
                 }
 
-                $attributes = $caller->getAttributes(Auth::class, \ReflectionAttribute::IS_INSTANCEOF);
+                $attributes = $caller->getAttributes(Auth::class, ReflectionAttribute::IS_INSTANCEOF);
 
                 /** @var Auth|null $auth */
                 $auth = null;
@@ -140,14 +145,11 @@ abstract class AbstractClient
                 if (!empty($attributes)) {
                     $auth = $attributes[0]->newInstance();
                 }
-                if (!($auth instanceof Auth) && !empty($this->reader)) {
-                    $auth = $this->reader->getMethodAnnotation($caller, Auth::class);
-                }
                 if (!is_null($auth)) {
-                    $auth?->setIdentifier($this->getIdentifier());
-                    $auth?->setTokenSource($this->getTokenSource());
+                    $auth->setIdentifier($this->getIdentifier())
+                        ->setTokenSource($this->getTokenSource());
                 }
-            } catch (\ReflectionException) {
+            } catch (ReflectionException) {
             }
         }
 
@@ -156,7 +158,7 @@ abstract class AbstractClient
         }
 
         if (empty($url) || !is_string($url)) {
-            throw new \InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
 
         $options = $this->mergeAuth($auth ?? null, $options);
@@ -192,7 +194,7 @@ abstract class AbstractClient
      * @throws TransportExceptionInterface
      * @throws NoTokenException
      */
-    public function jsonRequest($url, \ReflectionMethod|string $caller = null, string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string $responseClass = null, array $context = [], callable $onDeserializeCallable = null, callable $onSuccessCallable = null, array $params = [])
+    public function jsonRequest($url, ReflectionMethod|string $caller = null, string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string $responseClass = null, array $context = [], callable $onDeserializeCallable = null, callable $onSuccessCallable = null, array $params = [])
     {
         $options['headers']['Content-Type'] = ContentType::json->value;
 
