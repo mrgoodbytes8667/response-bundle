@@ -20,7 +20,7 @@ class AnnotationReaderTraitTest extends TestCase
     public function testSetReader()
     {
         $mock = $this->getMockForTrait(AnnotationReaderTrait::class);
-        $this->expectDeprecation('Since mrgoodbytes8667/response-bundle 5.3.0: Annotation support will be dropped in v6.0.0.');
+        $this->expectDeprecation('Since mrgoodbytes8667/response-bundle 5.4.0: Annotation support will be dropped in v6.0.0.');
         self::assertNotNull($mock->setReader(new AnnotationReader()));
     }
 }
