@@ -34,10 +34,10 @@ trait ClientTrait
                 throw new \LogicException('"setReader()" must be called before attempting to load client annotations.');
             }
             $annotations = $this->reader->getClassAnnotation($reflectionClass, Client::class);
-            if (!empty($annotations)) {
-                $this->cachedIdentifier = $annotations?->getIdentifier();
-                $this->cachedTokenSource = $annotations?->getTokenSource();
-            }
+        }
+        if (!empty($annotations)) {
+            $this->cachedIdentifier = $annotations?->getIdentifier();
+            $this->cachedTokenSource = $annotations?->getTokenSource();
         }
     }
 
