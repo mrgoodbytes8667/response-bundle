@@ -28,6 +28,7 @@ trait ClientTrait
         if (!empty($classAttributes)) {
             $annotations = $classAttributes[0]->newInstance();
         }
+
         if (!empty($annotations)) {
             $this->cachedIdentifier = $annotations?->getIdentifier();
             $this->cachedTokenSource = $annotations?->getTokenSource();

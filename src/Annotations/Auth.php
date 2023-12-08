@@ -18,12 +18,15 @@ class Auth
             $values['scopes'] = $values['value'];
             unset($values['value']);
         }
+
         if (!is_null($scopes)) {
             $values['scopes'] = $scopes;
         }
+
         if (!is_null($identifier)) {
             $values['identifier'] = $identifier;
         }
+
         if (!is_null($tokenSource)) {
             $values['tokenSource'] = $tokenSource;
         }

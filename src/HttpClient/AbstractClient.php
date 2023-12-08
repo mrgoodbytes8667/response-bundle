@@ -145,6 +145,7 @@ abstract class AbstractClient
                 if (!empty($attributes)) {
                     $auth = $attributes[0]->newInstance();
                 }
+
                 if (!is_null($auth)) {
                     $auth->setIdentifier($this->getIdentifier())
                         ->setTokenSource($this->getTokenSource());
