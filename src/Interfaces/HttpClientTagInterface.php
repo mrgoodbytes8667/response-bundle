@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * For {@see AbstractApiClient} classes that autoconfigure the bytes_response.http_client tag
+ * For {@see AbstractApiClient} classes that autoconfigure the bytes_response.http_client tag.
  */
 interface HttpClientTagInterface
 {

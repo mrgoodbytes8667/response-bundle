@@ -1,12 +1,9 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\DependencyInjection;
 
-
 /**
- * Interface ResponseExtensionInterface
- * @package Bytes\ResponseBundle\DependencyInjection
+ * Interface ResponseExtensionInterface.
  */
 interface ResponseExtensionInterface
 {

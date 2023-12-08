@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Controller;
-
 
 use Bytes\ResponseBundle\Routing\OAuthInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -11,25 +9,19 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class OAuthController
- * A controller that can be repackaged for each OAuth class
- * @package Bytes\ResponseBundle\Controller
+ * A controller that can be repackaged for each OAuth class.
  */
 class OAuthController
 {
     /**
      * OAuthController constructor.
-     * @param OAuthInterface $oauth
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param string $destinationRoute
      */
     public function __construct(protected OAuthInterface $oauth, protected UrlGeneratorInterface $urlGenerator, protected string $destinationRoute)
     {
     }
 
     /**
-     * Route("/redirect", name="responsebundle_oauth_redirect")
-     *
-     * @return RedirectResponse
+     * Route("/redirect", name="responsebundle_oauth_redirect").
      */
     public function redirectAction(): RedirectResponse
     {
@@ -37,9 +29,7 @@ class OAuthController
     }
 
     /**
-     * Route("/handler", name="responsebundle_oauth_handler")
-     *
-     * @return RedirectResponse
+     * Route("/handler", name="responsebundle_oauth_handler").
      */
     public function handlerAction(): RedirectResponse
     {

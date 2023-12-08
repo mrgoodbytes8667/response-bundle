@@ -1,26 +1,17 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Token\Interfaces;
-
 
 use Bytes\ResponseBundle\Enums\TokenSource;
 use DateInterval;
 
 /**
- * Interface AccessTokenInterface
- * @package Bytes\ResponseBundle\Token\Interfaces
+ * Interface AccessTokenInterface.
  */
 interface AccessTokenInterface
 {
-    /**
-     * @return string|null
-     */
     public function getAccessToken(): ?string;
 
-    /**
-     * @return string|null
-     */
     public function getRefreshToken(): ?string;
 
     /**
@@ -33,9 +24,6 @@ interface AccessTokenInterface
      */
     public function getScope();
 
-    /**
-     * @return string|null
-     */
     public function getTokenType(): ?string;
 
     /**
@@ -43,25 +31,13 @@ interface AccessTokenInterface
      */
     public function getTokenSource();
 
-    /**
-     * @return string|null
-     */
     public function getIdentifier(): ?string;
 
-    /**
-     * @param AccessTokenInterface|string $token
-     * @return static
-     */
     public static function createFromAccessToken(AccessTokenInterface|string $token): static;
 
-    /**
-     * @param ...$args
-     * @return static
-     */
     public static function createFromParts(...$args): static;
 
     /**
-     * @param AccessTokenInterface $token
      * @return $this
      */
     public function updateFromAccessToken(AccessTokenInterface $token);

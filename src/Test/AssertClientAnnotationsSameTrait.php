@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Test;
 
 use Bytes\ResponseBundle\Enums\TokenSource;
@@ -10,17 +9,10 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 
 /**
- * Trait AssertClientAnnotationsSameTrait
- * @package Bytes\ResponseBundle\Test
+ * Trait AssertClientAnnotationsSameTrait.
  */
 trait AssertClientAnnotationsSameTrait
 {
-    /**
-     * @param string $expectedIdentifier
-     * @param TokenSource|string $expectedTokenSource
-     * @param AbstractClient|ClientTokenResponseInterface $actual
-     * @param string $message
-     */
     public static function assertClientAnnotationEquals(string $expectedIdentifier, TokenSource|string $expectedTokenSource, AbstractClient|ClientTokenResponseInterface $actual, string $message = '')
     {
         $actual->setReader(new AnnotationReader());
@@ -28,9 +20,6 @@ trait AssertClientAnnotationsSameTrait
         self::assertEquals($expectedTokenSource instanceof TokenSource ? $expectedTokenSource : TokenSource::from($expectedTokenSource), $actual->getTokenSource(), $message);
     }
 
-    /**
-     * @param AbstractClient|ClientTokenResponseInterface $actual
-     */
     public function assertUsesClientAnnotations(AbstractClient|ClientTokenResponseInterface $actual)
     {
         $reader = $this->getMockBuilder(Reader::class)->getMock();
@@ -48,9 +37,6 @@ trait AssertClientAnnotationsSameTrait
         $this->assertNotEmpty($actual->getTokenSource());
     }
 
-    /**
-     * @param AbstractClient|ClientTokenResponseInterface $actual
-     */
     public function assertNotUsesClientAnnotations(AbstractClient|ClientTokenResponseInterface $actual)
     {
         $reader = $this->getMockBuilder(Reader::class)->getMock();

@@ -1,14 +1,12 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Token\Exceptions;
 
+use Exception;
 
 /**
- * Class NoTokenException
- * @package Bytes\ResponseBundle\Token\Exceptions
+ * Class NoTokenException.
  */
-class NoTokenException extends \Exception
+class NoTokenException extends Exception
 {
-
 }

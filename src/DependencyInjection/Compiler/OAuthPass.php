@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\DependencyInjection\Compiler;
-
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -11,8 +9,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Class OAuthPass
  * Sets the url generator, validator, and security, and csrf token manager dependencies on every service that is
- * tagged "bytes_response.oauth"
- * @package Bytes\ResponseBundle\DependencyInjection\Compiler
+ * tagged "bytes_response.oauth".
  */
 class OAuthPass implements CompilerPassInterface
 {

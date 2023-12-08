@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Routing;
-
 
 use BadMethodCallException;
 use Bytes\ResponseBundle\Handler\LocatorInterface;
@@ -16,25 +14,28 @@ use LogicException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+
+use function Symfony\Component\String\u;
+
 use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Exception\ValidatorException;
-use function Symfony\Component\String\u;
 
 /**
- * Class AbstractOAuth
- * @package Bytes\ResponseBundle\Routing
+ * Class AbstractOAuth.
  */
 abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
 {
-    use SecurityTrait, UrlGeneratorTrait, ValidatorTrait;
+    use SecurityTrait;
+    use UrlGeneratorTrait;
+    use ValidatorTrait;
 
     /**
      * @var string
      */
-    const RESPONSE_TYPE = 'code';
+    public const RESPONSE_TYPE = 'code';
 
     /**
      * @var string
@@ -52,20 +53,19 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
     protected static $baseAuthorizationCodeGrantURL;
 
     /**
-     * Cached normalized permissions list
+     * Cached normalized permissions list.
+     *
      * @var array
      */
     private $permissions = [];
 
     /**
-     * Cached normalized scopes list
+     * Cached normalized scopes list.
+     *
      * @var array
      */
     private $scopes = [];
 
-    /**
-     * @var array
-     */
     private array $defaultScopes = [];
 
     /**
@@ -85,101 +85,82 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
 
     /**
      * AbstractOAuth constructor.
-     * @param string|null $clientId
-     * @param array $config
-     * @param array $options
      */
     public function __construct(protected ?string $clientId, protected array $config, array $options = [])
     {
         if (!isset(static::$endpoint)) {
             throw new LogicException('The static property "$endpoint" must be set by the child class.');
         }
-        
+
         if (!isset(static::$promptKey)) {
             throw new LogicException('The static property "$promptKey" must be set by the child class.');
         }
-        
+
         if (!isset(static::$baseAuthorizationCodeGrantURL)) {
             throw new LogicException('The static property "$baseAuthorizationCodeGrantURL" must be set by the child class.');
         }
-        
+
         if (!isset($this->config[static::$endpoint])) {
             throw new LogicException('The config parameter must include the key for "$endpoint".');
         }
-        
+
         $this->defaultScopes = $this->getDefaultScopes();
     }
 
     /**
-     * @param array $defaultScopes
      * @return $this
      */
     public function setDefaultScopes(array $defaultScopes): self
     {
         $this->defaultScopes = $defaultScopes;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
     abstract protected function getDefaultScopes(): array;
 
     /**
-     * @param array $permissions
      * @return array
      */
     public static function hydratePermissions(array $permissions)
     {
-        array_walk($permissions, array('self', 'walkHydratePermissions'));
+        array_walk($permissions, ['self', 'walkHydratePermissions']);
+
         return $permissions;
     }
 
     /**
-     * @param array $scopes
      * @return array
      */
     public static function hydrateScopes(array $scopes)
     {
-        array_walk($scopes, array('self', 'walkHydrateScopes'));
+        array_walk($scopes, ['self', 'walkHydrateScopes']);
+
         return $scopes;
     }
 
-    /**
-     * @param $value
-     * @param $key
-     */
     abstract protected static function walkHydrateScopes(&$value, $key);
 
     /**
-     * Get the external URL begin the OAuth token exchange process
-     * @param string|null $state
-     * @param ...$options
-     * @return string
+     * Get the external URL begin the OAuth token exchange process.
      */
-    public function getAuthorizationUrl(?string $state = null, ...$options): string
+    public function getAuthorizationUrl(string $state = null, ...$options): string
     {
         $prompt = null;
         if (isset($options['prompt'])) {
             $prompt = $options['prompt'];
             unset($options['prompt']);
         }
-        
+
         return $this->getAuthorizationCodeGrantURL($this->getRedirect(), $this->defaultScopes, $state, self::RESPONSE_TYPE, $prompt, ...$options);
     }
 
     /**
-     * @param string $redirect
-     * @param array $scopes
-     * @param string|null $state
-     * @param string $responseType
-     * @param OAuthPromptInterface|string|bool|null $prompt
-     * @param ...$options
      * @return string
      *
      * @internal
      */
-    public function getAuthorizationCodeGrantURL(string $redirect, array $scopes, ?string $state, string $responseType = self::RESPONSE_TYPE, OAuthPromptInterface|string|bool|null $prompt = null, ...$options)
+    public function getAuthorizationCodeGrantURL(string $redirect, array $scopes, ?string $state, string $responseType = self::RESPONSE_TYPE, OAuthPromptInterface|string|bool $prompt = null, ...$options)
     {
         $scopes = $this->getScopes($scopes);
 
@@ -195,37 +176,32 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
         return static::getBaseAuthorizationCodeGrantURL()->append(http_build_query($this->getQueryValues($query)))->toString();
     }
 
-    /**
-     * @param array|null $scopes
-     * @return array
-     */
     public function getScopes(array $scopes = null): array
     {
-        if(!empty($this->scopes))
-        {
+        if (!empty($this->scopes)) {
             return $this->scopes;
         }
-        
+
         $this->scopes = $this->normalizeScopes(!empty($scopes) ? $scopes : $this->defaultScopes);
+
         return $this->scopes;
     }
 
     /**
-     * Takes the default scopes list and adds/removes any scopes coming from the config
-     * @param array $scopes
+     * Takes the default scopes list and adds/removes any scopes coming from the config.
+     *
      * @return array
      */
     protected function normalizeScopes(array $scopes)
     {
-        if(!isset($this->config[static::$endpoint]['scopes']))
-        {
+        if (!isset($this->config[static::$endpoint]['scopes'])) {
             $this->config[static::$endpoint]['scopes'] = [];
         }
-        
+
         if (array_key_exists('add', $this->config[static::$endpoint]['scopes'])) {
             $add = $this->config[static::$endpoint]['scopes']['add'];
             if (count($add) > 0) {
-                array_walk($add, array(static::class, 'walkHydrateScopes'));
+                array_walk($add, [static::class, 'walkHydrateScopes']);
                 $scopes = array_unique(array_merge($scopes, $add));
             }
         }
@@ -233,7 +209,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
         if (array_key_exists('remove', $this->config[static::$endpoint]['scopes'])) {
             $remove = $this->config[static::$endpoint]['scopes']['remove'];
             if (count($remove) > 0) {
-                array_walk($remove, array(static::class, 'walkHydrateScopes'));
+                array_walk($remove, [static::class, 'walkHydrateScopes']);
 
                 $scopes = Arr::where($scopes, function ($value, $key) use ($remove) {
                     return !in_array($value, $remove);
@@ -245,7 +221,6 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
     }
 
     /**
-     * @param string $route
      * @return string
      */
     protected function getState(string $route)
@@ -257,34 +232,26 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
                 $userId = $user?->getId();
             }
         }
-        
-        $userId ??= (string)new Ulid();
+
+        $userId ??= (string) new Ulid();
+
         return u($userId)->append($this->csrfTokenManager->getToken($userId))->toString();
     }
 
     /**
-     * Returns the $prompt argument for getAuthorizationCodeGrantURL() after normalization and validation
-     * @param OAuthPromptInterface|string|bool|null $prompt
-     * @param mixed ...$options
+     * Returns the $prompt argument for getAuthorizationCodeGrantURL() after normalization and validation.
+     *
      * @return string|bool
      *
      * @throws BadMethodCallException
      */
     abstract protected function normalizePrompt(OAuthPromptInterface|string|bool|null $prompt, ...$options);
 
-    /**
-     * @param Push $query
-     * @param ...$options
-     * @return Push
-     */
     protected function appendToAuthorizationCodeGrantURLQuery(Push $query, ...$options): Push
     {
         return $query;
     }
 
-    /**
-     * @return UnicodeString
-     */
     protected static function getBaseAuthorizationCodeGrantURL(): UnicodeString
     {
         return u(static::$baseAuthorizationCodeGrantURL)->ensureEnd('?');
@@ -292,8 +259,6 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
 
     /**
      * Converts the Push object to an array for http_build_query().
-     * @param Push $query
-     * @return array
      */
     protected function getQueryValues(Push $query): array
     {
@@ -301,17 +266,15 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
     }
 
     /**
-     * Get the internal redirect destination URI for OAuth
-     * @return string
+     * Get the internal redirect destination URI for OAuth.
      */
     public function getRedirect(): string
     {
         $redirect = $this->redirect ?? $this->setupRedirect();
-        if(is_null($redirect))
-        {
+        if (is_null($redirect)) {
             throw new LogicException('ValidatorInterface cannot be null when getting redirects');
         }
-        
+
         return $redirect;
     }
 
@@ -321,11 +284,11 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
     protected function setupRedirect()
     {
         if (!array_key_exists(static::$endpoint, $this->config)) {
-            throw new InvalidArgumentException(sprintf('The key "%s" was not present in the configuration', (string)static::$endpoint));
+            throw new InvalidArgumentException(sprintf('The key "%s" was not present in the configuration', (string) static::$endpoint));
         }
-        
+
         if (!array_key_exists('redirects', $this->config[static::$endpoint])) {
-            throw new InvalidArgumentException(sprintf('The configuration for key "%s" was not valid', (string)static::$endpoint));
+            throw new InvalidArgumentException(sprintf('The configuration for key "%s" was not valid', (string) static::$endpoint));
         }
 
         switch ($this->config[static::$endpoint]['redirects']['method']) {
@@ -333,13 +296,13 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
                 if (empty($this->urlGenerator)) {
                     throw new InvalidArgumentException('URLGeneratorInterface cannot be null when a route name is passed');
                 }
-                
+
                 try {
                     $redirect = $this->urlGenerator->generate($this->config[static::$endpoint]['redirects']['route_name'], [], UrlGeneratorInterface::ABSOLUTE_URL);
                 } catch (RouteNotFoundException $routeNotFoundException) {
                     throw new RouteNotFoundException(sprintf('In "%s", the configured route cannot be generated. %s', static::class, $routeNotFoundException->getMessage()), $routeNotFoundException->getCode(), $routeNotFoundException);
                 }
-                
+
                 break;
             case 'url':
                 $redirect = $this->config[static::$endpoint]['redirects']['url'];
@@ -351,15 +314,16 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
 
         if (is_null($this->validator)) {
             $this->redirect = null;
+
             return null;
         }
 
         $errors = $this->validator->validate($redirect, [
             new NotBlank(),
-            new Url()
+            new Url(),
         ]);
         if (count($errors) > 0) {
-            throw new ValidatorException((string)$errors);
+            throw new ValidatorException((string) $errors);
         }
 
         $this->redirect = $redirect;
@@ -368,12 +332,12 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
     }
 
     /**
-     * @param CsrfTokenManagerInterface $csrfTokenManager
      * @return $this
      */
     public function setCsrfTokenManager(CsrfTokenManagerInterface $csrfTokenManager): self
     {
         $this->csrfTokenManager = $csrfTokenManager;
+
         return $this;
     }
 }

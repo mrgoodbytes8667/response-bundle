@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Request;
-
 
 use Bytes\ResponseBundle\Handler\LocatorInterface;
 use Symfony\Component\HttpFoundation\HeaderBag;
@@ -12,29 +10,25 @@ abstract class AbstractSignature implements LocatorInterface
 {
     /**
      * AbstractSignature constructor.
-     * @param string $secret
      */
     public function __construct(protected string $secret)
     {
     }
 
-    /**
-     * @return string
-     */
-    public static function getSignatureField(): string {
+    public static function getSignatureField(): string
+    {
         return 'x-hub-signature';
     }
 
     /**
      * Is the signature valid?
-     * @param HeaderBag $headers
+     *
      * @param bool|resource|string|null $content
-     * @param bool $throw If true, will throw exceptions instead of simply returning false.
-     * @return bool
+     * @param bool                      $throw   if true, will throw exceptions instead of simply returning false
      *
      * @throws AccessDeniedHttpException
      *
-     * @link https://gist.github.com/milo/daed6e958ea534e4eba3
+     * @see https://gist.github.com/milo/daed6e958ea534e4eba3
      */
     public function validateHubSignature(HeaderBag $headers, $content, bool $throw = true): bool
     {
@@ -47,16 +41,16 @@ abstract class AbstractSignature implements LocatorInterface
             }
         }
 
-        if(!$this->hasHashExtension()) {
+        if (!$this->hasHashExtension()) {
             if ($throw) {
                 throw new AccessDeniedHttpException("Missing 'hash' extension to check the secret code validity.");
             } else {
                 return false;
             }
         }
-        
-        list($algo, $hash) = explode('=', $headers->get(static::getSignatureField()), 2) + array('', '');
-        if (!in_array($algo, hash_algos(), TRUE)) {
+
+        list($algo, $hash) = explode('=', $headers->get(static::getSignatureField()), 2) + ['', ''];
+        if (!in_array($algo, hash_algos(), true)) {
             if ($throw) {
                 throw new AccessDeniedHttpException("Hash algorithm '$algo' is not supported.");
             } else {
@@ -77,21 +71,13 @@ abstract class AbstractSignature implements LocatorInterface
         return true;
     }
 
-    /**
-     * @param HeaderBag $headers
-     * @param bool|string|null $content
-     * @return string
-     */
     protected function getHashString(HeaderBag $headers, bool|string|null $content): string
     {
         return $content;
     }
 
-    /**
-     * @return bool
-     */
     protected function hasHashExtension(): bool
     {
-       return extension_loaded('hash');
+        return extension_loaded('hash');
     }
 }

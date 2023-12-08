@@ -1,57 +1,59 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Objects;
 
-
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Deprecated;
+
 use function Symfony\Component\String\u;
 
 /**
- * Class Push
- * @package Bytes\ResponseBundle\Objects
+ * Class Push.
  */
 class Push
 {
     /**
      * Holds the (cached) camel key version of the array
-     * Cleared upon every call to push() that adds/updates a row
+     * Cleared upon every call to push() that adds/updates a row.
+     *
      * @var array
      */
     private $camelArray = [];
 
     /**
      * Holds the (cached) snake key version of the array
-     * Cleared upon every call to push() that adds/updates a row
+     * Cleared upon every call to push() that adds/updates a row.
+     *
      * @var array
      */
     private $snakeArray = [];
 
     /**
      * Push constructor.
-     * @param array $array
      */
     public function __construct(private array $array = [])
     {
     }
 
     /**
-     * Creates the object [from an existing array] and does a single push()
-     * @param array|null $array
+     * Creates the object [from an existing array] and does a single push().
+     *
      * @param mixed|null $value
-     * @param int|string|null $key
-     * @param bool $empty
+     *
      * @return Push
      */
-    public static function createPush(?array $array = [], $value = null, int|string|null $key = null, bool $empty = true)
+    public static function createPush(?array $array = [], $value = null, int|string $key = null, bool $empty = true)
     {
         $static = static::create($array);
+
         return $static->push($value, $key, $empty);
     }
 
     /**
-     * Creates the object [from an existing array]
+     * Creates the object [from an existing array].
+     *
      * @param array|null $array (Optional) array to seed the object from
+     *
      * @return static
      */
     public static function create(?array $array = [])
@@ -60,13 +62,15 @@ class Push
     }
 
     /**
-     * Push if value is not null/empty
-     * @param mixed|null $value Value to push
-     * @param int|string|null $key Key to push
-     * @param bool $empty When true, ignores the push if the value is empty. Defaults to true.
+     * Push if value is not null/empty.
+     *
+     * @param mixed|null      $value Value to push
+     * @param int|string|null $key   Key to push
+     * @param bool            $empty When true, ignores the push if the value is empty. Defaults to true.
+     *
      * @return $this
      */
-    public function push($value = null, int|string|null $key = null, bool $empty = true): self
+    public function push($value = null, int|string $key = null, bool $empty = true): self
     {
         if ($empty) {
             if (!empty($value)) {
@@ -82,37 +86,31 @@ class Push
     }
 
     /**
-     * @param int|string $key
      * @return $this
      */
     public function removeKey(int|string $key): self
     {
-        if(isset($this->array[$key])) {
+        if (isset($this->array[$key])) {
             unset($this->array[$key]);
             $this->resetCachedArrays();
         }
-        
+
         return $this;
     }
 
-    /**
-     * @param int|string $key
-     * @return mixed
-     */
     public function getValue(int|string $key)
     {
-        if(isset($this->array[$key])) {
+        if (isset($this->array[$key])) {
             return $this->array[$key];
         }
-        
-        throw new \InvalidArgumentException(sprintf('The key "%s" does not exist.', $key));
+
+        throw new InvalidArgumentException(sprintf('The key "%s" does not exist.', $key));
     }
 
     /**
      * @param null $value
-     * @param int|string|null $key
      */
-    private function update($value = null, int|string|null $key = null)
+    private function update($value = null, int|string $key = null)
     {
         if (!is_null($key)) {
             $this->array[$key] = $value;
@@ -123,7 +121,7 @@ class Push
     }
 
     /**
-     * Reset all cached arrays
+     * Reset all cached arrays.
      */
     private function resetCachedArrays(): void
     {
@@ -132,14 +130,17 @@ class Push
     }
 
     /**
-     * Get the array
+     * Get the array.
+     *
      * @return array
+     *
      * @deprecated since 2.0.11, use toArray() instead
      */
     #[Deprecated(reason: 'since 2.0.11, use toArray() instead', replacement: '%class%->toArray()')]
     public function value()
     {
         trigger_deprecation('mrgoodbytes8667/response-bundle', '2.0.11', 'Please use toArray() instead.');
+
         return $this->array;
     }
 
@@ -154,7 +155,8 @@ class Push
     }
 
     /**
-     * Get the array with each key transformed into camel case
+     * Get the array with each key transformed into camel case.
+     *
      * @return array
      */
     public function camel()
@@ -172,7 +174,8 @@ class Push
     }
 
     /**
-     * Get the array with each key transformed into snake case
+     * Get the array with each key transformed into snake case.
+     *
      * @return array
      */
     public function snake()

@@ -1,18 +1,14 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Handler;
 
-
 /**
- * Interface LocatorInterface
- * @package Bytes\ResponseBundle\Handler
+ * Interface LocatorInterface.
  */
 interface LocatorInterface
 {
     /**
-     * Return the locator name
-     * @return string
+     * Return the locator name.
      */
     public static function getDefaultIndexName(): string;
 }

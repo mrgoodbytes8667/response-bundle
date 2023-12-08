@@ -2,9 +2,8 @@
 
 namespace Bytes\ResponseBundle\Event;
 
-
 /**
- * Based on Symfony\Contracts\EventDispatcher\Event
+ * Based on Symfony\Contracts\EventDispatcher\Event.
  */
 trait EventTrait
 {

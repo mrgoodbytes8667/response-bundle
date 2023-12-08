@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\HttpClient\Token;
-
 
 use BadMethodCallException;
 use Bytes\ResponseBundle\Annotations\Auth;
@@ -14,10 +12,10 @@ use Bytes\ResponseBundle\Interfaces\ClientTokenResponseInterface;
 use Bytes\ResponseBundle\Objects\Push;
 use Bytes\ResponseBundle\Routing\OAuthInterface;
 use Bytes\ResponseBundle\Routing\UrlGeneratorTrait;
-use Bytes\ResponseBundle\Token\Exceptions\NoTokenException;
 use Bytes\ResponseBundle\Validator\ValidatorTrait;
 use Illuminate\Support\Arr;
 use LogicException;
+use ReflectionMethod;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\SerializerAwareTrait;
@@ -31,14 +29,15 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * Class AbstractTokenClient
- * @package Bytes\ResponseBundle\HttpClient\Token
+ * Class AbstractTokenClient.
  *
  * @experimental
  */
 abstract class AbstractTokenClient extends AbstractClient implements TokenExchangeInterface
 {
-    use SerializerAwareTrait, UrlGeneratorTrait, ValidatorTrait;
+    use SerializerAwareTrait;
+    use UrlGeneratorTrait;
+    use ValidatorTrait;
 
     /**
      * @var string|null
@@ -58,18 +57,10 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     /**
      * @var OAuthInterface|null
      */
-    protected $oAuth = null;
+    protected $oAuth;
 
     /**
      * AbstractTokenClient constructor.
-     * @param HttpClientInterface $httpClient
-     * @param EventDispatcherInterface $dispatcher
-     * @param string|null $userAgent
-     * @param bool $revokeOnRefresh
-     * @param bool $fireRevokeOnRefresh
-     * @param array $defaultOptionsByRegexp
-     * @param string|null $defaultRegexp
-     * @param bool $retryAuth
      */
     public function __construct(HttpClientInterface $httpClient, EventDispatcherInterface $dispatcher, ?string $userAgent, protected bool $revokeOnRefresh, protected bool $fireRevokeOnRefresh, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, bool $retryAuth = false)
     {
@@ -78,13 +69,13 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     }
 
     /**
-     * Overloadable method to setup the revoke/fire on refresh variables
-     * @param bool $revokeOnRefresh
-     * @param bool $fireRevokeOnRefresh
+     * Overloadable method to setup the revoke/fire on refresh variables.
+     *
      * @return $this
      */
-    public function setupRevokeOnRefresh(bool $revokeOnRefresh, bool $fireRevokeOnRefresh): self {
-        if($revokeOnRefresh) {
+    public function setupRevokeOnRefresh(bool $revokeOnRefresh, bool $fireRevokeOnRefresh): self
+    {
+        if ($revokeOnRefresh) {
             $this->fireRevokeOnRefresh = false; // Will be fired by the revoke regardless
         }
 
@@ -92,45 +83,40 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
     }
 
     /**
-     * Exchanges the provided code (or token) for a (new) access token
-     * @param string $code
-     * @param string|null $route Either $route or $url (or setOAuth(()) is required, $route takes precedence over $url
-     * @param string|null|callable(string, array) $url Either $route or $url (or setOAuth(()) is required, $route takes precedence over $url
-     * @param array $scopes
-     * @param OAuthGrantTypes|null $grantType
-     * @param ClientTokenResponseInterface|string|null $responseClass
-     * @param callable|null $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
-     * @param callable|null $onSuccessCallable If set, should be triggered by deserialize() on success
-     * @return ClientTokenResponseInterface|null
+     * Exchanges the provided code (or token) for a (new) access token.
+     *
+     * @param string|null                         $route                 Either $route or $url (or setOAuth(()) is required, $route takes precedence over $url
+     * @param string|callable(string, array)|null $url                   Either $route or $url (or setOAuth(()) is required, $route takes precedence over $url
+     * @param callable|null                       $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
+     * @param callable|null                       $onSuccessCallable     If set, should be triggered by deserialize() on success
      *
      * @throws ClientExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    protected function tokenExchange(string $code, ?string $route = null, string|callable|null $url = null, array $scopes = [], OAuthGrantTypes $grantType = null, ClientTokenResponseInterface|string|null $responseClass = null, ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null): ?ClientTokenResponseInterface
+    protected function tokenExchange(string $code, string $route = null, string|callable $url = null, array $scopes = [], OAuthGrantTypes $grantType = null, ClientTokenResponseInterface|string $responseClass = null, callable $onDeserializeCallable = null, callable $onSuccessCallable = null): ?ClientTokenResponseInterface
     {
         $redirect = '';
         if (!empty($route)) {
             $redirect = $this->urlGenerator->generate($route, [], UrlGeneratorInterface::ABSOLUTE_URL);
         } elseif (!empty($url)) {
             $redirect = is_callable($url) ? call_user_func($url, $code, $scopes) : $url;
-        } elseif(!is_null($this->oAuth)) {
+        } elseif (!is_null($this->oAuth)) {
             $redirect = $this->oAuth->getRedirect();
         } else {
             throw new BadMethodCallException('Either $route or $url must be provided.');
         }
-        
+
         $errors = $this->validator->validate($redirect, [
             new NotBlank(),
-            new Url()
+            new Url(),
         ]);
         if (count($errors) > 0) {
-            throw new ValidatorException((string)$errors);
+            throw new ValidatorException((string) $errors);
         }
 
-        if(empty($scopes) && !is_null($this->oAuth))
-        {
+        if (empty($scopes) && !is_null($this->oAuth)) {
             $scopes = $this->oAuth->getScopes();
         }
 
@@ -154,7 +140,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
 
         $body = $this->normalizeTokenExchangeBody($body);
 
-        return $this->request($this->buildURL(static::getTokenExchangeBaseUri() . static::$tokenExchangeEndpoint),
+        return $this->request($this->buildURL(static::getTokenExchangeBaseUri().static::$tokenExchangeEndpoint),
             type: static::getTokenExchangeDeserializationClass(),
             options: [
                 'headers' => [
@@ -165,19 +151,11 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
             onSuccessCallable: $onSuccessCallable, params: ['code' => $code]);
     }
 
-    /**
-     * @param Push $body
-     * @return Push
-     */
     protected function normalizeTokenExchangeBody(Push $body): Push
     {
         return $body;
     }
 
-    /**
-     * @param mixed ...$scopes
-     * @return string
-     */
     public static function buildOAuthString(...$scopes): string
     {
         return implode(' ', Arr::flatten($scopes));
@@ -191,7 +169,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
         if (empty(static::$tokenExchangeBaseUri)) {
             throw new LogicException(sprintf('You must instantiate "$tokenExchangeBaseUri" or override the "%s" method.', __METHOD__));
         }
-        
+
         return static::$tokenExchangeBaseUri;
     }
 
@@ -203,66 +181,51 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
         if (empty(static::$tokenExchangeDeserializationClass)) {
             throw new LogicException(sprintf('You must instantiate "$tokenExchangeDeserializationClass" or override the "%s" method.', __METHOD__));
         }
-        
+
         return static::$tokenExchangeDeserializationClass;
     }
 
-    /**
-     * @return OAuthInterface|null
-     */
     public function getOAuth(): ?OAuthInterface
     {
         return $this->oAuth;
     }
 
     /**
-     * @param OAuthInterface|null $oAuth
      * @return $this
      */
     public function setOAuth(?OAuthInterface $oAuth): self
     {
         $this->oAuth = $oAuth;
+
         return $this;
     }
 
-    /**
-     * @param Auth|null $auth
-     * @param array $options
-     * @param bool $refresh
-     * @param array|null $authHeader
-     * @return array
-     */
-    final public function mergeAuth(?Auth $auth = null, array $options = [], bool $refresh = false, array $authHeader = null): array
+    final public function mergeAuth(Auth $auth = null, array $options = [], bool $refresh = false, array $authHeader = null): array
     {
         return $options;
     }
 
-    /**
-     * @param Auth|null $auth
-     * @param bool $refresh
-     * @return array
-     */
-    final public function getAuthenticationOption(?Auth $auth = null, bool $refresh = false): array
+    final public function getAuthenticationOption(Auth $auth = null, bool $refresh = false): array
     {
         return [];
     }
 
     /**
-     * Overload to prevent caller deprecations (for now)
-     * @param string|string[] $url
-     * @param \ReflectionMethod|string|null $caller
-     * @param string|null $type
-     * @param array $options = HttpClientInterface::OPTIONS_DEFAULTS
-     * @param HttpMethods|string $method = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
-     * @param ClientResponseInterface|string|null $responseClass
-     * @param array $context Additional context for deserialize(), can be overloaded by deserialize()
-     * @param callable|null $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
-     * @param callable|null $onSuccessCallable If set, should be triggered by deserialize() on success
-     * @param array $params Extra params for makeFrom
+     * Overload to prevent caller deprecations (for now).
+     *
+     * @param string|string[]    $url
+     * @param array              $options               = HttpClientInterface::OPTIONS_DEFAULTS
+     * @param HttpMethods|string $method                = ['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'][$any]
+     * @param array              $context               Additional context for deserialize(), can be overloaded by deserialize()
+     * @param callable|null      $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
+     * @param callable|null      $onSuccessCallable     If set, should be triggered by deserialize() on success
+     * @param array              $params                Extra params for makeFrom
+     *
      * @return ClientResponseInterface
+     *
      * @throws TransportExceptionInterface
      */
-    public function request($url, \ReflectionMethod|string $caller = null, ?string $type = null, array $options = [], $method = 'GET', string|ClientResponseInterface|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
+    public function request($url, ReflectionMethod|string $caller = null, string $type = null, array $options = [], $method = 'GET', string|ClientResponseInterface $responseClass = null, array $context = [], callable $onDeserializeCallable = null, callable $onSuccessCallable = null, array $params = [])
     {
         return parent::request($url, $caller ?? __METHOD__, $type, $options, $method, $responseClass, $context, $onDeserializeCallable, $onSuccessCallable, $params);
     }

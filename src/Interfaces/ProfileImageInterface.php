@@ -3,16 +3,12 @@
 namespace Bytes\ResponseBundle\Interfaces;
 
 /**
- * Interface ProfileImageInterface
- * @package Bytes\ResponseBundle\Interfaces
+ * Interface ProfileImageInterface.
  */
 interface ProfileImageInterface
 {
     /**
-     * Return the profile image
-     * @param int|null $width
-     * @param int|null $height
-     * @return string|null
+     * Return the profile image.
      */
-    public function getProfileImage(?int $width = null, ?int $height = null): ?string;
+    public function getProfileImage(int $width = null, int $height = null): ?string;
 }
