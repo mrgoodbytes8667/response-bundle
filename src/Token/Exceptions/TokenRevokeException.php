@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Token\Exceptions;
-
 
 use RuntimeException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -11,15 +9,13 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * Class TokenRevokeException
- * Thrown via the HttpClient or Response class when an error occurs revoking a token
- * @package Bytes\ResponseBundle\Token\Exceptions
+ * Thrown via the HttpClient or Response class when an error occurs revoking a token.
  */
 class TokenRevokeException extends RuntimeException implements ClientExceptionInterface
 {
     /**
      * TokenRevokeException constructor.
-     * @param ResponseInterface $response
-     * @param string|null $message
+     *
      * @throws TransportExceptionInterface
      */
     public function __construct(private readonly ResponseInterface $response, ?string $message = 'Token could not be revoked')
@@ -27,9 +23,6 @@ class TokenRevokeException extends RuntimeException implements ClientExceptionIn
         parent::__construct($message, $response?->getStatusCode() ?? 0);
     }
 
-    /**
-     * @return ResponseInterface
-     */
     public function getResponse(): ResponseInterface
     {
         return $this->response;

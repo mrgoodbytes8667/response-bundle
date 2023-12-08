@@ -1,15 +1,10 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Tests\Fixtures;
-
 
 use Bytes\ResponseBundle\Enums\TokenSource;
 use Bytes\ResponseBundle\Event\DispatcherTrait;
 use Bytes\ResponseBundle\Event\EventDispatcherTrait;
-use Bytes\ResponseBundle\Event\RevokeTokenEvent;
-use Bytes\ResponseBundle\Event\TokenGrantedEvent;
-use Bytes\ResponseBundle\Event\TokenRevokedEvent;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Bytes\ResponseBundle\Token\Interfaces\TokenValidationResponseInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -18,8 +13,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class Dispatcher
 {
-    use EventDispatcherTrait, DispatcherTrait;
-
+    use EventDispatcherTrait;
+    use DispatcherTrait;
 
     /**
      * Dispatcher constructor.
@@ -46,7 +41,7 @@ class Dispatcher
         ];
     }
 
-    public function dispatchObtainValidToken(string $identifier, TokenSource $tokenSource, ?UserInterface $user = null, array $scopes = [])
+    public function dispatchObtainValidToken(string $identifier, TokenSource $tokenSource, UserInterface $user = null, array $scopes = [])
     {
         return $this->dispatchObtainValidTokenEvent($identifier, $tokenSource, $user, $scopes);
     }

@@ -13,14 +13,10 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ComparableDateIntervalTest
- * @package Bytes\ResponseBundle\Tests\Objects
+ * Class ComparableDateIntervalTest.
  */
 class ComparableDateIntervalTest extends TestCase
 {
-    /**
-     *
-     */
     public function testGetTotalSeconds()
     {
         $start = new DateTimeImmutable('2022-10-24T19:18:17+00:00');
@@ -33,9 +29,6 @@ class ComparableDateIntervalTest extends TestCase
         self::assertEquals(241361, ($this->getTestClass())::getTotalSeconds($start->diff($end)));
     }
 
-    /**
-     *
-     */
     public function testNormalizeToSeconds()
     {
         $start = new DateTimeImmutable('2022-10-24T19:18:17+00:00');
@@ -52,7 +45,6 @@ class ComparableDateIntervalTest extends TestCase
     /**
      * @dataProvider provideIntervalCreateArgsNumberInterval
      * @dataProvider provideIntervalCreateArgsString
-     * @param $spec
      */
     public function testNormalizeToSecondsSpec($spec)
     {
@@ -62,7 +54,6 @@ class ComparableDateIntervalTest extends TestCase
     /**
      * @dataProvider provideIntervalCreateArgsNumberInterval
      * @dataProvider provideIntervalCreateArgsString
-     * @param $spec
      */
     public function testNormalizeToDateIntervalSpec($spec)
     {
@@ -78,17 +69,11 @@ class ComparableDateIntervalTest extends TestCase
         return ComparableDateInterval::class;
     }
 
-    /**
-     *
-     */
     public function testSecondsToInterval()
     {
         self::assertEquals(15, ($this->getTestClass())::secondsToInterval(900)->i);
     }
 
-    /**
-     *
-     */
     public function testGetTotalSecondsNegative()
     {
         $start = new DateTimeImmutable('2022-10-24T19:18:17+00:00');
@@ -105,7 +90,7 @@ class ComparableDateIntervalTest extends TestCase
     /**
      * @dataProvider provideIntervalCreateArgsNumberInterval
      * @dataProvider provideIntervalCreateArgsString
-     * @param $spec
+     *
      * @throws Exception
      */
     public function testCompare($spec)
@@ -126,7 +111,7 @@ class ComparableDateIntervalTest extends TestCase
     /**
      * @dataProvider provideIntervalCreateArgsNumberInterval
      * @dataProvider provideIntervalCreateArgsString
-     * @param $spec
+     *
      * @throws Exception
      */
     public function testEquals($spec)
@@ -146,6 +131,7 @@ class ComparableDateIntervalTest extends TestCase
 
     /**
      * @return Generator
+     *
      * @throws Exception
      */
     public function provideIntervalCreateArgsNumberInterval()
@@ -158,6 +144,7 @@ class ComparableDateIntervalTest extends TestCase
 
     /**
      * @return Generator
+     *
      * @throws Exception
      */
     public function provideIntervalCreateArgsString()
@@ -167,7 +154,7 @@ class ComparableDateIntervalTest extends TestCase
 
     /**
      * @dataProvider provideIntervalCreateArgsNumberInterval
-     * @param $spec
+     *
      * @throws Exception
      */
     public function testNormalize($spec)
@@ -180,29 +167,20 @@ class ComparableDateIntervalTest extends TestCase
         self::assertEquals(($this->getTestClass())::getTotalSeconds($testInterval), ($this->getTestClass())::getTotalSeconds($interval));
     }
 
-    /**
-     *
-     */
     public function testLargeIntervalsYears()
     {
         $this->expectException(LargeDateIntervalException::class);
 
-        ComparableDateInterval::getTotalSeconds(new DateInterval("P5YT50S"));
+        ComparableDateInterval::getTotalSeconds(new DateInterval('P5YT50S'));
     }
 
-    /**
-     *
-     */
     public function testLargeIntervalsMonths()
     {
         $this->expectException(LargeDateIntervalException::class);
 
-        ComparableDateInterval::getTotalSeconds(new DateInterval("P5MT50S"));
+        ComparableDateInterval::getTotalSeconds(new DateInterval('P5MT50S'));
     }
 
-    /**
-     *
-     */
     public function testLargeIntervalsViaDateDiff()
     {
         $start = new DateTimeImmutable('2010-10-24T19:18:17+00:00');
@@ -210,12 +188,9 @@ class ComparableDateIntervalTest extends TestCase
         self::assertEquals(350074961, ComparableDateInterval::getTotalSeconds($start->diff($end)));
     }
 
-    /**
-     *
-     */
     public function testLargeIntervalHasIntervalSet()
     {
-        $interval = new DateInterval("P5YT50S");
+        $interval = new DateInterval('P5YT50S');
         try {
             ComparableDateInterval::getTotalSeconds($interval);
         } catch (LargeDateIntervalException $exception) {
@@ -223,9 +198,6 @@ class ComparableDateIntervalTest extends TestCase
         }
     }
 
-    /**
-     *
-     */
     public function testIntervalToMinutes()
     {
         self::assertEquals(120, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H1S'), 'round'));
@@ -240,9 +212,6 @@ class ComparableDateIntervalTest extends TestCase
         self::assertEquals(179, ($this->getTestClass())::getTotalMinutes(new DateInterval('PT2H59M59S'), manipulator: 'floor'));
     }
 
-    /**
-     *
-     */
     public function testIntervalToHoursMissingSecondArgument()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -250,9 +219,6 @@ class ComparableDateIntervalTest extends TestCase
         ($this->getTestClass())::getTotalHours(new DateInterval('PT15M'));
     }
 
-    /**
-     *
-     */
     public function testIntervalToMinutesMissingSecondArgument()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -260,9 +226,6 @@ class ComparableDateIntervalTest extends TestCase
         ($this->getTestClass())::getTotalMinutes(new DateInterval('PT15M'));
     }
 
-    /**
-     *
-     */
     public function testIntervalToHoursAdditionalThirdArgument()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -270,9 +233,6 @@ class ComparableDateIntervalTest extends TestCase
         ($this->getTestClass())::getTotalHours(new DateInterval('PT15M'), 'ceil', 3);
     }
 
-    /**
-     *
-     */
     public function testIntervalToMinutesAdditionalThirdArgument()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -280,9 +240,6 @@ class ComparableDateIntervalTest extends TestCase
         ($this->getTestClass())::getTotalMinutes(new DateInterval('PT15M'), 'ceil', 3);
     }
 
-    /**
-     *
-     */
     public function testIntervalToHoursInvalidManipulator()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -290,9 +247,6 @@ class ComparableDateIntervalTest extends TestCase
         ($this->getTestClass())::getTotalHours(new DateInterval('PT15M'), 'abc123');
     }
 
-    /**
-     *
-     */
     public function testIntervalToMinutesInvalidManipulator()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -300,9 +254,6 @@ class ComparableDateIntervalTest extends TestCase
         ($this->getTestClass())::getTotalMinutes(new DateInterval('PT15M'), 'abc123');
     }
 
-    /**
-     *
-     */
     public function testIntervalToHours()
     {
         self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H'), 'round'));
@@ -317,9 +268,6 @@ class ComparableDateIntervalTest extends TestCase
         self::assertEquals(2, ($this->getTestClass())::getTotalHours(new DateInterval('PT2H59M'), manipulator: 'floor'));
     }
 
-    /**
-     *
-     */
     public function testIntervalToDaysInvalidManipulator()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -327,9 +275,6 @@ class ComparableDateIntervalTest extends TestCase
         ($this->getTestClass())::getTotalDays(new DateInterval('PT15M'), 'abc123');
     }
 
-    /**
-     *
-     */
     public function testIntervalToDaysAdditionalThirdArgument()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -337,9 +282,6 @@ class ComparableDateIntervalTest extends TestCase
         ($this->getTestClass())::getTotalDays(new DateInterval('PT15M'), 'ceil', 3);
     }
 
-    /**
-     *
-     */
     public function testIntervalToDaysMissingSecondArgument()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -347,9 +289,6 @@ class ComparableDateIntervalTest extends TestCase
         ($this->getTestClass())::getTotalDays(new DateInterval('PT15M'));
     }
 
-    /**
-     *
-     */
     public function testIntervalToDays()
     {
         self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2D'), 'round'));
@@ -366,9 +305,6 @@ class ComparableDateIntervalTest extends TestCase
         self::assertEquals(2, ($this->getTestClass())::getTotalDays(new DateInterval('P2DT23H59M'), manipulator: 'floor'));
     }
 
-    /**
-     *
-     */
     public function testInvertedInterval()
     {
         $faker = Factory::create();

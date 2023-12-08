@@ -6,7 +6,7 @@ use Bytes\ResponseBundle\HttpClient\Api\AbstractApiClient;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * For {@see AbstractApiClient} classes that autoconfigure the bytes_response.http_client.token tag
+ * For {@see AbstractApiClient} classes that autoconfigure the bytes_response.http_client.token tag.
  */
 interface HttpClientTokenTagInterface
 {

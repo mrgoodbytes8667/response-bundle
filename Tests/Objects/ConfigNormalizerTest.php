@@ -7,16 +7,12 @@ use Bytes\ResponseBundle\Objects\ConfigNormalizer;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ConfigNormalizerTest
- * @package Bytes\ResponseBundle\Tests\Objects
+ * Class ConfigNormalizerTest.
  */
 class ConfigNormalizerTest extends TestCase
 {
     use TestFakerTrait;
 
-    /**
-     *
-     */
     public function testNormalizeEndpoints()
     {
         $endpointKey1 = $this->faker->unique()->word();
@@ -28,7 +24,7 @@ class ConfigNormalizerTest extends TestCase
             'endpoints' => [
                 $endpointKey1 => [],
                 $endpointExtraKey => [],
-            ]
+            ],
         ];
 
         $normalized = ConfigNormalizer::normalizeEndpoints($config, [$endpointKey1, $endpointKey2]);
@@ -41,13 +37,10 @@ class ConfigNormalizerTest extends TestCase
 
         $this->extracted($endpointKey1, $normalized, ['permissions', 'scopes']);
         $this->extracted($endpointKey2, $normalized, ['permissions', 'scopes']);
-
     }
 
     /**
-     * @param string $key
      * @param array $normalized
-     * @param array $addRemoveParentKeys
      */
     protected function extracted(string $key, mixed $normalized, array $addRemoveParentKeys): void
     {
@@ -65,9 +58,6 @@ class ConfigNormalizerTest extends TestCase
         }
     }
 
-    /**
-     *
-     */
     public function testNormalizeEndpointsWithAddRemove()
     {
         $endpointKey1 = $this->faker->unique()->word();
@@ -82,10 +72,10 @@ class ConfigNormalizerTest extends TestCase
             'sample' => [],
             'endpoints' => [
                 $endpointKey1 => [
-                    $addRemoveParentExtraKey => []
+                    $addRemoveParentExtraKey => [],
                 ],
                 $endpointExtraKey => [],
-            ]
+            ],
         ];
 
         $normalized = ConfigNormalizer::normalizeEndpoints($config, [$endpointKey1, $endpointKey2], $addRemoveParentKeys);

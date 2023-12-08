@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Tests\Event;
-
 
 use Bytes\ResponseBundle\Event\ValidateTokenEvent;
 use Bytes\ResponseBundle\Tests\Fixtures\Token;
@@ -12,14 +10,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class ValidateTokenEventTest
- * @package Bytes\ResponseBundle\Tests\Event
+ * Class ValidateTokenEventTest.
  */
 class ValidateTokenEventTest extends TestCase
 {
-    /**
-     *
-     */
     public function testGetSetNew()
     {
         $token = $this->getMockBuilder(AccessTokenInterface::class)->getMock();

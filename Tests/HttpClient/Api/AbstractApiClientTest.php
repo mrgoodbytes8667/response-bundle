@@ -9,14 +9,10 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\Retry\GenericRetryStrategy;
 
 /**
- * Class AbstractApiClientTest
- * @package Bytes\ResponseBundle\Tests\HttpClient\Api
+ * Class AbstractApiClientTest.
  */
 class AbstractApiClientTest extends TestCase
 {
-    /**
-     *
-     */
     public function testClient()
     {
         $client = $this->getMockForAbstractClass(AbstractApiClient::class, [HttpClient::create(), new EventDispatcher(), new GenericRetryStrategy(), '', '']);

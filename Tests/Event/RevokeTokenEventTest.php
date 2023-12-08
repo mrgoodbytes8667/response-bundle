@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Tests\Event;
-
 
 use Bytes\ResponseBundle\Event\RevokeTokenEvent;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
@@ -10,14 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class RevokeTokenEventTest
- * Covers all AbstractTokenEvent children
- * @package Bytes\ResponseBundle\Tests\Event
+ * Covers all AbstractTokenEvent children.
  */
 class RevokeTokenEventTest extends TestCase
 {
-    /**
-     *
-     */
     public function testGetSetNew()
     {
         $token = $this->getMockBuilder(AccessTokenInterface::class)->getMock();

@@ -10,12 +10,11 @@ use PHPUnit\Framework\TestCase;
 
 class TokenSourceTest extends TestCase
 {
-    use TestSerializerTrait, TestEnumTrait;
+    use TestSerializerTrait;
+    use TestEnumTrait;
 
     /**
      * @dataProvider provideLabelsValues
-     * @param $label
-     * @param $value
      */
     public function testEnum($label, $value)
     {
@@ -25,8 +24,6 @@ class TokenSourceTest extends TestCase
 
     /**
      * @dataProvider provideLabelsValues
-     * @param $label
-     * @param $value
      */
     public function testEnumSerialization($label, $value)
     {
@@ -37,7 +34,7 @@ class TokenSourceTest extends TestCase
 
         self::assertEquals(json_encode([
             'label' => $label,
-            'value' => $value
+            'value' => $value,
         ]), $output);
     }
 
@@ -51,9 +48,6 @@ class TokenSourceTest extends TestCase
         yield ['label' => 'user', 'value' => 'user'];
     }
 
-    /**
-     *
-     */
     public function testFormChoices()
     {
         self::assertEquals([

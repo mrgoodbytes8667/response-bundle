@@ -33,8 +33,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class ObtainValidTokenEventTest
- * @package Bytes\ResponseBundle\Tests\Event
+ * Class ObtainValidTokenEventTest.
  *
  * @property FakerGenerator|FakerEnumProvider|MiscProvider|Address|Barcode|Biased|Color|Company|DateTime|File|HtmlLorem|Image|Internet|Lorem|Medical|Miscellaneous|Payment|Person|PhoneNumber|Text|UserAgent|Uuid $faker
  */
@@ -47,9 +46,6 @@ class ObtainValidTokenEventTest extends TestCase
      */
     protected $providers = [FakerEnumProvider::class];
 
-    /**
-     *
-     */
     public function testNew()
     {
         $identifier = $this->faker->word();
@@ -69,9 +65,6 @@ class ObtainValidTokenEventTest extends TestCase
         self::assertEquals($token, $event->getToken());
     }
 
-    /**
-     *
-     */
     public function testUserTokenWithNoUser()
     {
         $identifier = $this->faker->word();
@@ -80,9 +73,6 @@ class ObtainValidTokenEventTest extends TestCase
         $event = ObtainValidTokenEvent::new($identifier, $tokenSource);
     }
 
-    /**
-     *
-     */
     public function testGetSet()
     {
         $identifier = $this->faker->word();
@@ -115,7 +105,5 @@ class ObtainValidTokenEventTest extends TestCase
         self::assertCount(0, $event->getScopes());
         self::assertInstanceOf(ObtainValidTokenEvent::class, $event->setScopes($scopes));
         self::assertCount(3, $event->getScopes());
-
     }
 }
-

@@ -1,18 +1,14 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Tests\Fixtures\Routing;
-
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class User
- * @package Bytes\ResponseBundle\Tests\Fixtures\Routing
+ * Class User.
  */
 class User implements UserInterface
 {
-
     /**
      * Returns the roles granted to the user.
      *
@@ -80,33 +76,28 @@ class User implements UserInterface
 
     /**
      * User constructor.
-     * @param string $id
      */
     public function __construct(public string $id)
     {
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param string $id
      * @return $this
      */
     public function setId(string $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
     /**
-     * Returns the identifier for this user (e.g. its username or e-mail address)
-     * @return string
+     * Returns the identifier for this user (e.g. its username or e-mail address).
      */
     public function getUserIdentifier(): string
     {

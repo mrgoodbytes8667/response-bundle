@@ -2,7 +2,6 @@
 
 namespace Bytes\ResponseBundle\Enums;
 
-
 use Bytes\EnumSerializerBundle\Enums\BackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
 

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\HttpClient\Retry;
-
 
 use Exception;
 use Symfony\Component\HttpClient\Exception\InvalidArgumentException;
@@ -14,40 +12,44 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * Class APIRetryStrategy
- * Similar to the GenericRetryStrategy with some logic from other http client frameworks
- * @package Bytes\ResponseBundle\HttpClient\Retry
+ * Similar to the GenericRetryStrategy with some logic from other http client frameworks.
  */
 abstract class APIRetryStrategy implements RetryStrategyInterface
 {
     /**
-     * Default amount of time to delay (or the initial value when multiplier is used)
+     * Default amount of time to delay (or the initial value when multiplier is used).
+     *
      * @var int
      */
-    const DEFAULT_DELAY_MS = 1000;
+    public const DEFAULT_DELAY_MS = 1000;
 
     /**
-     * Default multiplier to apply to the delay each time a retry occurs
+     * Default multiplier to apply to the delay each time a retry occurs.
+     *
      * @var float
      */
-    const DEFAULT_MULTIPLIER = 2.0;
+    public const DEFAULT_MULTIPLIER = 2.0;
 
     /**
-     * Default maximum delay to allow (0 means no maximum)
+     * Default maximum delay to allow (0 means no maximum).
+     *
      * @var int
      */
-    const DEFAULT_MAX_DELAY_MS = 0;
+    public const DEFAULT_MAX_DELAY_MS = 0;
 
     /**
-     * Default probability of randomness int delay (0 = none, 1 = 100% random)
+     * Default probability of randomness int delay (0 = none, 1 = 100% random).
+     *
      * @var float
      */
-    const DEFAULT_JITTER = 0.1;
+    public const DEFAULT_JITTER = 0.1;
 
     /**
-     * Default number of times to retry before failing
+     * Default number of times to retry before failing.
+     *
      * @var int
      */
-    const DEFAULT_MAX_RETRIES = 3;
+    public const DEFAULT_MAX_RETRIES = 3;
 
     /**
      * @var array List of HTTP status codes that trigger a retry
@@ -81,16 +83,16 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
 
     /**
      * @param array $statusCodes List of HTTP status codes that trigger a retry
-     * @param int $delayMs Amount of time to delay (or the initial value when multiplier is used)
-     * @param float $multiplier Multiplier to apply to the delay each time a retry occurs
-     * @param int $maxDelayMs Maximum delay to allow (0 means no maximum)
-     * @param float $jitter Probability of randomness int delay (0 = none, 1 = 100% random)
-     * @param int $maxRetries Number of times to retry before failing
+     * @param int   $delayMs     Amount of time to delay (or the initial value when multiplier is used)
+     * @param float $multiplier  Multiplier to apply to the delay each time a retry occurs
+     * @param int   $maxDelayMs  Maximum delay to allow (0 means no maximum)
+     * @param float $jitter      Probability of randomness int delay (0 = none, 1 = 100% random)
+     * @param int   $maxRetries  Number of times to retry before failing
      */
     public function __construct(array $statusCodes = GenericRetryStrategy::DEFAULT_RETRY_STATUS_CODES,
-                                int $delayMs = self::DEFAULT_DELAY_MS, float $multiplier = self::DEFAULT_MULTIPLIER,
-                                int $maxDelayMs = self::DEFAULT_MAX_DELAY_MS, float $jitter = self::DEFAULT_JITTER,
-                                int $maxRetries = self::DEFAULT_MAX_RETRIES)
+        int $delayMs = self::DEFAULT_DELAY_MS, float $multiplier = self::DEFAULT_MULTIPLIER,
+        int $maxDelayMs = self::DEFAULT_MAX_DELAY_MS, float $jitter = self::DEFAULT_JITTER,
+        int $maxRetries = self::DEFAULT_MAX_RETRIES)
     {
         $this->setStatusCodes($statusCodes);
         $this->setDelayMs($delayMs);
@@ -101,17 +103,16 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
     }
 
     /**
-     * @param array $statusCodes
      * @return $this
      */
     public function setStatusCodes(array $statusCodes): self
     {
         $this->statusCodes = $statusCodes;
+
         return $this;
     }
 
     /**
-     * @param int $delayMs
      * @return $this
      */
     public function setDelayMs(int $delayMs): self
@@ -119,13 +120,13 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if ($delayMs < 0) {
             throw new InvalidArgumentException(sprintf('Delay must be greater than or equal to zero: "%s" given.', $delayMs));
         }
-        
+
         $this->delayMs = $delayMs;
+
         return $this;
     }
 
     /**
-     * @param float $multiplier
      * @return $this
      */
     public function setMultiplier(float $multiplier): self
@@ -133,13 +134,13 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if ($multiplier < 1) {
             throw new InvalidArgumentException(sprintf('Multiplier must be greater than or equal to one: "%s" given.', $multiplier));
         }
-        
+
         $this->multiplier = $multiplier;
+
         return $this;
     }
 
     /**
-     * @param int $maxDelayMs
      * @return $this
      */
     public function setMaxDelayMs(int $maxDelayMs): self
@@ -147,13 +148,13 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if ($maxDelayMs < 0) {
             throw new InvalidArgumentException(sprintf('Max delay must be greater than or equal to zero: "%s" given.', $maxDelayMs));
         }
-        
+
         $this->maxDelayMs = $maxDelayMs;
+
         return $this;
     }
 
     /**
-     * @param float $jitter
      * @return $this
      */
     public function setJitter(float $jitter): self
@@ -161,68 +162,48 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if ($jitter < 0 || $jitter > 1) {
             throw new InvalidArgumentException(sprintf('Jitter must be between 0 and 1: "%s" given.', $jitter));
         }
-        
+
         $this->jitter = $jitter;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getStatusCodes(): array
     {
         return $this->statusCodes;
     }
 
-    /**
-     * @return int
-     */
     public function getDelayMs(): int
     {
         return $this->delayMs;
     }
 
-    /**
-     * @return float
-     */
     public function getMultiplier(): float
     {
         return $this->multiplier;
     }
 
-    /**
-     * @return int
-     */
     public function getMaxDelayMs(): int
     {
         return $this->maxDelayMs;
     }
 
-    /**
-     * @return float
-     */
     public function getJitter(): float
     {
         return $this->jitter;
     }
 
-    /**
-     * @param AsyncContext $context
-     * @param string|null $responseContent
-     * @param TransportExceptionInterface|null $exception
-     * @return bool|null
-     */
     public function shouldRetry(AsyncContext $context, ?string $responseContent, ?TransportExceptionInterface $exception): ?bool
     {
         $statusCode = $context->getStatusCode();
         if (in_array($statusCode, $this->statusCodes, true)) {
             return true;
         }
-        
+
         if (isset($this->statusCodes[$statusCode]) && is_array($this->statusCodes[$statusCode])) {
             return in_array($context->getInfo('http_method'), $this->statusCodes[$statusCode], true);
         }
-        
+
         if (null === $exception) {
             return false;
         }
@@ -230,7 +211,7 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if (in_array(0, $this->statusCodes, true)) {
             return true;
         }
-        
+
         if (isset($this->statusCodes[0]) && is_array($this->statusCodes[0])) {
             return in_array($context->getInfo('http_method'), $this->statusCodes[0], true);
         }
@@ -243,10 +224,8 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
     }
 
     /**
-     * @param AsyncContext $context
-     * @param string|null $responseContent
-     * @param TransportExceptionInterface|null $exception
      * @return int Amount of time to delay in milliseconds
+     *
      * @throws Exception
      */
     public function getDelay(AsyncContext $context, ?string $responseContent, ?TransportExceptionInterface $exception): int
@@ -260,23 +239,17 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
                 $delay = $this->calculateDelay($context, $exception);
                 break;
         }
-        
-        return $this->standardizeDelay((int)$delay);
+
+        return $this->standardizeDelay((int) $delay);
     }
 
     /**
-     * @param AsyncContext $context
-     * @param TransportExceptionInterface|null $exception
      * @return int Amount of time to delay in milliseconds
+     *
      * @throws Exception
      */
     abstract protected function getRateLimitDelay(AsyncContext $context, ?TransportExceptionInterface $exception): int;
 
-    /**
-     * @param array $headers
-     * @param string $key
-     * @return mixed
-     */
     protected static function getHeaderValue(array $headers, string $key)
     {
         if (array_key_exists($key, $headers)) {
@@ -285,26 +258,25 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
                 return $headers[$key][0];
             }
         }
-        
+
         throw new \InvalidArgumentException(sprintf('The header "%s" does not exist or does not have a key "0".', $key));
     }
 
     /**
-     * @param AsyncContext $context
-     * @param TransportExceptionInterface|null $exception
      * @return int Amount of time to delay in milliseconds
+     *
      * @throws Exception
      */
     protected function calculateDelay(AsyncContext $context, ?TransportExceptionInterface $exception): int
     {
         $delay = $this->delayMs * $this->multiplier ** ($context->getInfo('retry_count') ?? 1);
 
-        return (int)$delay;
+        return (int) $delay;
     }
 
     /**
-     * @param int $delay
      * @return int Amount of time to delay in milliseconds
+     *
      * @throws Exception
      */
     protected function standardizeDelay(int $delay): int
@@ -314,12 +286,10 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
             return $this->maxDelayMs;
         }
 
-        return (int)$delay;
+        return (int) $delay;
     }
 
     /**
-     * @param int $delay
-     * @return int
      * @throws Exception
      */
     protected function applyJitter(int $delay): int
@@ -334,19 +304,15 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
             }
         }
 
-        return (int)$delay;
+        return (int) $delay;
     }
 
-    /**
-     * @return int
-     */
     public function getMaxRetries(): int
     {
         return $this->maxRetries;
     }
 
     /**
-     * @param int $maxRetries
      * @return $this
      */
     public function setMaxRetries(int $maxRetries): self
@@ -354,8 +320,9 @@ abstract class APIRetryStrategy implements RetryStrategyInterface
         if ($maxRetries < 0) {
             throw new InvalidArgumentException(sprintf('Max retries must be greater than or equal to zero: "%s" given.', $maxRetries));
         }
-        
+
         $this->maxRetries = $maxRetries;
+
         return $this;
     }
 }

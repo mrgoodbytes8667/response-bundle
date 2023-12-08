@@ -16,8 +16,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
- * Class EmptyContentExceptionTest
- * @package Bytes\ResponseBundle\Tests\Exception\Response
+ * Class EmptyContentExceptionTest.
  */
 class EmptyContentExceptionTest extends TestCase
 {

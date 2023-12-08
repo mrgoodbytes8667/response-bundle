@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Enums;
-
 
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
@@ -17,17 +15,20 @@ enum TokenSource: string implements StringBackedEnumInterface
     case app = 'app';
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::app')]
-    public static function app() {
+    public static function app()
+    {
         return static::app;
     }
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::user')]
-    public static function user() {
+    public static function user()
+    {
         return static::user;
     }
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::id')]
-    public static function id() {
+    public static function id()
+    {
         return static::id;
     }
 

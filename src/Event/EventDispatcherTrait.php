@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Event;
-
 
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Trait EventDispatcherTrait
- * @package Bytes\ResponseBundle\Event
+ * Trait EventDispatcherTrait.
  */
 trait EventDispatcherTrait
 {
@@ -18,12 +15,12 @@ trait EventDispatcherTrait
     protected $dispatcher;
 
     /**
-     * @param EventDispatcherInterface $dispatcher
      * @return $this
      */
     public function setDispatcher(EventDispatcherInterface $dispatcher): self
     {
         $this->dispatcher = $dispatcher;
+
         return $this;
     }
 }

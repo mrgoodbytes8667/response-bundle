@@ -1,41 +1,28 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Entity;
-
 
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Trait CreatedUpdatedTrait
- * @package Bytes\ResponseBundle\Entity
+ * Trait CreatedUpdatedTrait.
  */
 trait CreatedUpdatedTrait
 {
-    /**
-     * @var DateTimeInterface|null
-     */
     #[ORM\Column(type: 'datetime')]
-    protected ?\DateTimeInterface $createdAt = null;
+    protected ?DateTimeInterface $createdAt = null;
 
-    /**
-     * @var DateTimeInterface|null
-     */
     #[ORM\Column(type: 'datetime')]
-    protected ?\DateTimeInterface $updatedAt = null;
+    protected ?DateTimeInterface $updatedAt = null;
 
-    /**
-     * @return DateTimeInterface|null
-     */
     public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
     /**
-     * @param DateTimeInterface|null $createdAt
      * @return $this
      */
     public function setCreatedAt(?DateTimeInterface $createdAt): self
@@ -52,26 +39,22 @@ trait CreatedUpdatedTrait
     {
         $dateTime = new DateTime();
         $this->setCreatedAt($dateTime);
-        if ($this->getUpdatedAt() == null) {
+        if (null == $this->getUpdatedAt()) {
             $this->setUpdatedAt($dateTime);
         }
 
         return $this;
     }
 
-    /**
-     * @return DateTimeInterface|null
-     */
     public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
 
     /**
-     * @param DateTimeInterface|null $updatedAt
      * @return $this
      */
-    public function setUpdatedAt(?DateTimeInterface $updatedAt = null): self
+    public function setUpdatedAt(DateTimeInterface $updatedAt = null): self
     {
         $this->updatedAt = $updatedAt ?? new DateTime();
 

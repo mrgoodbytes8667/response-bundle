@@ -1,22 +1,16 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Tests\Event;
-
 
 use Bytes\ResponseBundle\Event\TokenRefreshedEvent;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class TokenRefreshedEventTest
- * @package Bytes\ResponseBundle\Tests\Event
+ * Class TokenRefreshedEventTest.
  */
 class TokenRefreshedEventTest extends TestCase
 {
-    /**
-     *
-     */
     public function testGetSetNew()
     {
         $token = $this->getMockBuilder(AccessTokenInterface::class)->getMock();
@@ -28,9 +22,6 @@ class TokenRefreshedEventTest extends TestCase
         self::assertEquals($token2, $event->getToken());
     }
 
-    /**
-     *
-     */
     public function testGetSetNewWithOld()
     {
         $token = $this->getMockBuilder(AccessTokenInterface::class)->getMock();

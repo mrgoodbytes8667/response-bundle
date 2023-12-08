@@ -13,8 +13,7 @@ use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
 
 /**
- * Class AbstractClientTest
- * @package Bytes\ResponseBundle\Tests\HttpClient
+ * Class AbstractClientTest.
  */
 class AbstractClientTest extends TestCase
 {
@@ -22,9 +21,6 @@ class AbstractClientTest extends TestCase
 
     /**
      * @dataProvider provideAccessTokens
-     * @param $token
-     * @param $accessToken
-     * @param $refreshToken
      */
     public function testNormalizeAccessToken($token, $accessToken, $refreshToken)
     {
@@ -33,9 +29,6 @@ class AbstractClientTest extends TestCase
         self::assertEquals($accessToken, \Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient::normalizeAccessToken($token));
     }
 
-    /**
-     *
-     */
     public function testNormalizeAccessTokenNoNulls()
     {
         $this->expectException(UnexpectedValueException::class);
@@ -44,11 +37,9 @@ class AbstractClientTest extends TestCase
     }
 
     /**
-     * @param string|null $accessToken
-     * @param string|null $refreshToken
      * @return AccessTokenInterface|MockObject
      */
-    private function createToken(?string $accessToken = null, ?string $refreshToken = null)
+    private function createToken(string $accessToken = null, string $refreshToken = null)
     {
         $token = $this
             ->getMockBuilder(AccessTokenInterface::class)
@@ -64,9 +55,6 @@ class AbstractClientTest extends TestCase
 
     /**
      * @dataProvider provideRefreshTokens
-     * @param $token
-     * @param $accessToken
-     * @param $refreshToken
      */
     public function testNormalizeRefreshToken($token, $accessToken, $refreshToken)
     {
@@ -75,9 +63,6 @@ class AbstractClientTest extends TestCase
         self::assertEquals($refreshToken, AbstractTokenClient::normalizeRefreshToken($token));
     }
 
-    /**
-     *
-     */
     public function testNormalizeRefreshTokenNoNulls()
     {
         $this->expectException(UnexpectedValueException::class);

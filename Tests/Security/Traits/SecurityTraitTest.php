@@ -9,14 +9,10 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class SecurityTraitTest
- * @package Bytes\ResponseBundle\Tests\Security\Traits
+ * Class SecurityTraitTest.
  */
 class SecurityTraitTest extends TestCase
 {
-    /**
-     *
-     */
     public function testSetTokenUser()
     {
         $trait = $this->getMockForTrait(SecurityTrait::class);
@@ -24,9 +20,6 @@ class SecurityTraitTest extends TestCase
         self::assertNotNull($trait->setTokenUser($user));
     }
 
-    /**
-     *
-     */
     public function testSetSecurity()
     {
         $trait = $this->getMockForTrait(SecurityTrait::class);

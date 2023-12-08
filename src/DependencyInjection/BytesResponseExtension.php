@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\DependencyInjection;
-
 
 use Bytes\ResponseBundle\Objects\ConfigNormalizer;
 use Exception;
@@ -14,19 +12,16 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 /**
- * Class BytesResponseExtension
- * @package Bytes\ResponseBundle\DependencyInjection
+ * Class BytesResponseExtension.
  */
 class BytesResponseExtension extends Extension implements ExtensionInterface, PrependExtensionInterface
 {
     /**
-     * @param array $configs
-     * @param ContainerBuilder $container
      * @throws Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.php');
 
         $configuration = $this->getConfiguration($configs, $container);
@@ -54,15 +49,15 @@ class BytesResponseExtension extends Extension implements ExtensionInterface, Pr
         if (isset($bundles['BytesDiscordBundle']) || isset($bundles['BytesTwitchClientBundle'])) {
             // Normalize, process, and prepend extension config if found
             foreach ($container->getExtensions() as $name => $extension) {
-                if($extension instanceof ResponseExtensionInterface) {
+                if ($extension instanceof ResponseExtensionInterface) {
                     switch ($name) {
                         case 'bytes_discord_client':
                         case 'bytes_twitch_client':
-                            $clientConfig = self::processResponseClientBundle($name === 'bytes_discord_client' ? 'discord' : 'twitch', $config, $extension);
+                            $clientConfig = self::processResponseClientBundle('bytes_discord_client' === $name ? 'discord' : 'twitch', $config, $extension);
                             if (!empty($clientConfig)) {
                                 $container->prependExtensionConfig($name, $clientConfig);
                             }
-                            
+
                             break;
                     }
                 }
@@ -71,20 +66,18 @@ class BytesResponseExtension extends Extension implements ExtensionInterface, Pr
     }
 
     /**
-     * @param string $key
-     * @param array $values
-     * @param ResponseExtensionInterface $extension
      * @return array
      */
-    private static function processResponseClientBundle(string $key, array $values, ResponseExtensionInterface $extension) {
-        if(!isset($values['connections'][$key])) {
+    private static function processResponseClientBundle(string $key, array $values, ResponseExtensionInterface $extension)
+    {
+        if (!isset($values['connections'][$key])) {
             return [];
         }
-        
+
         $config = $values['connections'][$key];
 
         $userAgent = self::getUserAgent($values, $key);
-        if(!empty($userAgent)) {
+        if (!empty($userAgent)) {
             $config['user_agent'] = $userAgent;
         }
 
@@ -92,20 +85,20 @@ class BytesResponseExtension extends Extension implements ExtensionInterface, Pr
     }
 
     /**
-     * @param array $config
      * @param string $section = ['twitch']['discord'][$any]
+     *
      * @return string
      */
     private static function getUserAgent(array $config, string $section)
     {
-        if(isset($config['connections'][$section]['user_agent'])) {
+        if (isset($config['connections'][$section]['user_agent'])) {
             return $config['connections'][$section]['user_agent'];
         }
-        
-        if(isset($config['defaults']['user_agent'])) {
+
+        if (isset($config['defaults']['user_agent'])) {
             return $config['defaults']['user_agent'];
         }
-        
+
         return '';
     }
 }

@@ -1,14 +1,10 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Interfaces;
 
-
 /**
- * Interface ClientTokenResponseInterface
- * @package Bytes\ResponseBundle\Interfaces
+ * Interface ClientTokenResponseInterface.
  */
 interface ClientTokenResponseInterface extends ClientResponseInterface
 {
-
 }

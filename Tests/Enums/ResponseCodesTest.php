@@ -11,8 +11,7 @@ class ResponseCodesTest extends TestCase
 {
     /**
      * @dataProvider provideAll
-     * @param ResponseCodes $enum
-     * @param int $value
+     *
      * @return void
      */
     public function testAll(ResponseCodes $enum, int $value)
@@ -22,9 +21,6 @@ class ResponseCodesTest extends TestCase
         EnumAssertions::assertSameEnumValue($enum, $value);
     }
 
-    /**
-     * @return Generator
-     */
     public function provideAll(): Generator
     {
         foreach (ResponseCodes::cases() as $enum) {

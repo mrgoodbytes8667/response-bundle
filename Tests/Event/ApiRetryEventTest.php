@@ -34,8 +34,7 @@ use Symfony\Component\HttpClient\Response\AsyncContext;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
 /**
- * Class ApiRetryEventTest
- * @package Bytes\ResponseBundle\Tests\Event
+ * Class ApiRetryEventTest.
  *
  * @var FakerGenerator|MiscProvider|Address|Barcode|Biased|Color|Company|DateTime|File|HtmlLorem|Image|Internet|Lorem|Medical|Miscellaneous|Payment|Person|PhoneNumber|Text|UserAgent|Uuid|FakerEnumProvider
  */
@@ -78,11 +77,12 @@ class ApiRetryEventTest extends TestCase
 
     /**
      * @depends testNew
+     *
      * @param array $args = ['retry' => new ApiRetryEvent(), 'apiClient' => new ApiClientInterface(), 'method' => '', 'url' => '', 'options' => [], 'context' => new AsyncContext(), 'content' => '', 'retryCount' => 0]
      */
     public function testGetSet(array $args)
     {
-        /** @var ApiRetryEvent $retry */
+        /* @var ApiRetryEvent $retry */
         extract($args);
 
         self::assertEquals($apiClient, $retry->getClient());
@@ -93,7 +93,7 @@ class ApiRetryEventTest extends TestCase
         self::assertEquals($content, $retry->getResponseContent());
         self::assertEquals($retryCount, $retry->getRetryCount());
 
-        extract((array)$this->provideClient());
+        extract((array) $this->provideClient());
 
         $method = $this->faker->randomEnum(HttpMethods::class)->value;
         $url = $this->faker->url();
@@ -120,8 +120,6 @@ class ApiRetryEventTest extends TestCase
         self::assertEquals($content, $retry->getResponseContent());
         self::assertEquals($retryCount, $retry->getRetryCount());
         self::assertEquals($shouldRetry, $retry->getShouldRetry());
-
-
     }
 
     public function provideClient()

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Token;
-
 
 use Bytes\ResponseBundle\Entity\CreatedUpdatedTrait;
 use Bytes\ResponseBundle\Enums\TokenSource;
@@ -21,11 +19,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use ValueError;
 
 /**
- * Trait AccessTokenTrait
- * @package Bytes\ResponseBundle\Token
+ * Trait AccessTokenTrait.
  *
- * Note: if you receive serialization errors due to the Ulid, a simple fix can be adding a property annotation to the
- * class using this trait
  * @example @property ?\Symfony\Component\Uid\Ulid $id
  */
 trait AccessTokenTrait
@@ -39,35 +34,34 @@ trait AccessTokenTrait
     protected ?Ulid $id = null;
 
     /**
-     * User access token
-     * @var string|null
+     * User access token.
      */
     #[ORM\Column(type: 'string', length: 512)]
     private ?string $accessToken = null;
 
     /**
-     * Refresh token
-     * @var string|null
+     * Refresh token.
      */
     #[ORM\Column(type: 'string', length: 512, nullable: true)]
     private ?string $refreshToken = null;
 
     /**
-     * Time (in seconds) until the access token expires
+     * Time (in seconds) until the access token expires.
+     *
      * @var DateInterval|null
      */
     #[ORM\Column(type: 'dateinterval')]
     private $expiresIn;
 
     /**
-     * (Calculated) datetime when the access token expires
-     * @var DateTimeInterface|null
+     * (Calculated) datetime when the access token expires.
      */
     #[ORM\Column(type: 'datetime')]
     private ?DateTimeInterface $expiresAt = null;
 
     /**
-     * Space separated scopes
+     * Space separated scopes.
+     *
      * @var string|array|null
      */
     #[Assert\AtLeastOneOf([
@@ -78,41 +72,22 @@ trait AccessTokenTrait
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $scope = null;
 
-    /**
-     * @var string|null
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $tokenType = null;
 
-    /**
-     * @var string|null
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $tokenSource = null;
 
-    /**
-     * @var string|null
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $class = null;
 
-    /**
-     * @var UserInterface|null
-     */
     private ?UserInterface $user = null;
 
-    /**
-     * @return Ulid
-     */
     public function getId(): Ulid
     {
         return $this->id;
     }
 
-    /**
-     * @param bool $masked
-     * @return string|null
-     */
     public function getAccessToken(bool $masked = false): ?string
     {
         if ($masked && class_exists('\Bytes\StringMaskBundle\Twig\StringMaskRuntime', false)) {
@@ -123,19 +98,15 @@ trait AccessTokenTrait
     }
 
     /**
-     * @param string|null $accessToken
      * @return $this
      */
     public function setAccessToken(?string $accessToken): self
     {
         $this->accessToken = $accessToken;
+
         return $this;
     }
 
-    /**
-     * @param bool $masked
-     * @return string|null
-     */
     public function getRefreshToken(bool $masked = false): ?string
     {
         if ($masked && class_exists('\Bytes\StringMaskBundle\Twig\StringMaskRuntime', false)) {
@@ -146,26 +117,23 @@ trait AccessTokenTrait
     }
 
     /**
-     * @param string|null $refreshToken
      * @return $this
      */
     public function setRefreshToken(?string $refreshToken): self
     {
         $this->refreshToken = $refreshToken;
+
         return $this;
     }
 
-    /**
-     * @return DateInterval|null
-     */
     public function getExpiresIn(): ?DateInterval
     {
         return $this->expiresIn;
     }
 
     /**
-     * @param int|DateInterval|null $expiresIn
      * @return $this
+     *
      * @throws Exception
      */
     public function setExpiresIn(int|DateInterval|null $expiresIn): self
@@ -177,6 +145,7 @@ trait AccessTokenTrait
         }
 
         $this->expiresIn = $expiresIn;
+
         return $this;
     }
 
@@ -193,25 +162,21 @@ trait AccessTokenTrait
     }
 
     /**
-     * @param DateTimeInterface|null $expiresAt
      * @return $this
      */
     public function setExpiresAt(?DateTimeInterface $expiresAt): self
     {
         $this->expiresAt = $expiresAt;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getScope(): string
     {
         return $this->scope ?? '';
     }
 
     /**
-     * @param string|array $scope
      * @return $this
      */
     public function setScope(string|array|null $scope = ''): self
@@ -221,30 +186,25 @@ trait AccessTokenTrait
         }
 
         $this->scope = $scope ?? '';
+
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTokenType(): ?string
     {
         return $this->tokenType;
     }
 
     /**
-     * @param string|null $tokenType
      * @return $this
      */
     public function setTokenType(?string $tokenType): self
     {
         $this->tokenType = $tokenType;
+
         return $this;
     }
 
-    /**
-     * @return TokenSource|null
-     */
     public function getTokenSource(): ?TokenSource
     {
         if (is_null($this->tokenSource)) {
@@ -259,7 +219,6 @@ trait AccessTokenTrait
     }
 
     /**
-     * @param TokenSource|string|null $tokenSource
      * @return $this
      */
     public function setTokenSource(TokenSource|string|null $tokenSource): self
@@ -269,42 +228,37 @@ trait AccessTokenTrait
         }
 
         $this->tokenSource = $tokenSource;
+
         return $this;
     }
 
-    /**
-     * @return UserInterface|null
-     */
     public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
     /**
-     * @param UserInterface|null $user
      * @return $this
      */
     public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getIdentifier(): ?string
     {
         return $this->class;
     }
 
     /**
-     * @param string|null $class
      * @return $this
      */
-    public function setIdentifier(?string $class = null): self
+    public function setIdentifier(string $class = null): self
     {
         $this->class = $class ?? static::class;
+
         return $this;
     }
 }
