@@ -145,12 +145,9 @@ abstract class AbstractClient
                 if (!empty($attributes)) {
                     $auth = $attributes[0]->newInstance();
                 }
-                if (!($auth instanceof Auth) && !empty($this->reader)) {
-                    $auth = $this->reader->getMethodAnnotation($caller, Auth::class);
-                }
                 if (!is_null($auth)) {
-                    $auth?->setIdentifier($this->getIdentifier());
-                    $auth?->setTokenSource($this->getTokenSource());
+                    $auth->setIdentifier($this->getIdentifier())
+                        ->setTokenSource($this->getTokenSource());
                 }
             } catch (ReflectionException) {
             }

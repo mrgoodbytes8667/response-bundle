@@ -5,10 +5,6 @@ namespace Bytes\ResponseBundle\Annotations;
 use Attribute;
 use Bytes\ResponseBundle\Enums\TokenSource;
 
-/**
- * @Annotation
- * @Target({"METHOD"})
- */
 #[Attribute(Attribute::TARGET_METHOD)]
 class Auth
 {

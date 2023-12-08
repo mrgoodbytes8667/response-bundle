@@ -8,9 +8,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Class HttpClientPass
  * Sets the serializer, validator, and dispatcher dependencies on every bytes_response.http_client
- * Also sets the annotation reader on api, and urlGenerator on token classes.
+ * Also sets the urlGenerator on token classes.
  */
 class HttpClientPass implements CompilerPassInterface
 {
@@ -26,7 +25,6 @@ class HttpClientPass implements CompilerPassInterface
             $definition = $container->findDefinition($id);
             $definition->addMethodCall('setSerializer', [new Reference('serializer')]);
             $definition->addMethodCall('setValidator', [new Reference('validator')]);
-            $definition->addMethodCall('setReader', [new Reference('annotations.cached_reader')]);
         }
 
         // find all service IDs with the bytes_response.http_client.api tag
