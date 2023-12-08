@@ -16,25 +16,25 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
+
+use function Symfony\Component\String\u;
+
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
-use function Symfony\Component\String\u;
 
 /**
- * Class ResponseTest
- * @package Bytes\ResponseBundle\Tests\HttpClient\Response
+ * Class ResponseTest.
  */
 class ResponseTest extends TestCase
 {
-    use TestFullSerializerTrait, ClientExceptionResponseProviderTrait;
+    use TestFullSerializerTrait;
+    use ClientExceptionResponseProviderTrait;
 
     /**
      * @dataProvider provideEmptySuccessfulResponse
-     * @param $response
-     * @param $headers
      */
     public function testGetOnSuccessCallable($response, $headers)
     {
@@ -44,8 +44,6 @@ class ResponseTest extends TestCase
 
     /**
      * @dataProvider provideEmptySuccessfulResponse
-     * @param $response
-     * @param $headers
      */
     public function testGetDeserializeContext($response, $headers)
     {
@@ -55,8 +53,6 @@ class ResponseTest extends TestCase
 
     /**
      * @dataProvider provideEmptySuccessfulResponse
-     * @param $response
-     * @param $providedHeaders
      */
     public function testGetHeaders($response, $providedHeaders)
     {
@@ -74,8 +70,6 @@ class ResponseTest extends TestCase
 
     /**
      * @dataProvider provideEmptySuccessfulResponse
-     * @param $response
-     * @param $headers
      */
     public function testPassthroughMethods($response, $headers)
     {
@@ -102,11 +96,8 @@ class ResponseTest extends TestCase
         $discordResponse->getStatusCode();
     }
 
-
     /**
      * @dataProvider provide200Responses
-     * @param $code
-     * @param $success
      */
     public function testIsSuccess($code, $success)
     {
@@ -126,8 +117,6 @@ class ResponseTest extends TestCase
      * @dataProvider provide300Responses
      * @dataProvider provide400Responses
      * @dataProvider provide500Responses
-     * @param $code
-     * @param $success
      */
     public function testIsNotSuccess($code, $success)
     {
@@ -142,9 +131,6 @@ class ResponseTest extends TestCase
         self::assertFalse($discordResponse->isSuccess());
     }
 
-    /**
-     *
-     */
     public function testIsSuccessWithException()
     {
         $response = $this
@@ -160,8 +146,6 @@ class ResponseTest extends TestCase
 
     /**
      * @dataProvider provideEmptySuccessfulResponse
-     * @param $response
-     * @param $headers
      */
     public function testGetType($response, $headers)
     {
@@ -193,8 +177,8 @@ class ResponseTest extends TestCase
         $ri->method('getHeaders')
             ->willReturn([
                 $header => [
-                    $value
-                ]
+                    $value,
+                ],
             ]);
 
         yield ['response' => DiscordResponse::make($this->serializer, new EventDispatcher())->withResponse($ri, null), 'headers' => $headers];
@@ -202,7 +186,6 @@ class ResponseTest extends TestCase
 
     /**
      * @depends testMake
-     * @param $clientResponse
      */
     public function testMakeFrom($clientResponse)
     {
@@ -230,9 +213,6 @@ class ResponseTest extends TestCase
         $discordResponse->onSuccessCallback()->onSuccessCallback(true);
     }
 
-    /**
-     *
-     */
     public function testCallbackNoDeserialize()
     {
         $response = new MockStandaloneResponse(content: '{"bar":"bar","foo":"foo"}', headers: ['Content-Type' => 'application/json']);
@@ -246,7 +226,6 @@ class ResponseTest extends TestCase
 
     /**
      * @depends testMake
-     * @param DiscordResponse $clientResponse
      */
     public function testGetResponse(DiscordResponse $clientResponse)
     {
@@ -255,7 +234,6 @@ class ResponseTest extends TestCase
 
     /**
      * @depends testMake
-     * @param DiscordResponse $clientResponse
      */
     public function testGetSerializer(DiscordResponse $clientResponse)
     {
@@ -289,7 +267,6 @@ class ResponseTest extends TestCase
         self::assertEquals('bar', $discordResponse->getBar());
     }
 
-
     /**
      * @throws ClientExceptionInterface
      * @throws TransportExceptionInterface
@@ -310,7 +287,7 @@ class ResponseTest extends TestCase
 
     /**
      * @dataProvider provideClientExceptionResponses
-     * @param $code
+     *
      * @throws ClientExceptionInterface
      * @throws TransportExceptionInterface
      * @throws RedirectionExceptionInterface
@@ -367,7 +344,6 @@ class ResponseTest extends TestCase
 
     /**
      * @depends testMake
-     * @param DiscordResponse $clientResponse
      */
     public function testGetResults(DiscordResponse $clientResponse)
     {
@@ -376,7 +352,6 @@ class ResponseTest extends TestCase
 
     /**
      * @depends testMake
-     * @param DiscordResponse $clientResponse
      */
     public function testGetExtraParams(DiscordResponse $clientResponse)
     {
@@ -385,8 +360,6 @@ class ResponseTest extends TestCase
 
     /**
      * @dataProvider provideEmptySuccessfulResponse
-     * @param $response
-     * @param $headers
      */
     public function testGetContent($response, $headers)
     {
@@ -412,9 +385,6 @@ class ResponseTest extends TestCase
         return $discordResponse;
     }
 
-    /**
-     *
-     */
     public function testMagicGetter()
     {
         $response = new DiscordResponse($this->serializer);

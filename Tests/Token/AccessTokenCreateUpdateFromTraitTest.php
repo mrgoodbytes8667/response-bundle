@@ -9,16 +9,12 @@ use DateInterval;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class AccessTokenCreateUpdateFromTraitTest
- * @package Bytes\ResponseBundle\Tests\Token
+ * Class AccessTokenCreateUpdateFromTraitTest.
  */
 class AccessTokenCreateUpdateFromTraitTest extends TestCase
 {
     use TestFakerTrait;
 
-    /**
-     *
-     */
     public function testCreateFromAccessTokenAccessTokenOnly()
     {
         $accessToken = $this->faker->randomAlphanumericString();
@@ -30,9 +26,6 @@ class AccessTokenCreateUpdateFromTraitTest extends TestCase
         self::assertEquals($accessToken, $token->getAccessToken());
     }
 
-    /**
-     *
-     */
     public function testCreateFromAccessTokenFullToken()
     {
         $newToken = $this->getMockBuilder(AccessTokenInterface::class)->getMock();
@@ -43,7 +36,7 @@ class AccessTokenCreateUpdateFromTraitTest extends TestCase
 
         $token->setAccessToken($this->faker->randomAlphanumericString())
             ->setRefreshToken($this->faker->randomAlphanumericString())
-            ->setExpiresIn(new DateInterval('PT' . $this->faker->numberBetween() . 'S'))
+            ->setExpiresIn(new DateInterval('PT'.$this->faker->numberBetween().'S'))
             ->setScope($this->faker->words(asText: true))
             ->setTokenType($this->faker->word());
 

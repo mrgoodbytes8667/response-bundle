@@ -12,7 +12,6 @@ class CreatedUpdatedTraitTest extends TestCase
 
     /**
      * @dataProvider provideMock
-     * @param CreatedUpdatedTrait|\PHPUnit\Framework\MockObject\MockObject $mock
      */
     public function testGetSetCreatedAt(CreatedUpdatedTrait|\PHPUnit\Framework\MockObject\MockObject $mock)
     {
@@ -24,7 +23,6 @@ class CreatedUpdatedTraitTest extends TestCase
 
     /**
      * @dataProvider provideMock
-     * @param CreatedUpdatedTrait|\PHPUnit\Framework\MockObject\MockObject $mock
      */
     public function testInitializeDates(CreatedUpdatedTrait|\PHPUnit\Framework\MockObject\MockObject $mock)
     {
@@ -38,7 +36,6 @@ class CreatedUpdatedTraitTest extends TestCase
 
     /**
      * @dataProvider provideMock
-     * @param CreatedUpdatedTrait|\PHPUnit\Framework\MockObject\MockObject $mock
      */
     public function testGetSetUpdatedAt(CreatedUpdatedTrait|\PHPUnit\Framework\MockObject\MockObject $mock)
     {

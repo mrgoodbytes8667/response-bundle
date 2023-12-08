@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Tests\Fixtures\Routing;
-
 
 use BadMethodCallException;
 use Bytes\ResponseBundle\Routing\AbstractOAuth;
@@ -34,17 +32,16 @@ abstract class AbstractModel extends AbstractOAuth
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected static function walkHydrateScopes(&$value, $key)
     {
-        $value = (string)$value;
+        $value = (string) $value;
     }
 
     /**
-     * Returns the $prompt argument for getAuthorizationCodeGrantURL() after normalization and validation
-     * @param OAuthPromptInterface|string|bool|null $prompt
-     * @param mixed ...$options
+     * Returns the $prompt argument for getAuthorizationCodeGrantURL() after normalization and validation.
+     *
      * @return string|bool
      *
      * @throws BadMethodCallException

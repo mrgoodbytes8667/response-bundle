@@ -7,14 +7,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
- * Class EventDispatcherTraitTest
- * @package Bytes\ResponseBundle\Tests\Event
+ * Class EventDispatcherTraitTest.
  */
 class EventDispatcherTraitTest extends TestCase
 {
-    /**
-     *
-     */
     public function testSetDispatcher()
     {
         $mock = $this->getMockForTrait(EventDispatcherTrait::class);

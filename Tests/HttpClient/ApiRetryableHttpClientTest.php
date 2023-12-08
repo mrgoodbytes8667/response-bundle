@@ -47,8 +47,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * Class ApiRetryableHttpClientTest
- * Based on RetryableHttpClientTest from https://github.com/symfony/http-client/blob/625caf0b0aa516463f14415e24f12fbe25861dd9/Tests/RetryableHttpClientTest.php
- * @package Bytes\ResponseBundle\Tests\HttpClient
+ * Based on RetryableHttpClientTest from https://github.com/symfony/http-client/blob/625caf0b0aa516463f14415e24f12fbe25861dd9/Tests/RetryableHttpClientTest.php.
  */
 class ApiRetryableHttpClientTest extends TestCase
 {
@@ -194,7 +193,7 @@ class ApiRetryableHttpClientTest extends TestCase
         } catch (TransportExceptionInterface $e) {
             self::assertSame('Could not resolve host "does.not.exists".', $e->getMessage());
         }
-        
+
         self::assertCount(2, $logger->logs);
         self::assertSame('Try #{count} after {delay}ms: Could not resolve host "does.not.exists".', $logger->logs[0]);
     }

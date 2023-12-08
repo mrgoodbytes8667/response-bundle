@@ -9,16 +9,13 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
- * Class PushTest
- * @package Bytes\ResponseBundle\Tests\Objects
+ * Class PushTest.
  */
 class PushTest extends TestCase
 {
-    use TestFakerTrait, ExpectDeprecationTrait;
+    use TestFakerTrait;
+    use ExpectDeprecationTrait;
 
-    /**
-     *
-     */
     public function testCreate()
     {
         $key = $this->faker->unique()->word();
@@ -51,16 +48,12 @@ class PushTest extends TestCase
         self::assertCount(1, $arr->toArray());
 
         foreach (range(2, 10) as $count) {
-
             $arr->push('', key: $this->faker->unique()->word(), empty: false);
             self::assertIsArray($arr->toArray());
             self::assertCount($count, $arr->toArray());
         }
     }
 
-    /**
-     *
-     */
     public function testCreatePush()
     {
         $key = $this->faker->unique()->word();
@@ -76,9 +69,6 @@ class PushTest extends TestCase
         self::assertArrayHasKey($key, $arr->toArray());
     }
 
-    /**
-     *
-     */
     public function testCachedReset()
     {
         $options = Push::createPush(value: $this->faker->word(), key: 'hi there');
@@ -136,9 +126,6 @@ class PushTest extends TestCase
         self::assertCount(3, $snakes);
     }
 
-    /**
-     *
-     */
     public function testGetValueInvalidKey()
     {
         $key = $this->faker->unique()->word();

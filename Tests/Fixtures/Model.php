@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Tests\Fixtures;
-
 
 class Model
 {

@@ -2,7 +2,6 @@
 
 namespace Bytes\ResponseBundle\Tests\Enums;
 
-use BadMethodCallException;
 use Bytes\ResponseBundle\Enums\TokenStatus;
 use Bytes\Tests\Common\TestEnumTrait;
 use Bytes\Tests\Common\TestSerializerTrait;
@@ -13,13 +12,12 @@ use ValueError;
 
 class TokenStatusTest extends TestCase
 {
-    use TestSerializerTrait, TestEnumTrait;
+    use TestSerializerTrait;
+    use TestEnumTrait;
 
     /**
      * @dataProvider provideActiveLabelsValues
      * @dataProvider provideInactiveLabelsValues
-     * @param $label
-     * @param $value
      */
     public function testEnum($label, $value)
     {
@@ -30,8 +28,6 @@ class TokenStatusTest extends TestCase
     /**
      * @dataProvider provideActiveLabelsValues
      * @dataProvider provideInactiveLabelsValues
-     * @param $label
-     * @param $value
      */
     public function testEnumSerialization($label, $value)
     {
@@ -42,7 +38,7 @@ class TokenStatusTest extends TestCase
 
         self::assertEquals(json_encode([
             'label' => $label,
-            'value' => $value
+            'value' => $value,
         ]), $output);
     }
 
@@ -75,8 +71,6 @@ class TokenStatusTest extends TestCase
 
     /**
      * @dataProvider provideActiveLabelsValues
-     * @param $label
-     * @param $value
      */
     public function testIsActive($label, $value)
     {
@@ -88,8 +82,6 @@ class TokenStatusTest extends TestCase
 
     /**
      * @dataProvider provideInactiveLabelsValues
-     * @param $label
-     * @param $value
      */
     public function testIsNotActive($label, $value)
     {
@@ -102,8 +94,6 @@ class TokenStatusTest extends TestCase
     /**
      * @dataProvider provideInactiveLabelsValues
      * @dataProvider provideInvalidLabelsValues
-     * @param $label
-     * @param $value
      */
     public function testIsNotActiveInvalid($label, $value)
     {
@@ -113,8 +103,6 @@ class TokenStatusTest extends TestCase
 
     /**
      * @dataProvider provideInvalidLabelsValues
-     * @param $label
-     * @param $value
      */
     public function testMakeInvalidValue($label, $value)
     {
@@ -122,9 +110,6 @@ class TokenStatusTest extends TestCase
         self::assertFalse(TokenStatus::isActive(TokenStatus::from($value)));
     }
 
-    /**
-     *
-     */
     public function testFormChoices()
     {
         self::assertEquals([

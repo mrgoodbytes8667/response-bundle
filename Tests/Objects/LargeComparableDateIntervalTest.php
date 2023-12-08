@@ -13,26 +13,17 @@ class LargeComparableDateIntervalTest extends ComparableDateIntervalTest
         return LargeComparableDateInterval::class;
     }
 
-    /**
-     *
-     */
     public function testLargeIntervalsYears()
     {
-        self::assertEquals(157680050, LargeComparableDateInterval::getTotalSeconds(new DateInterval("P5YT50S")));
-        self::assertEquals(166665650, LargeComparableDateInterval::getTotalSeconds(new DateInterval("P5Y3M2WT50S")));
+        self::assertEquals(157680050, LargeComparableDateInterval::getTotalSeconds(new DateInterval('P5YT50S')));
+        self::assertEquals(166665650, LargeComparableDateInterval::getTotalSeconds(new DateInterval('P5Y3M2WT50S')));
     }
 
-    /**
-     *
-     */
     public function testLargeIntervalsMonths()
     {
-        self::assertEquals(12960050, LargeComparableDateInterval::getTotalSeconds(new DateInterval("P5MT50S")));
+        self::assertEquals(12960050, LargeComparableDateInterval::getTotalSeconds(new DateInterval('P5MT50S')));
     }
 
-    /**
-     *
-     */
     public function testLargeIntervalsViaDateDiff()
     {
         $start = new DateTimeImmutable('2010-10-24T19:18:17+00:00');
@@ -44,9 +35,6 @@ class LargeComparableDateIntervalTest extends ComparableDateIntervalTest
         self::assertEquals(349729361, LargeComparableDateInterval::getTotalSeconds($interval));
     }
 
-    /**
-     *
-     */
     public function testLargeIntervalHasIntervalSet()
     {
         $this->expectNotToPerformAssertions();

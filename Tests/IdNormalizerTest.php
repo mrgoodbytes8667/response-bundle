@@ -10,8 +10,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class IdNormalizerTest
- * @package Bytes\ResponseBundle\Tests
+ * Class IdNormalizerTest.
  */
 class IdNormalizerTest extends TestCase
 {
@@ -19,8 +18,6 @@ class IdNormalizerTest extends TestCase
 
     /**
      * @dataProvider provideValidIds
-     * @param $object
-     * @param $id
      */
     public function testNormalizeIdArgument($object, $id)
     {
@@ -30,9 +27,6 @@ class IdNormalizerTest extends TestCase
         self::assertEquals($id, $result);
     }
 
-    /**
-     *
-     */
     public function testNormalizeIdInt()
     {
         $message = $this->faker->sentence();
@@ -43,7 +37,6 @@ class IdNormalizerTest extends TestCase
 
     /**
      * @dataProvider provideIdsForDisallowNulls
-     * @param $input
      */
     public function testNormalizeIdArgumentAllowNullWithNull($input)
     {
@@ -71,7 +64,6 @@ class IdNormalizerTest extends TestCase
 
     /**
      * @dataProvider provideIdsForDisallowNulls
-     * @param $input
      */
     public function testNormalizeIdArgumentDisallowNull($input)
     {
@@ -83,9 +75,6 @@ class IdNormalizerTest extends TestCase
         self::assertNull($result);
     }
 
-    /**
-     *
-     */
     public function testNormalizeIdArgumentMissingMessageObject()
     {
         $object = $this
@@ -99,9 +88,6 @@ class IdNormalizerTest extends TestCase
         self::assertNull($result);
     }
 
-    /**
-     *
-     */
     public function testNormalizeIdArgumentMissingMessageString()
     {
         $result = IdNormalizer::normalizeIdArgument('', '', true);
@@ -115,7 +101,7 @@ class IdNormalizerTest extends TestCase
     public function provideValidIds()
     {
         $this->setupFaker();
-        $id = (string)$this->faker->numberBetween(1000, 9999);
+        $id = (string) $this->faker->numberBetween(1000, 9999);
         $object = $this
             ->getMockBuilder(IdInterface::class)
             ->getMock();

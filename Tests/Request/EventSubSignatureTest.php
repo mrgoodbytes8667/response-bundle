@@ -13,27 +13,24 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
- * Class EventSubSignatureTest
- * @package Bytes\TwitchResponseBundle\Tests\Request
+ * Class EventSubSignatureTest.
  */
 class EventSubSignatureTest extends TestCase
 {
-
-    /**
-     *
-     * @var string
-     */
-    const TWITCH_HUB_SECRET = 'abc123';
-
     /**
      * @var string
      */
-    const TWITCH_MESSAGE_ID = '5AL_vgZc1wZ7ZqDcU6SYRJyw7ijry1tMaM6_CEiS1zo=';
+    public const TWITCH_HUB_SECRET = 'abc123';
 
     /**
      * @var string
      */
-    const TWITCH_TIMESTAMP = '2020-11-21T03:33:53Z';
+    public const TWITCH_MESSAGE_ID = '5AL_vgZc1wZ7ZqDcU6SYRJyw7ijry1tMaM6_CEiS1zo=';
+
+    /**
+     * @var string
+     */
+    public const TWITCH_TIMESTAMP = '2020-11-21T03:33:53Z';
 
     /**
      * @throws ClientExceptionInterface
@@ -57,8 +54,6 @@ class EventSubSignatureTest extends TestCase
     }
 
     /**
-     * @param string $content
-     * @return HeaderBag
      * @throws ClientExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
@@ -66,15 +61,16 @@ class EventSubSignatureTest extends TestCase
      */
     protected function buildHeaders(string $content): HeaderBag
     {
-        $hash = hash_hmac('sha256', self::TWITCH_MESSAGE_ID . self::TWITCH_TIMESTAMP . $content, self::TWITCH_HUB_SECRET);
+        $hash = hash_hmac('sha256', self::TWITCH_MESSAGE_ID.self::TWITCH_TIMESTAMP.$content, self::TWITCH_HUB_SECRET);
 
         $response = new MockResponse($content, [
             'response_headers' => [
                 EventSubSignature::TWITCH_EVENTSUB_MESSAGE_ID => self::TWITCH_MESSAGE_ID,
                 EventSubSignature::TWITCH_EVENTSUB_MESSAGE_TIMESTAMP => self::TWITCH_TIMESTAMP,
-                EventSubSignature::SIGNATURE_FIELD => 'sha256=' . $hash
-            ]
+                EventSubSignature::SIGNATURE_FIELD => 'sha256='.$hash,
+            ],
         ]);
+
         return new HeaderBag($response->getHeaders());
     }
 
@@ -103,7 +99,7 @@ class EventSubSignatureTest extends TestCase
      */
     protected function setUp(): void
     {
-        if (!(extension_loaded('hash'))) {
+        if (!extension_loaded('hash')) {
             self::markTestSkipped('The hash extension is not available.');
         }
     }

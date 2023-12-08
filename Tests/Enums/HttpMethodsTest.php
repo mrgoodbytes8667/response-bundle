@@ -11,8 +11,7 @@ class HttpMethodsTest extends TestCase
 {
     /**
      * @dataProvider provideAll
-     * @param HttpMethods $enum
-     * @param string $value
+     *
      * @return void
      */
     public function testAll(HttpMethods $enum, string $value)
@@ -22,9 +21,6 @@ class HttpMethodsTest extends TestCase
         EnumAssertions::assertSameEnumValue($enum, $value);
     }
 
-    /**
-     * @return Generator
-     */
     public function provideAll(): Generator
     {
         foreach (HttpMethods::cases() as $enum) {

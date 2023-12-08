@@ -9,6 +9,7 @@ use Bytes\ResponseBundle\Objects\ComparableDateInterval;
 use Bytes\ResponseBundle\Token\AccessTokenTrait;
 use Bytes\StringMaskBundle\Twig\StringMaskRuntime;
 use DateInterval;
+use DateTimeImmutable;
 use Exception;
 use Generator;
 use PHPUnit\Framework\TestCase;
@@ -16,24 +17,20 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use TypeError;
 
 /**
- * Class AccessTokenTraitTest
- * @package Bytes\ResponseBundle\Tests\Token
+ * Class AccessTokenTraitTest.
  */
 class AccessTokenTraitTest extends TestCase
 {
     use TestFakerTrait;
 
     /**
-     * Ensure the StrinkMaskRuntime class is loaded
+     * Ensure the StrinkMaskRuntime class is loaded.
      */
     protected function setUp(): void
     {
         StringMaskRuntime::getMaskedString('');
     }
 
-    /**
-     *
-     */
     public function testGetSetAccessToken()
     {
         $accessToken = $this->faker->randomAlphanumericString();
@@ -50,9 +47,6 @@ class AccessTokenTraitTest extends TestCase
         self::assertNotEquals($token, $token->getAccessToken(true));
     }
 
-    /**
-     *
-     */
     public function testGetSetId()
     {
         $this->expectException(TypeError::class);
@@ -60,9 +54,6 @@ class AccessTokenTraitTest extends TestCase
         $token->getId();
     }
 
-    /**
-     *
-     */
     public function testGetSetIdentifier()
     {
         $token = $this->getMockForTrait(AccessTokenTrait::class);
@@ -77,9 +68,6 @@ class AccessTokenTraitTest extends TestCase
         self::assertEquals($class, $token->getIdentifier());
     }
 
-    /**
-     *
-     */
     public function testGetSetTokenType()
     {
         $tokenType = $this->faker->word();
@@ -94,9 +82,6 @@ class AccessTokenTraitTest extends TestCase
         self::assertEquals($tokenType, $token->getTokenType());
     }
 
-    /**
-     *
-     */
     public function testGetSetTokenSource()
     {
         $this->faker->addProvider(new FakerEnumProvider($this->faker));
@@ -112,9 +97,6 @@ class AccessTokenTraitTest extends TestCase
         self::assertEquals($tokenSource, $token->getTokenSource());
     }
 
-    /**
-     *
-     */
     public function testGetSetRefreshToken()
     {
         $refreshToken = $this->faker->randomAlphanumericString();
@@ -133,8 +115,6 @@ class AccessTokenTraitTest extends TestCase
 
     /**
      * @dataProvider provideScopes
-     * @param $scope
-     * @param $expected
      */
     public function testGetSetScope($scope, $expected)
     {
@@ -156,13 +136,10 @@ class AccessTokenTraitTest extends TestCase
      */
     public function provideScopes()
     {
-        yield ['scopes' => ["channel:read:hype_train", "user:read:email"], 'expected' => "channel:read:hype_train user:read:email"];
-        yield ['scopes' => "channel:read:hype_train user:read:email", 'expected' => "channel:read:hype_train user:read:email"];
+        yield ['scopes' => ['channel:read:hype_train', 'user:read:email'], 'expected' => 'channel:read:hype_train user:read:email'];
+        yield ['scopes' => 'channel:read:hype_train user:read:email', 'expected' => 'channel:read:hype_train user:read:email'];
     }
 
-    /**
-     *
-     */
     public function testGetSetUser()
     {
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
@@ -179,8 +156,10 @@ class AccessTokenTraitTest extends TestCase
 
     /**
      * @dataProvider provideExpiresIn
+     *
      * @param DateInterval $interval
-     * @param int $seconds
+     * @param int          $seconds
+     *
      * @throws Exception
      */
     public function testGetSetExpiresInInterval($interval, $seconds)
@@ -199,13 +178,14 @@ class AccessTokenTraitTest extends TestCase
 
     /**
      * @dataProvider provideExpiresIn
+     *
      * @param DateInterval $interval
-     * @param int $seconds
+     * @param int          $seconds
+     *
      * @throws Exception
      */
     public function testGetSetExpiresInSeconds($interval, $seconds)
     {
-
         $token = $this->getMockForTrait(AccessTokenTrait::class);
         self::assertNull($token->getExpiresIn());
 
@@ -229,7 +209,6 @@ class AccessTokenTraitTest extends TestCase
 
     /**
      * @dataProvider provideExpiresAt
-     * @param $expiresAt
      */
     public function testGetSetExpiresAt($expiresAt)
     {
@@ -247,6 +226,6 @@ class AccessTokenTraitTest extends TestCase
     {
         $this->setupFaker();
         yield [$this->faker->dateTimeThisMonth()];
-        yield [\DateTimeImmutable::createFromInterface($this->faker->dateTimeThisMonth())];
+        yield [DateTimeImmutable::createFromInterface($this->faker->dateTimeThisMonth())];
     }
 }
