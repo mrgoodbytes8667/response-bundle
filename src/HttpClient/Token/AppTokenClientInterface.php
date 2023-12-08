@@ -1,22 +1,18 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\HttpClient\Token;
-
 
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 
 /**
- * Interface AppTokenClientInterface
- * @package Bytes\ResponseBundle\HttpClient\Token
+ * Interface AppTokenClientInterface.
  *
  * @experimental
  */
 interface AppTokenClientInterface extends TokenClientInterface
 {
     /**
-     * Returns an access token
-     * @return AccessTokenInterface|null
+     * Returns an access token.
      */
     public function getToken(): ?AccessTokenInterface;
 }

@@ -5,6 +5,9 @@ namespace Bytes\ResponseBundle\HttpClient;
 use Bytes\ResponseBundle\Annotations\AnnotationReaderTrait;
 use Bytes\ResponseBundle\Annotations\Client;
 use Bytes\ResponseBundle\Enums\TokenSource;
+use LogicException;
+use ReflectionAttribute;
+use ReflectionClass;
 
 trait ClientTrait
 {
@@ -22,8 +25,8 @@ trait ClientTrait
 
     protected function setClientAnnotations()
     {
-        $reflectionClass = new \ReflectionClass(static::class);
-        $classAttributes = $reflectionClass->getAttributes(Client::class, \ReflectionAttribute::IS_INSTANCEOF);
+        $reflectionClass = new ReflectionClass(static::class);
+        $classAttributes = $reflectionClass->getAttributes(Client::class, ReflectionAttribute::IS_INSTANCEOF);
         /** @var Client|null $annotations */
         $annotations = null;
         if (!empty($classAttributes)) {
@@ -31,7 +34,7 @@ trait ClientTrait
         }
         if (!($annotations instanceof Client)) {
             if (is_null($this->reader)) {
-                throw new \LogicException('"setReader()" must be called before attempting to load client annotations.');
+                throw new LogicException('"setReader()" must be called before attempting to load client annotations.');
             }
             $annotations = $this->reader->getClassAnnotation($reflectionClass, Client::class);
             if (!empty($annotations)) {

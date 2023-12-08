@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Enums;
-
 
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
@@ -12,6 +10,7 @@ use ValueError;
 
 /**
  * @since 1.1.0
+ *
  * @version 5.0.0
  */
 enum ContentType: string implements StringBackedEnumInterface
@@ -25,10 +24,6 @@ enum ContentType: string implements StringBackedEnumInterface
     case imageWebP = 'image/webp';
     case json = 'application/json';
 
-    /**
-     * @param $extension
-     * @return ContentType
-     */
     public static function fromExtension($extension): ContentType
     {
         return match (Ext::tryFrom(strtolower($extension))) {
@@ -79,7 +74,6 @@ enum ContentType: string implements StringBackedEnumInterface
     }
 
     /**
-     * @return string
      * @throws ValueError
      */
     public function getExtension(): string

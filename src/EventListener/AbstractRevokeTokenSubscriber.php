@@ -1,16 +1,13 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\EventListener;
-
 
 use Bytes\ResponseBundle\Event\RevokeTokenEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
- * Class AbstractRevokeTokenSubscriber
- * @package Bytes\ResponseBundle\EventListener
+ * Class AbstractRevokeTokenSubscriber.
  */
 abstract class AbstractRevokeTokenSubscriber implements EventSubscriberInterface
 {
@@ -43,8 +40,6 @@ abstract class AbstractRevokeTokenSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param RevokeTokenEvent $event
-     * @return RevokeTokenEvent
      * @throws TransportExceptionInterface
      */
     abstract public function onRevokeToken(RevokeTokenEvent $event): RevokeTokenEvent;

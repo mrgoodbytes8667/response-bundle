@@ -11,9 +11,6 @@ class DayOfWeekTest extends TestCase
 {
     /**
      * @dataProvider provideAll
-     * @param DayOfWeek $enum
-     * @param int $value
-     * @return void
      */
     public function testAll(DayOfWeek $enum, int $value): void
     {
@@ -22,9 +19,6 @@ class DayOfWeekTest extends TestCase
         EnumAssertions::assertSameEnumValue($enum, $value);
     }
 
-    /**
-     * @return void
-     */
     public function testAbbreviations(): void
     {
         $all = DayOfWeek::provideAbbreviatedFormChoices();
@@ -33,9 +27,6 @@ class DayOfWeekTest extends TestCase
         self::assertEquals(0, $sunday);
     }
 
-    /**
-     * @return Generator
-     */
     public function provideAll(): Generator
     {
         foreach (DayOfWeek::cases() as $enum) {
@@ -45,18 +36,12 @@ class DayOfWeekTest extends TestCase
 
     /**
      * @dataProvider provideAll
-     * @param DayOfWeek $enum
-     * @param int $value
-     * @return void
      */
     public function testTryFromSuccessful(DayOfWeek $enum, int $value): void
     {
         EnumAssertions::assertSameEnum($enum, DayOfWeek::tryFrom($value));
     }
 
-    /**
-     * @return void
-     */
     public function testTryFromUnsuccessful(): void
     {
         self::assertNull(DayOfWeek::tryFrom(-1));

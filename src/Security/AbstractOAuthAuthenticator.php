@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Security;
-
 
 use Bytes\ResponseBundle\Handler\Locator;
 use Bytes\ResponseBundle\HttpClient\Token\TokenClientInterface;
@@ -32,55 +30,46 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+
+use function Symfony\Component\String\u;
+
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use function Symfony\Component\String\u;
 
 /**
- * Class AbstractOAuthAuthenticator
- * @package Bytes\ResponseBundle\Security
+ * Class AbstractOAuthAuthenticator.
  */
 abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implements AuthenticatorInterface
 {
-    use TargetPathTrait, AuthenticationSuccessTrait, CreateAuthenticatedTokenTrait;
+    use TargetPathTrait;
+    use AuthenticationSuccessTrait;
+    use CreateAuthenticatedTokenTrait;
 
     /**
-     * Error message for a invalid user at login
+     * Error message for a invalid user at login.
+     *
      * @var string
      */
-    const REDIRECT_TO_REGISTRATION = 'redirect_to_registration';
+    public const REDIRECT_TO_REGISTRATION = 'redirect_to_registration';
 
     /**
-     * Error message for a duplicate user
+     * Error message for a duplicate user.
+     *
      * @var string
      */
-    const REDIRECT_TO_LOGOUT = 'You are already registered. Please login.';
+    public const REDIRECT_TO_LOGOUT = 'You are already registered. Please login.';
 
     /**
      * AbstractOAuthAuthenticator constructor.
-     * @param EntityManagerInterface $em
-     * @param ServiceEntityRepository $userRepository
-     * @param Security $security
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param Locator $httpClientOAuthLocator
-     * @param TokenClientInterface $client
-     * @param CsrfTokenManagerInterface $csrfTokenManager
-     * @param TokenStorageInterface $tokenStorage
-     * @param string $userIdField
-     * @param string $loginRoute
-     * @param string $loginSuccessRoute
-     * @param string $loginFailureRoute
-     * @param string $registrationRoute
-     * @param string $redirectToRegistrationRoute
      */
     public function __construct(
         protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security,
-        protected UrlGeneratorInterface  $urlGenerator, protected Locator $httpClientOAuthLocator,
-        protected TokenClientInterface   $client, protected CsrfTokenManagerInterface $csrfTokenManager, protected TokenStorageInterface $tokenStorage,
-        protected string                 $userIdField, protected string $loginRoute, protected string $loginSuccessRoute,
-        protected string                 $loginFailureRoute, protected string $registrationRoute, protected string $redirectToRegistrationRoute)
+        protected UrlGeneratorInterface $urlGenerator, protected Locator $httpClientOAuthLocator,
+        protected TokenClientInterface $client, protected CsrfTokenManagerInterface $csrfTokenManager, protected TokenStorageInterface $tokenStorage,
+        protected string $userIdField, protected string $loginRoute, protected string $loginSuccessRoute,
+        protected string $loginFailureRoute, protected string $registrationRoute, protected string $redirectToRegistrationRoute)
     {
     }
 
@@ -88,9 +77,6 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
      * Called on every request to decide if this authenticator should be
      * used for the request. Returning `false` will cause this authenticator
      * to be skipped.
-     *
-     * @param Request $request
-     * @return bool|null
      */
     public function supports(Request $request): ?bool
     {
@@ -118,11 +104,6 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
      * Your job is to return an object that implements UserInterface. If you
      * do, then checkCredentials() will be called. If you return null (or
      * throw an AuthenticationException) authentication will fail.
-     *
-     * @param AccessTokenInterface $tokenResponse
-     * @param TokenValidationResponseInterface $validationResponse
-     *
-     * @return UserInterface|null
      *
      * @throws AuthenticationException
      * @throws RedirectionExceptionInterface
@@ -153,8 +134,6 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
      * You may throw any AuthenticationException in this method in case of error (e.g.
      * a UserNotFoundException when the user cannot be found).
      *
-     * @param Request $request
-     * @return Passport
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      * @throws ClientExceptionInterface
@@ -208,29 +187,20 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
         $passport = new SelfValidatingPassport(new UserBadge($user->getUserIdentifier()));
         $passport->setAttribute('accessToken', $tokenResponse);
         $passport->setAttribute('tokenIdentifier', $tokenResponse->getIdentifier());
+
         return $passport;
     }
 
-    /**
-     * @return string
-     */
     protected function getOAuthTag(): string
     {
         return static::$tag;
     }
 
     /**
-     * For user registrations, validate the state against the passed user
-     * @param string $requestState
-     * @param UserInterface $user
-     * @return bool
+     * For user registrations, validate the state against the passed user.
      */
     abstract protected function validateRegistrationState(string $requestState, UserInterface $user): bool;
 
-    /**
-     * @param AccessTokenInterface $tokenResponse
-     * @return TokenValidationResponseInterface
-     */
     protected function validateToken(AccessTokenInterface $tokenResponse): TokenValidationResponseInterface
     {
         $validate = $this->client->validateToken($tokenResponse);
@@ -244,9 +214,6 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
 
     /**
      * Is this account already tied to another user?
-     * @param UserInterface $user
-     * @param TokenValidationResponseInterface $validationResponse
-     * @return UserInterface
      *
      * @throws DuplicateAccountException
      */
@@ -265,18 +232,10 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
         }
     }
 
-    /**
-     * @param UserInterface $user
-     * @return UserInterface
-     */
     abstract protected function setDuplicateDetails(UserInterface $user): UserInterface;
 
     /**
-     * Set any details on the user entity that are needed to tie the user to this authentication mechanism
-     * @param UserInterface $user
-     * @param AccessTokenInterface $tokenResponse
-     * @param TokenValidationResponseInterface $validationResponse
-     * @return UserInterface
+     * Set any details on the user entity that are needed to tie the user to this authentication mechanism.
      */
     abstract protected function setUserDetails(UserInterface $user, AccessTokenInterface $tokenResponse, TokenValidationResponseInterface $validationResponse): UserInterface;
 
@@ -288,10 +247,6 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
      *
      * If you return null, the request will continue, but the user will
      * not be authenticated. This is probably not what you want to do.
-     *
-     * @param Request $request
-     * @param AuthenticationException $exception
-     * @return Response|null
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
@@ -300,9 +255,9 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
             $request->getSession()->getFlashBag()->add('error', $exception->getMessage());
         }
 
-        if ($exception::class === AuthenticationException::class && $exception->getMessage() === self::REDIRECT_TO_REGISTRATION) {
+        if (AuthenticationException::class === $exception::class && self::REDIRECT_TO_REGISTRATION === $exception->getMessage()) {
             $url = $this->redirectToRegistrationRoute;
-        } elseif ($exception::class === DuplicateAccountException::class || ($exception::class === AuthenticationException::class && $exception->getMessage() === self::REDIRECT_TO_LOGOUT)) {
+        } elseif (DuplicateAccountException::class === $exception::class || (AuthenticationException::class === $exception::class && self::REDIRECT_TO_LOGOUT === $exception->getMessage())) {
             $this->tokenStorage->setToken(null);
             $url = $this->loginFailureRoute;
         } else {

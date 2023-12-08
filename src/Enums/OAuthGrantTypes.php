@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Enums;
-
 
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;

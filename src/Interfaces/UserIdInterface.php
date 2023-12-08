@@ -1,18 +1,14 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Interfaces;
 
-
 /**
- * Interface UserIdInterface
- * @package Bytes\ResponseBundle\Interfaces
+ * Interface UserIdInterface.
  */
 interface UserIdInterface
 {
     /**
-     * id of the user
-     * @return string|null
+     * id of the user.
      */
     public function getUserId(): ?string;
 }

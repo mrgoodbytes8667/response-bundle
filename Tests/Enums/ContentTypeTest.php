@@ -10,12 +10,11 @@ use PHPUnit\Framework\TestCase;
 
 class ContentTypeTest extends TestCase
 {
-    use TestSerializerTrait, TestEnumTrait;
+    use TestSerializerTrait;
+    use TestEnumTrait;
 
     /**
      * @dataProvider provideLabelsValuesExtensions
-     * @param $label
-     * @param $value
      */
     public function testEnum($label, $value, $extension)
     {
@@ -27,8 +26,6 @@ class ContentTypeTest extends TestCase
     /**
      * @dataProvider provideLabelsValuesExtensions
      * @dataProvider provideLabelsValuesAlternateExtensions
-     * @param $label
-     * @param $value
      */
     public function testEnumFromExtension($label, $value, $extension)
     {
@@ -38,8 +35,6 @@ class ContentTypeTest extends TestCase
 
     /**
      * @dataProvider provideLabelsValuesExtensions
-     * @param $label
-     * @param $value
      */
     public function testEnumSerialization($label, $value, $extension)
     {
@@ -50,7 +45,7 @@ class ContentTypeTest extends TestCase
 
         self::assertEquals(json_encode([
             'label' => $label,
-            'value' => $value
+            'value' => $value,
         ]), $output);
     }
 

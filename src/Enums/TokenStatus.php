@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Enums;
-
 
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
@@ -11,6 +9,7 @@ use ValueError;
 
 /**
  * @since 2.0.0
+ *
  * @version 5.0.0
  */
 enum TokenStatus: string implements StringBackedEnumInterface
@@ -46,10 +45,6 @@ enum TokenStatus: string implements StringBackedEnumInterface
         return static::revoked;
     }
 
-    /**
-     * @param TokenStatus|string $status
-     * @return bool
-     */
     public static function isActive(TokenStatus|string $status): bool
     {
         /** @var TokenStatus $enum */
@@ -64,7 +59,7 @@ enum TokenStatus: string implements StringBackedEnumInterface
                 return false;
             }
         }
-        
+
         return $enum->equals(TokenStatus::granted, TokenStatus::refreshed);
     }
 }

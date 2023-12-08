@@ -1,23 +1,18 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Token;
-
 
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Exception;
 
 /**
- * Trait AccessTokenCreateUpdateFromTrait
- * @package Bytes\ResponseBundle\Token
+ * Trait AccessTokenCreateUpdateFromTrait.
  */
 trait AccessTokenCreateUpdateFromTrait
 {
     use AccessTokenTrait;
 
     /**
-     * @param AccessTokenInterface|string $token
-     * @return static
      * @throws Exception
      */
     public static function createFromAccessToken(AccessTokenInterface|string $token): static
@@ -28,14 +23,15 @@ trait AccessTokenCreateUpdateFromTrait
         } else {
             $static->setAccessToken($token);
         }
-        
+
         return $static;
     }
 
     /**
-     * Update the current access token with details from another access token (ie: a refresh token)
-     * @param AccessTokenInterface $token
+     * Update the current access token with details from another access token (ie: a refresh token).
+     *
      * @return $this
+     *
      * @throws Exception
      */
     abstract public function updateFromAccessToken(AccessTokenInterface $token);

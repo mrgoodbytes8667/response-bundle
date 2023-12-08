@@ -2,15 +2,15 @@
 
 namespace Bytes\ResponseBundle\Enums;
 
-
 use Bytes\EnumSerializerBundle\Enums\BackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Enum implementation of the Response class response code constants
- * As of 2022-05-20
- * @link https://github.com/symfony/http-foundation/blob/6.1/Response.php
+ * As of 2022-05-20.
+ *
+ * @see https://github.com/symfony/http-foundation/blob/6.1/Response.php
  * @see Response
  */
 enum ResponseCodes: int implements BackedEnumInterface

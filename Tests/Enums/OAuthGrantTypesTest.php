@@ -11,8 +11,7 @@ class OAuthGrantTypesTest extends TestCase
 {
     /**
      * @dataProvider provideAll
-     * @param OAuthGrantTypes $enum
-     * @param string $value
+     *
      * @return void
      */
     public function testAll(OAuthGrantTypes $enum, string $value)
@@ -22,9 +21,6 @@ class OAuthGrantTypesTest extends TestCase
         EnumAssertions::assertSameEnumValue($enum, $value);
     }
 
-    /**
-     * @return Generator
-     */
     public function provideAll(): Generator
     {
         foreach (OAuthGrantTypes::cases() as $enum) {

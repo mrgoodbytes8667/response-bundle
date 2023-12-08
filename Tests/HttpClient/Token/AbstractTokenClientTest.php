@@ -21,16 +21,14 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
- * Class AbstractTokenClientTest
- * @package Bytes\ResponseBundle\Tests\HttpClient\Api
+ * Class AbstractTokenClientTest.
  */
 class AbstractTokenClientTest extends TestCase
 {
-    use AssertClientResponseTrait, TestFullSerializerTrait, TestFakerTrait;
+    use AssertClientResponseTrait;
+    use TestFullSerializerTrait;
+    use TestFakerTrait;
 
-    /**
-     *
-     */
     public function testClient()
     {
         $client = $this->getMockForAbstractClass(AbstractTokenClient::class, [HttpClient::create(), new EventDispatcher(), '', true, false]);
@@ -39,8 +37,6 @@ class AbstractTokenClientTest extends TestCase
 
     /**
      * @dataProvider provideOAuthString
-     * @param $scopes
-     * @param $expected
      */
     public function testBuildOAuthString($scopes, $expected)
     {
@@ -56,9 +52,6 @@ class AbstractTokenClientTest extends TestCase
         yield ['scopes' => ['a', ['b'], ['c']], 'expected' => 'a b c'];
     }
 
-    /**
-     *
-     */
     public function testGetSetOAuth()
     {
         $client = $this->getMockForAbstractClass(AbstractTokenClient::class, [HttpClient::create(), new EventDispatcher(), '', true, false]);
@@ -80,7 +73,7 @@ class AbstractTokenClientTest extends TestCase
     {
         $client = $this->getMockForAbstractClass(AbstractTokenClient::class, [MockClient::empty(), new EventDispatcher(), '', true, false]);
         $client->setResponse(Response::make($this->serializer, new EventDispatcher()));
-        
+
         $response = $client->request($this->faker->url(), caller: __METHOD__);
         self::assertResponseIsSuccessful($response);
         self::assertResponseStatusCodeSame($response, Http::HTTP_NO_CONTENT);
@@ -89,6 +82,7 @@ class AbstractTokenClientTest extends TestCase
 
     /**
      * @dataProvider provideMethods
+     *
      * @throws ClientExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
@@ -98,22 +92,20 @@ class AbstractTokenClientTest extends TestCase
     {
         $client = $this->getMockForAbstractClass(AbstractTokenClient::class, [MockClient::empty(), new EventDispatcher(), '', true, false]);
         $client->setResponse(Response::make($this->serializer, new EventDispatcher()));
-        
+
         $response = $client->request($this->faker->url(), caller: __METHOD__, method: $method);
         self::assertResponseIsSuccessful($response);
         self::assertResponseStatusCodeSame($response, Http::HTTP_NO_CONTENT);
         self::assertResponseHasNoContent($response);
     }
 
-    public function provideMethods() {
+    public function provideMethods()
+    {
         yield ['method' => 'GET'];
         yield ['method' => HttpMethods::get];
         yield ['method' => HttpMethods::get->value];
     }
 
-    /**
-     *
-     */
     public function testFinalMethods()
     {
         $client = $this->getMockForAbstractClass(AbstractTokenClient::class, [HttpClient::create(), new EventDispatcher(), '', true, false]);

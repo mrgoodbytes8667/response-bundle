@@ -1,18 +1,14 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Routing;
 
-
 /**
- * Interface OAuthPromptInterface
- * @package Bytes\ResponseBundle\Routing
+ * Interface OAuthPromptInterface.
  */
 interface OAuthPromptInterface
 {
     /**
-     * Returns the prompt value
-     * @return mixed
+     * Returns the prompt value.
      */
     public function prompt();
 }

@@ -1,14 +1,12 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Class Configuration
- * @package Bytes\ResponseBundle\DependencyInjection
+ * Class Configuration.
  */
 class Configuration implements ConfigurationInterface
 {
@@ -95,8 +93,8 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end() // end eventsub
                             ->arrayNode('endpoints')
-                                //->addDefaultsIfNotSet()
-                                //->children()
+                                // ->addDefaultsIfNotSet()
+                                // ->children()
                                     ->useAttributeAsKey('name')
                                     ->arrayPrototype()
                                         ->addDefaultsIfNotSet()
@@ -118,18 +116,18 @@ class Configuration implements ConfigurationInterface
                                                 ->children()
                                                     ->arrayNode('add')
                                                         ->scalarPrototype()
-                                                            //->beforeNormalization()
+                                                            // ->beforeNormalization()
                                                             //    ->always()
                                                             //    ->then(function ($v) { return (new Permissions($v))->value; })
-                                                            //->end()
+                                                            // ->end()
                                                         ->end()
                                                     ->end()
                                                     ->arrayNode('remove')
                                                         ->scalarPrototype()
-                                                            //->beforeNormalization()
+                                                            // ->beforeNormalization()
                                                             //    ->always()
                                                             //    ->then(function ($v) { return (new Permissions($v))->value; })
-                                                            //->end()
+                                                            // ->end()
                                                         ->end()
                                                     ->end()
                                                 ->end()
@@ -140,18 +138,18 @@ class Configuration implements ConfigurationInterface
                                                 ->children()
                                                     ->arrayNode('add')
                                                         ->scalarPrototype()
-                                                            //->beforeNormalization()
+                                                            // ->beforeNormalization()
                                                             //    ->always()
                                                             //    ->then(function ($v) { return (new OAuthScopes($v))->value; })
-                                                            //->end()
+                                                            // ->end()
                                                         ->end()
                                                     ->end()
                                                     ->arrayNode('remove')
                                                         ->scalarPrototype()
-                                                            //->beforeNormalization()
+                                                            // ->beforeNormalization()
                                                             //    ->always()
                                                             //    ->then(function ($v) { return (new OAuthScopes($v))->value; })
-                                                            //->end()
+                                                            // ->end()
                                                         ->end()
                                                     ->end()
                                                 ->end()
@@ -166,7 +164,7 @@ class Configuration implements ConfigurationInterface
                                             ->end() // end fireRevokeOnRefresh
                                         ->end()
                                     ->end()
-                                //->end()
+                                // ->end()
                             ->end()
                         ->end()
                     ->end()

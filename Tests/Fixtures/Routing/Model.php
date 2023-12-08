@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Tests\Fixtures\Routing;
-
 
 use BadMethodCallException;
 use Bytes\Common\Faker\Providers\MiscProvider;
@@ -27,7 +25,6 @@ use Faker\Provider\PhoneNumber;
 use Faker\Provider\Text;
 use Faker\Provider\UserAgent;
 use Faker\Provider\Uuid;
-use Illuminate\Support\Arr;
 
 class Model extends \Bytes\ResponseBundle\Routing\AbstractOAuth
 {
@@ -52,27 +49,23 @@ class Model extends \Bytes\ResponseBundle\Routing\AbstractOAuth
     private $faker;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected static function walkHydrateScopes(&$value, $key)
     {
-        $value = (string)$value;
+        $value = (string) $value;
     }
 
     private array $localDefaultScopes = [];
 
-    /**
-     * @return array
-     */
     protected function getDefaultScopes(): array
     {
         return $this->localDefaultScopes;
     }
 
     /**
-     * Returns the $prompt argument for getAuthorizationCodeGrantURL() after normalization and validation
-     * @param OAuthPromptInterface|string|bool|null $prompt
-     * @param mixed ...$options
+     * Returns the $prompt argument for getAuthorizationCodeGrantURL() after normalization and validation.
+     *
      * @return string|bool
      *
      * @throws BadMethodCallException
@@ -82,13 +75,6 @@ class Model extends \Bytes\ResponseBundle\Routing\AbstractOAuth
         return 'normalizedPrompt';
     }
 
-    /**
-     * @param $faker
-     * @param array $defaultScopes
-     * @param string|null $clientId
-     * @param array $config
-     * @param array $options
-     */
     public function __construct($faker, array $defaultScopes, ?string $clientId, array $config, array $options = [])
     {
         $this->faker = $faker;
@@ -98,8 +84,7 @@ class Model extends \Bytes\ResponseBundle\Routing\AbstractOAuth
     }
 
     /**
-     * Return the OAuth name
-     * @return string
+     * Return the OAuth name.
      */
     public static function getDefaultIndexName(): string
     {

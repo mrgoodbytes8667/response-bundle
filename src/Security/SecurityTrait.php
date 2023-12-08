@@ -1,16 +1,13 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Security;
-
 
 use LogicException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Trait SecurityTrait
- * @package Bytes\ResponseBundle\Security
+ * Trait SecurityTrait.
  */
 trait SecurityTrait
 {
@@ -25,19 +22,17 @@ trait SecurityTrait
     protected $tokenUser;
 
     /**
-     * @param Security|null $security
      * @return $this
      */
     public function setSecurity(?Security $security): self
     {
         $this->security = $security;
+
         return $this;
     }
 
     /**
      * Get a user from the Security Token Storage.
-     *
-     * @return UserInterface|null
      *
      * @throws LogicException If SecurityBundle is not available
      *
@@ -66,12 +61,12 @@ trait SecurityTrait
     }
 
     /**
-     * @param UserInterface|null $tokenUser
      * @return $this
      */
     public function setTokenUser(?UserInterface $tokenUser): self
     {
         $this->tokenUser = $tokenUser;
+
         return $this;
     }
 }

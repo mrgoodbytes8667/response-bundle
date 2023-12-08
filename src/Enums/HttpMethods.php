@@ -1,15 +1,13 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\Enums;
-
 
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\StringBackedEnumTrait;
 use JetBrains\PhpStorm\Deprecated;
 
 /**
- * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods As of 2020-10-29
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods As of 2020-10-29
  */
 enum HttpMethods: string implements StringBackedEnumInterface
 {
@@ -26,47 +24,56 @@ enum HttpMethods: string implements StringBackedEnumInterface
     case patch = 'PATCH';   // The PATCH method is used to apply partial modifications to a resource.
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::get')]
-    public static function get() {
+    public static function get()
+    {
         return static::get;
     }
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::head')]
-    public static function head() {
+    public static function head()
+    {
         return static::head;
     }
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::post')]
-    public static function post() {
+    public static function post()
+    {
         return static::post;
     }
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::put')]
-    public static function put() {
+    public static function put()
+    {
         return static::put;
     }
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::delete')]
-    public static function delete() {
+    public static function delete()
+    {
         return static::delete;
     }
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::connect')]
-    public static function connect() {
+    public static function connect()
+    {
         return static::connect;
     }
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::options')]
-    public static function options() {
+    public static function options()
+    {
         return static::options;
     }
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::trace')]
-    public static function trace() {
+    public static function trace()
+    {
         return static::trace;
     }
 
     #[Deprecated(reason: 'since 5.0.0, use the enumeration constant instead.', replacement: '%class%::patch')]
-    public static function patch() {
+    public static function patch()
+    {
         return static::patch;
     }
 }

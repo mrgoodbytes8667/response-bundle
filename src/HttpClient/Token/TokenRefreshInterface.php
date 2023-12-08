@@ -1,21 +1,16 @@
 <?php
 
-
 namespace Bytes\ResponseBundle\HttpClient\Token;
-
 
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 
 /**
- * Interface TokenRefreshInterface
- * @package Bytes\ResponseBundle\HttpClient\Token
+ * Interface TokenRefreshInterface.
  */
 interface TokenRefreshInterface
 {
     /**
-     * Refreshes the provided access token
-     * @param AccessTokenInterface|null $token
-     * @return AccessTokenInterface|null
+     * Refreshes the provided access token.
      */
     public function refreshToken(AccessTokenInterface $token = null): ?AccessTokenInterface;
 }

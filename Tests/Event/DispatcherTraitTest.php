@@ -11,16 +11,12 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class DispatcherTraitTest
- * @package Bytes\ResponseBundle\Tests\Event
+ * Class DispatcherTraitTest.
  */
 class DispatcherTraitTest extends TestCase
 {
     use TestFakerTrait;
 
-    /**
-     *
-     */
     public function testDispatcher()
     {
         $mock = new Dispatcher();
@@ -38,13 +34,11 @@ class DispatcherTraitTest extends TestCase
         $token->method('getAccessToken')
             ->willReturn($this->faker->randomAlphanumericString());
 
-
         $mock = new Dispatcher();
 
         $results = $mock->dispatchTokenEvents($token);
         self::assertCount(6, $results);
-        foreach($results as $i)
-        {
+        foreach ($results as $i) {
             self::assertInstanceOf(Event::class, $i);
         }
 
