@@ -3,7 +3,6 @@
 namespace Bytes\ResponseBundle\Interfaces;
 
 use Bytes\ResponseBundle\HttpClient\Api\AbstractApiClient;
-use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -15,6 +14,4 @@ interface HttpClientTagInterface
     public function setSerializer(SerializerInterface $serializer);
 
     public function setValidator(ValidatorInterface $validator);
-
-    public function setReader(Reader $reader);
 }
