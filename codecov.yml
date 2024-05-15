@@ -1,0 +1,3 @@
+ignore:
+  - ".php-cs-fixer.dist.php"
+  - "rector.php"
