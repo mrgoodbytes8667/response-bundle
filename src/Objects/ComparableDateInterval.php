@@ -9,6 +9,8 @@ use DateTime;
 use Exception;
 use InvalidArgumentException;
 
+trigger_deprecation('mrgoodbytes8667/response-bundle', '6.0.0', 'This class is moving to mrgoodbytes8667/date-bundle.');
+
 /**
  * Class ComparableDateInterval
  * Compares date intervals for days, hours, minutes, seconds, and microseconds. If interval is created via diff(), it can

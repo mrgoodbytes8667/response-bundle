@@ -5,6 +5,8 @@ namespace Bytes\ResponseBundle\Enums;
 use Bytes\EnumSerializerBundle\Enums\BackedEnumInterface;
 use Bytes\EnumSerializerBundle\Enums\BackedEnumTrait;
 
+trigger_deprecation('mrgoodbytes8667/response-bundle', '6.0.0', 'This class is moving to mrgoodbytes8667/date-bundle.');
+
 enum DayOfWeek: int implements BackedEnumInterface
 {
     use BackedEnumTrait;
