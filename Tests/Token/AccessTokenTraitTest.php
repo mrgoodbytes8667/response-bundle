@@ -3,9 +3,9 @@
 namespace Bytes\ResponseBundle\Tests\Token;
 
 use Bytes\Common\Faker\TestFakerTrait;
+use Bytes\DateBundle\Objects\ComparableDateInterval;
 use Bytes\EnumSerializerBundle\Faker\FakerEnumProvider;
 use Bytes\ResponseBundle\Enums\TokenSource;
-use Bytes\ResponseBundle\Objects\ComparableDateInterval;
 use Bytes\ResponseBundle\Token\AccessTokenTrait;
 use Bytes\StringMaskBundle\Twig\StringMaskRuntime;
 use DateInterval;

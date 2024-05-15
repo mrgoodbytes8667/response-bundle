@@ -2,9 +2,9 @@
 
 namespace Bytes\ResponseBundle\Token;
 
+use Bytes\DateBundle\Objects\ComparableDateInterval;
 use Bytes\ResponseBundle\Entity\CreatedUpdatedTrait;
 use Bytes\ResponseBundle\Enums\TokenSource;
-use Bytes\ResponseBundle\Objects\ComparableDateInterval;
 use Bytes\StringMaskBundle\Twig\StringMaskRuntime;
 use DateInterval;
 use DateTimeImmutable;
