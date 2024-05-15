@@ -9,6 +9,8 @@ trigger_deprecation('mrgoodbytes8667/response-bundle', '6.0.0', 'This class is m
 /**
  * Unlike \Bytes\ResponseBundle\Objects\ComparableDateInterval this method assumes a 30 day month and a 365 day year
  * unless the days variable is set [the DateInterval object was created by DateTimeImmutable::diff() or DateTime::diff()].
+ *
+ * @deprecated Since 6.0.0, this class is moving to mrgoodbytes8667/date-bundle
  */
 class LargeComparableDateInterval extends ComparableDateInterval
 {

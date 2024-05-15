@@ -21,6 +21,8 @@ trigger_deprecation('mrgoodbytes8667/response-bundle', '6.0.0', 'This class is m
  * @method static DateInterval|int getTotalDays(DateInterval|int $interval, string $manipulator)    Manipulator is a one argument function including round, ceiling, or floor.
  *
  * @see LargeComparableDateInterval For longer intervals (not created via diff()) that assumes a 30-day month and 365-day year
+ *
+ * @deprecated Since 6.0.0, this class is moving to mrgoodbytes8667/date-bundle
  */
 class ComparableDateInterval extends DateInterval
 {
