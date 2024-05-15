@@ -2,8 +2,8 @@
 
 namespace Bytes\ResponseBundle\Test\Constraint;
 
+use Bytes\DateBundle\Objects\ComparableDateInterval;
 use Bytes\ResponseBundle\Enums\TokenSource;
-use Bytes\ResponseBundle\Objects\ComparableDateInterval;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use DateInterval;
 use Exception;
