@@ -11,7 +11,7 @@
 ![GitHub Tests Workflow Status](https://img.shields.io/github/actions/workflow/status/mrgoodbytes8667/response-bundle/run-tests.yml?logo=github&logoColor=FFF&style=flat)
 ![GitHub By Version Workflow Status](https://img.shields.io/github/actions/workflow/status/mrgoodbytes8667/response-bundle/run-tests-by-version.yml?label=by-version%20build&logo=github&logoColor=FFF&style=flat)
 ![GitHub Coverage Workflow Status](https://img.shields.io/github/actions/workflow/status/mrgoodbytes8667/response-bundle/code-coverage.yml?label=coverage%20build&logo=github&logoColor=FFF&style=flat)
-[![codecov](https://img.shields.io/codecov/c/github/mrgoodbytes8667/response-bundle/6.0?logo=codecov&logoColor=FFF&style=flat)](https://codecov.io/gh/mrgoodbytes8667/response-bundle)  
+[![codecov](https://img.shields.io/codecov/c/github/mrgoodbytes8667/response-bundle/6.1?logo=codecov&logoColor=FFF&style=flat)](https://codecov.io/gh/mrgoodbytes8667/response-bundle)  
 A Symfony bundle that wraps response-common and provides shared classes for child response-bundles
 
 ## Installation
