@@ -15,6 +15,7 @@ class ContentTypeTest extends TestCase
 
     /**
      * @dataProvider provideLabelsValuesExtensions
+     * @dataProvider provideExtraJsonLabelsValuesExtensions
      */
     public function testEnum($label, $value, $extension)
     {
@@ -60,6 +61,15 @@ class ContentTypeTest extends TestCase
         yield ['label' => 'imageSvg', 'value' => 'image/svg+xml', 'extension' => 'svg'];
         yield ['label' => 'imageWebP', 'value' => 'image/webp', 'extension' => 'webp'];
         yield ['label' => 'json', 'value' => 'application/json', 'extension' => 'json'];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function provideExtraJsonLabelsValuesExtensions()
+    {
+        yield ['label' => 'jsonUtf8', 'value' => 'application/json; charset=utf-8', 'extension' => 'json'];
+        yield ['label' => 'mergePatchJson', 'value' => 'application/merge-patch+json', 'extension' => 'json'];
     }
 
     /**
