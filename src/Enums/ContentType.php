@@ -11,7 +11,7 @@ use ValueError;
 /**
  * @since 1.1.0
  *
- * @version 5.0.0
+ * @version 6.1.0
  */
 enum ContentType: string implements StringBackedEnumInterface
 {
@@ -23,6 +23,8 @@ enum ContentType: string implements StringBackedEnumInterface
     case imageSvg = 'image/svg+xml';
     case imageWebP = 'image/webp';
     case json = 'application/json';
+    case jsonUtf8 = 'application/json; charset=utf-8';
+    case mergePatchJson = 'application/merge-patch+json';
 
     public static function fromExtension($extension): ContentType
     {
@@ -84,7 +86,7 @@ enum ContentType: string implements StringBackedEnumInterface
             self::imagePng => 'png',
             self::imageSvg => 'svg',
             self::imageWebP => 'webp',
-            self::json => 'json',
+            self::json, self::jsonUtf8, self::mergePatchJson => 'json',
             default => throw new ValueError('The value is invalid.'),
         };
     }
