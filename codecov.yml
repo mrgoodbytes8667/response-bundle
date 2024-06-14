@@ -1,6 +1,5 @@
 ignore:
   - ".php-cs-fixer.dist.php"
   - "rector.php"
-  - "src/Enums/DayOfWeek.php"
   - "src/Objects/ComparableDateInterval.php"
   - "src/Objects/LargeComparableDateInterval.php"
