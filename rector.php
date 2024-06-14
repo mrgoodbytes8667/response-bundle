@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\CodeQuality\Rector\ClassMethod\InlineArrayReturnAssignRector;
 use Rector\CodeQuality\Rector\Foreach_\ForeachToInArrayRector;
@@ -10,6 +11,7 @@ use Rector\CodeQuality\Rector\Identical\GetClassToInstanceOfRector;
 use Rector\CodeQuality\Rector\If_\CombineIfRector;
 use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
 use Rector\CodingStyle\Rector\If_\NullableCompareToNullRector;
+//use Rector\CodingStyle\Rector\Property\NullifyUnionNullableRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\CodingStyle\Rector\String_\SymplifyQuoteEscapeRector;
 use Rector\Config\RectorConfig;
@@ -17,8 +19,9 @@ use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\Naming\Rector\Foreach_\RenameForeachValueVariableToMatchMethodCallReturnTypeRector;
 use Rector\Php81\Rector\Class_\SpatieEnumClassToEnumRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
-use Rector\PHPUnit\Set\PHPUnitSetList;
+use Rector\PHPUnit\Rector\Class_\PreferPHPUnitSelfCallRector;
 use Rector\Symfony\CodeQuality\Rector\BinaryOp\ResponseStatusCodeRector;
+use Rector\Symfony\CodeQuality\Rector\ClassMethod\ActionSuffixRemoverRector;
 use Rector\Symfony\CodeQuality\Rector\ClassMethod\ResponseReturnTypeControllerActionRector;
 use Rector\Symfony\CodeQuality\Rector\MethodCall\LiteralGetToRequestClassConstantRector;
 use Rector\Symfony\Set\SymfonySetList;
@@ -33,8 +36,11 @@ use Rector\Symfony\Symfony60\Rector\MethodCall\GetHelperControllerToServiceRecto
 use Rector\Symfony\Symfony61\Rector\Class_\CommandPropertyToAttributeRector;
 use Rector\Symfony\Symfony62\Rector\ClassMethod\ParamConverterAttributeToMapEntityAttributeRector;
 use Rector\Symfony\Symfony62\Rector\MethodCall\SimplifyFormRenderingRector;
+use Rector\Transform\Rector\Attribute\AttributeKeyToClassConstFetchRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromStrictConstructorRector;
+//use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromStrictGetterMethodReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromStrictSetUpRector;
+//use Rector\TypeDeclaration\Rector\Property\VarAnnotationIncorrectNullableRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -62,9 +68,10 @@ return static function (RectorConfig $rectorConfig): void {
         SymfonySetList::SYMFONY_60,
         SymfonySetList::SYMFONY_61,
         SymfonySetList::SYMFONY_62,
+        SymfonySetList::SYMFONY_63,
+        SymfonySetList::SYMFONY_64,
         SymfonySetList::SYMFONY_CODE_QUALITY,
-        SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
-        PHPUnitSetList::PHPUNIT_90,
+        SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION
     ]);
 
     $rectorConfig->rules([
@@ -126,5 +133,12 @@ return static function (RectorConfig $rectorConfig): void {
         ResponseReturnTypeControllerActionRector::class,
         ResponseStatusCodeRector::class,
         SimplifyFormRenderingRector::class,
+
+        // Transform
+        AttributeKeyToClassConstFetchRector::class,
+    ]);
+
+    $rectorConfig->skip([
+        ActionSuffixRemoverRector::class
     ]);
 };
