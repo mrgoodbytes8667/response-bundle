@@ -4,17 +4,15 @@ namespace Bytes\ResponseBundle\Entity;
 
 use DateTime;
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Trait CreatedUpdatedTrait.
- */
 trait CreatedUpdatedTrait
 {
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     protected ?DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     protected ?DateTimeInterface $updatedAt = null;
 
     public function getCreatedAt(): ?DateTimeInterface
@@ -25,9 +23,9 @@ trait CreatedUpdatedTrait
     /**
      * @return $this
      */
-    public function setCreatedAt(?DateTimeInterface $createdAt): self
+    public function setCreatedAt(?DateTimeInterface $createdAt = null): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = $createdAt ?? new DateTime();
 
         return $this;
     }
@@ -54,7 +52,7 @@ trait CreatedUpdatedTrait
     /**
      * @return $this
      */
-    public function setUpdatedAt(DateTimeInterface $updatedAt = null): self
+    public function setUpdatedAt(?DateTimeInterface $updatedAt = null): self
     {
         $this->updatedAt = $updatedAt ?? new DateTime();
 
