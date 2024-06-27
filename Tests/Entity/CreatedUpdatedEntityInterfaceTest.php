@@ -2,21 +2,23 @@
 
 namespace Bytes\ResponseBundle\Tests\Entity;
 
-use Bytes\Common\Faker\TestFakerTrait;
 use Bytes\ResponseBundle\Entity\CreatedUpdatedEntityInterface;
-use Bytes\ResponseBundle\Entity\CreatedUpdatedTrait;
 use Bytes\ResponseBundle\Tests\Fixtures\Entity\CreatedUpdatedEntity;
-use PHPUnit\Framework\MockObject\MockObject;
+use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 
+/**
+ * @see CreatedUpdatedEntityInterface
+ */
 class CreatedUpdatedEntityInterfaceTest extends TestCase
 {
     use ClockSensitiveTrait;
 
     /**
      * @dataProvider provideMock
-     * @param \DateTimeInterface $now
+     *
+     * @param DateTimeInterface $now
      */
     public function testGetSetCreatedAt(CreatedUpdatedEntityInterface $mock, $now)
     {
@@ -29,7 +31,8 @@ class CreatedUpdatedEntityInterfaceTest extends TestCase
 
     /**
      * @dataProvider provideMock
-     * @param \DateTimeInterface $now
+     *
+     * @param DateTimeInterface $now
      */
     public function testGetSetUpdatedAt(CreatedUpdatedEntityInterface $mock, $now)
     {

@@ -9,6 +9,8 @@ use DateTimeInterface;
  */
 interface CreatedUpdatedEntityInterface
 {
+    public function getCreatedAt(): ?DateTimeInterface;
+
     /**
      * @return $this
      */
