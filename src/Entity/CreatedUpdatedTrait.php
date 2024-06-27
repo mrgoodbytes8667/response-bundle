@@ -7,6 +7,9 @@ use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @see CreatedUpdatedEntityInterface
+ */
 trait CreatedUpdatedTrait
 {
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
