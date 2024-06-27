@@ -14,55 +14,6 @@ on:
       - 7.*
 
 jobs:
-  test:
-    timeout-minutes: 15
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        php: [ 8.2 ]
-        os: [ ubuntu-latest ]
-    env:
-      SYMFONY_PHPUNIT_VERSION: 9.6
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Set Variables
-        id: set-variables
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-          echo "::set-output name=cacheKeyPath::${{ format('{0}-php{1}-tests-coverage-composer-', runner.os, matrix.php) }}"
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.set-variables.outputs.dir }}
-          key: ${{ steps.set-variables.outputs.cacheKeyPath }}${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ steps.set-variables.outputs.cacheKeyPath }}
-
-      - name: Setup PHP
-        if: ${{ success() }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: json, dom, curl, libxml, mbstring
-          coverage: pcov
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install dependencies
-        if: ${{ success() }}
-        run: composer update ${{ steps.set-variables.outputs.preferLowest }} --prefer-stable --prefer-dist --no-interaction
-
-      - name: Run PHPUnit
-        if: ${{ success() }}
-        run: php vendor/bin/phpunit --coverage-clover=clover.xml
-
-      - name: Codecov
-        if: ${{ success() }}
-        uses: codecov/codecov-action@v4
-        with:
-          files: ./clover.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
+  coverage:
+    uses: mrgoodbytes8667/workflows/.github/workflows/code-coverage.yml@php8.2-8.3
+    secrets: inherit
