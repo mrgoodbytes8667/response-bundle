@@ -19,7 +19,7 @@ class BytesResponseExtension extends Extension implements ExtensionInterface, Pr
     /**
      * @throws Exception
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.php');
@@ -32,7 +32,7 @@ class BytesResponseExtension extends Extension implements ExtensionInterface, Pr
     /**
      * Allow an extension to prepend the extension configurations.
      */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         // process the configuration of this extension
         $configs = $container->getExtensionConfig($this->getAlias());
