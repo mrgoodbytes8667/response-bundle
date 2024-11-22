@@ -6,9 +6,6 @@ use Bytes\Common\Faker\TestFakerTrait;
 use Bytes\ResponseBundle\Objects\ConfigNormalizer;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class ConfigNormalizerTest.
- */
 class ConfigNormalizerTest extends TestCase
 {
     use TestFakerTrait;

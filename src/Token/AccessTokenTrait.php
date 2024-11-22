@@ -255,7 +255,7 @@ trait AccessTokenTrait
     /**
      * @return $this
      */
-    public function setIdentifier(string $class = null): self
+    public function setIdentifier(?string $class = null): self
     {
         $this->class = $class ?? static::class;
 

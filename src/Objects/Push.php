@@ -7,9 +7,6 @@ use JetBrains\PhpStorm\Deprecated;
 
 use function Symfony\Component\String\u;
 
-/**
- * Class Push.
- */
 class Push
 {
     /**
@@ -28,9 +25,6 @@ class Push
      */
     private $snakeArray = [];
 
-    /**
-     * Push constructor.
-     */
     public function __construct(private array $array = [])
     {
     }
@@ -42,7 +36,7 @@ class Push
      *
      * @return Push
      */
-    public static function createPush(?array $array = [], $value = null, int|string $key = null, bool $empty = true)
+    public static function createPush(?array $array = [], $value = null, int|string|null $key = null, bool $empty = true)
     {
         $static = static::create($array);
 
@@ -70,7 +64,7 @@ class Push
      *
      * @return $this
      */
-    public function push($value = null, int|string $key = null, bool $empty = true): self
+    public function push($value = null, int|string|null $key = null, bool $empty = true): self
     {
         if ($empty) {
             if (!empty($value)) {
@@ -110,7 +104,7 @@ class Push
     /**
      * @param null $value
      */
-    private function update($value = null, int|string $key = null)
+    private function update($value = null, int|string|null $key = null)
     {
         if (!is_null($key)) {
             $this->array[$key] = $value;

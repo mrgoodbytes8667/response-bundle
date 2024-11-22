@@ -8,9 +8,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 abstract class AbstractSignature implements LocatorInterface
 {
-    /**
-     * AbstractSignature constructor.
-     */
     public function __construct(protected string $secret)
     {
     }

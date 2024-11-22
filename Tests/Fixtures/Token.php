@@ -7,9 +7,6 @@ use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * Class Token.
- */
 class Token implements AccessTokenInterface
 {
     use AccessTokenCreateUpdateFromTrait;

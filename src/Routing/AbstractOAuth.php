@@ -23,9 +23,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Exception\ValidatorException;
 
-/**
- * Class AbstractOAuth.
- */
 abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
 {
     use SecurityTrait;
@@ -83,9 +80,6 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
      */
     private $csrfTokenManager;
 
-    /**
-     * AbstractOAuth constructor.
-     */
     public function __construct(protected ?string $clientId, protected array $config, array $options = [])
     {
         if (!isset(static::$endpoint)) {
@@ -144,7 +138,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
     /**
      * Get the external URL begin the OAuth token exchange process.
      */
-    public function getAuthorizationUrl(string $state = null, ...$options): string
+    public function getAuthorizationUrl(?string $state = null, ...$options): string
     {
         $prompt = null;
         if (isset($options['prompt'])) {
@@ -160,7 +154,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
      *
      * @internal
      */
-    public function getAuthorizationCodeGrantURL(string $redirect, array $scopes, ?string $state, string $responseType = self::RESPONSE_TYPE, OAuthPromptInterface|string|bool $prompt = null, ...$options)
+    public function getAuthorizationCodeGrantURL(string $redirect, array $scopes, ?string $state, string $responseType = self::RESPONSE_TYPE, OAuthPromptInterface|string|bool|null $prompt = null, ...$options)
     {
         $scopes = $this->getScopes($scopes);
 
@@ -176,7 +170,7 @@ abstract class AbstractOAuth implements OAuthInterface, LocatorInterface
         return static::getBaseAuthorizationCodeGrantURL()->append(http_build_query($this->getQueryValues($query)))->toString();
     }
 
-    public function getScopes(array $scopes = null): array
+    public function getScopes(?array $scopes = null): array
     {
         if (!empty($this->scopes)) {
             return $this->scopes;

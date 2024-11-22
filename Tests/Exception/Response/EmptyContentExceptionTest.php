@@ -15,9 +15,6 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-/**
- * Class EmptyContentExceptionTest.
- */
 class EmptyContentExceptionTest extends TestCase
 {
     use TestFullSerializerTrait;

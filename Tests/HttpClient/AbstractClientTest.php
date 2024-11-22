@@ -12,9 +12,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
 
-/**
- * Class AbstractClientTest.
- */
 class AbstractClientTest extends TestCase
 {
     use TestFakerTrait;
@@ -26,7 +23,7 @@ class AbstractClientTest extends TestCase
     {
         self::assertEquals($accessToken, AbstractClient::normalizeAccessToken($token));
         self::assertEquals($accessToken, AbstractApiClient::normalizeAccessToken($token));
-        self::assertEquals($accessToken, \Bytes\ResponseBundle\HttpClient\Token\AbstractTokenClient::normalizeAccessToken($token));
+        self::assertEquals($accessToken, AbstractTokenClient::normalizeAccessToken($token));
     }
 
     public function testNormalizeAccessTokenNoNulls()
@@ -39,7 +36,7 @@ class AbstractClientTest extends TestCase
     /**
      * @return AccessTokenInterface|MockObject
      */
-    private function createToken(string $accessToken = null, string $refreshToken = null)
+    private function createToken(?string $accessToken = null, ?string $refreshToken = null)
     {
         $token = $this
             ->getMockBuilder(AccessTokenInterface::class)

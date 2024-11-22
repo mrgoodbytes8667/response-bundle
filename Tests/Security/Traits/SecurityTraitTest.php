@@ -8,9 +8,6 @@ use Psr\Container\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * Class SecurityTraitTest.
- */
 class SecurityTraitTest extends TestCase
 {
     public function testSetTokenUser()

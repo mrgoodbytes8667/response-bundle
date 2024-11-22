@@ -9,16 +9,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class TokenValidatedEvent
  * Fired after a token is successfully validated.
  *
  * @experimental
  */
 class TokenValidatedEvent extends Event
 {
-    /**
-     * TokenValidatedEvent constructor.
-     */
     public function __construct(private AccessTokenInterface $token, private TokenValidationResponseInterface $validation, private ?UserInterface $user = null)
     {
         if (empty($user) && method_exists($token, 'getUser')) {
@@ -28,7 +24,7 @@ class TokenValidatedEvent extends Event
     }
 
     #[Pure]
-    public static function new(AccessTokenInterface $token, TokenValidationResponseInterface $validation, UserInterface $user = null): static
+    public static function new(AccessTokenInterface $token, TokenValidationResponseInterface $validation, ?UserInterface $user = null): static
     {
         return new static($token, $validation, $user);
     }

@@ -27,5 +27,5 @@ interface TokenExchangeInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function exchange(string $code, string $route = null, string|callable $url = null, array $scopes = [], callable $onSuccessCallable = null): ?AccessTokenInterface;
+    public function exchange(string $code, ?string $route = null, string|callable|null $url = null, array $scopes = [], ?callable $onSuccessCallable = null): ?AccessTokenInterface;
 }

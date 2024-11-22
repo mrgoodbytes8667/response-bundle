@@ -18,7 +18,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
- * Class ApiRetryableHttpClient
  * RetryableHttpClient that lets you modify the request (for API token renewal)
  * Based on the RetryableHttpClient from https://github.com/symfony/http-client/blob/cdaf3df771d3ea9b05696c9e91281ffd056aff66/RetryableHttpClient.php.
  */
@@ -27,23 +26,23 @@ class ApiRetryableHttpClient implements HttpClientInterface
     use AsyncDecoratorTrait;
     use DispatcherTrait;
 
-    private readonly \Symfony\Component\HttpClient\Retry\RetryStrategyInterface|\Symfony\Component\HttpClient\Retry\GenericRetryStrategy $strategy;
+    private readonly \Symfony\Component\HttpClient\Retry\RetryStrategyInterface|GenericRetryStrategy $strategy;
 
     private readonly int $maxRetries;
 
-    private readonly \Psr\Log\LoggerInterface|\Psr\Log\NullLogger $logger;
+    private readonly \Psr\Log\LoggerInterface|NullLogger $logger;
 
     /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
 
-    private readonly ?\Bytes\ResponseBundle\HttpClient\ApiClientInterface $apiClient;
+    private readonly ?ApiClientInterface $apiClient;
 
     /**
      * @param int $maxRetries The maximum number of times to retry
      */
-    public function __construct(HttpClientInterface $client, RetryStrategyInterface $strategy = null, int $maxRetries = 3, LoggerInterface $logger = null, EventDispatcherInterface $eventDispatcher = null, ApiClientInterface $apiClient = null)
+    public function __construct(HttpClientInterface $client, ?RetryStrategyInterface $strategy = null, int $maxRetries = 3, ?LoggerInterface $logger = null, ?EventDispatcherInterface $eventDispatcher = null, ?ApiClientInterface $apiClient = null)
     {
         $this->client = $client;
         $this->strategy = $strategy ?? new GenericRetryStrategy();

@@ -20,9 +20,6 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-/**
- * Class AbstractTokenClientTest.
- */
 class AbstractTokenClientTest extends TestCase
 {
     use AssertClientResponseTrait;

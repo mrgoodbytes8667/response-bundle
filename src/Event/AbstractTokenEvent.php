@@ -5,14 +5,8 @@ namespace Bytes\ResponseBundle\Event;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-/**
- * Class AbstractTokenEvent.
- */
 abstract class AbstractTokenEvent extends Event
 {
-    /**
-     * AbstractTokenEvent constructor.
-     */
     public function __construct(private AccessTokenInterface $token)
     {
     }

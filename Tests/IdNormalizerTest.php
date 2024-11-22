@@ -9,9 +9,6 @@ use Generator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class IdNormalizerTest.
- */
 class IdNormalizerTest extends TestCase
 {
     use TestFakerTrait;

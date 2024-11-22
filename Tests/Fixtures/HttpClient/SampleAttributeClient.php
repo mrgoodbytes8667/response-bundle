@@ -10,9 +10,6 @@ use Bytes\ResponseBundle\Interfaces\ClientResponseInterface;
 #[Client(identifier: 'sample')]
 class SampleAttributeClient extends AbstractClient
 {
-    /**
-     * {@inheritDoc}
-     */
     public static function getDefaultIndexName(): string
     {
         return '';

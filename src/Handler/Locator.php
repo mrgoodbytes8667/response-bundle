@@ -4,14 +4,8 @@ namespace Bytes\ResponseBundle\Handler;
 
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
-/**
- * Class Locator.
- */
 class Locator
 {
-    /**
-     * Locator constructor.
-     */
     public function __construct(protected ServiceLocator $locator)
     {
     }

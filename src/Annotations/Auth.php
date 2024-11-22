@@ -12,7 +12,7 @@ class Auth
 
     private array $scopes = [];
 
-    public function __construct(array $values = [], ?array $scopes = [], string $identifier = null, TokenSource|string $tokenSource = null)
+    public function __construct(array $values = [], ?array $scopes = [], ?string $identifier = null, TokenSource|string|null $tokenSource = null)
     {
         if (isset($values['value'])) {
             $values['scopes'] = $values['value'];
@@ -37,7 +37,7 @@ class Auth
     /**
      * @return $this
      */
-    public function set(?array $scopes = [], string $identifier = null, TokenSource|string $tokenSource = null): self
+    public function set(?array $scopes = [], ?string $identifier = null, TokenSource|string|null $tokenSource = null): self
     {
         $this->setScopes($scopes);
         $this->setIdentifier($identifier);

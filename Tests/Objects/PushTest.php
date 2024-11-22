@@ -8,9 +8,6 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
-/**
- * Class PushTest.
- */
 class PushTest extends TestCase
 {
     use TestFakerTrait;

@@ -5,9 +5,6 @@ namespace Bytes\ResponseBundle\Objects;
 use Bytes\ResponseBundle\Interfaces\IdInterface;
 use InvalidArgumentException;
 
-/**
- * Class IdNormalizer.
- */
 class IdNormalizer
 {
     /**

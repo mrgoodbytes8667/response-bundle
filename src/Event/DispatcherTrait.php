@@ -18,7 +18,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 trait DispatcherTrait
 {
-    protected function dispatch(StoppableEventInterface $event, string $eventName = null)
+    protected function dispatch(StoppableEventInterface $event, ?string $eventName = null)
     {
         if (empty($eventName)) {
             $eventName = get_class($event);
@@ -38,7 +38,7 @@ trait DispatcherTrait
     /**
      * @return ApiRetryEvent
      */
-    protected function dispatchApiRetryEvent(ApiClientInterface $client, string $method, string $url, AsyncContext $context, array $options = [], string $content = null, ?int $retryCount = 0, bool $shouldRetry = true)
+    protected function dispatchApiRetryEvent(ApiClientInterface $client, string $method, string $url, AsyncContext $context, array $options = [], ?string $content = null, ?int $retryCount = 0, bool $shouldRetry = true)
     {
         return $this->dispatch(ApiRetryEvent::new(client: $client, method: $method, url: $url, options: $options, context: $context, responseContent: $content, retryCount: $retryCount, shouldRetry: $shouldRetry));
     }
@@ -46,7 +46,7 @@ trait DispatcherTrait
     /**
      * @return ObtainValidTokenEvent
      */
-    protected function dispatchObtainValidTokenEvent(string $identifier, TokenSource $tokenSource, UserInterface $user = null, array $scopes = [])
+    protected function dispatchObtainValidTokenEvent(string $identifier, TokenSource $tokenSource, ?UserInterface $user = null, array $scopes = [])
     {
         return $this->dispatch(ObtainValidTokenEvent::new(identifier: $identifier, tokenSource: $tokenSource, user: $user, scopes: $scopes));
     }
@@ -62,7 +62,7 @@ trait DispatcherTrait
     /**
      * @return ValidateTokenEvent
      */
-    protected function dispatchValidateTokenEvent(AccessTokenInterface $token, UserInterface $user = null)
+    protected function dispatchValidateTokenEvent(AccessTokenInterface $token, ?UserInterface $user = null)
     {
         return $this->dispatch(ValidateTokenEvent::new(token: $token, user: $user));
     }
@@ -94,7 +94,7 @@ trait DispatcherTrait
     /**
      * @return TokenValidatedEvent
      */
-    protected function dispatchTokenValidatedEvent(AccessTokenInterface $token, TokenValidationResponseInterface $validation, UserInterface $user = null)
+    protected function dispatchTokenValidatedEvent(AccessTokenInterface $token, TokenValidationResponseInterface $validation, ?UserInterface $user = null)
     {
         return $this->dispatch(TokenValidatedEvent::new(token: $token, validation: $validation, user: $user));
     }

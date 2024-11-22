@@ -38,9 +38,6 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-/**
- * Class AbstractOAuthAuthenticator.
- */
 abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implements AuthenticatorInterface
 {
     use TargetPathTrait;
@@ -61,9 +58,6 @@ abstract class AbstractOAuthAuthenticator extends AbstractAuthenticator implemen
      */
     public const REDIRECT_TO_LOGOUT = 'You are already registered. Please login.';
 
-    /**
-     * AbstractOAuthAuthenticator constructor.
-     */
     public function __construct(
         protected EntityManagerInterface $em, protected ServiceEntityRepository $userRepository, protected Security $security,
         protected UrlGeneratorInterface $urlGenerator, protected Locator $httpClientOAuthLocator,

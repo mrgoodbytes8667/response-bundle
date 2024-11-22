@@ -9,9 +9,6 @@ use Bytes\ResponseBundle\Token\Interfaces\TokenValidationResponseInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * Class TokenValidatedEventTest.
- */
 class TokenValidatedEventTest extends TestCase
 {
     public function testGetSetNew()

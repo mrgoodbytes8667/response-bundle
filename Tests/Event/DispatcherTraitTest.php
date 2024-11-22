@@ -10,9 +10,6 @@ use Bytes\ResponseBundle\Token\Interfaces\TokenValidationResponseInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\Event;
 
-/**
- * Class DispatcherTraitTest.
- */
 class DispatcherTraitTest extends TestCase
 {
     use TestFakerTrait;

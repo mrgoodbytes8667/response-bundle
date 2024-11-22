@@ -21,8 +21,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
 
 /**
- * Class AbstractClient.
- *
  * @experimental
  */
 abstract class AbstractClient
@@ -35,7 +33,7 @@ abstract class AbstractClient
      */
     protected $response;
 
-    public function __construct(protected HttpClientInterface $httpClient, protected EventDispatcherInterface $dispatcher, ?string $userAgent, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, private readonly bool $retryAuth = true, private $parseAuth = true)
+    public function __construct(protected HttpClientInterface $httpClient, protected EventDispatcherInterface $dispatcher, ?string $userAgent, array $defaultOptionsByRegexp = [], ?string $defaultRegexp = null, private readonly bool $retryAuth = true, private $parseAuth = true)
     {
         // Add user agent if not already set
         if (!empty($userAgent)) {
@@ -121,7 +119,7 @@ abstract class AbstractClient
      * @throws TransportExceptionInterface
      * @throws NoTokenException
      */
-    public function request($url, ReflectionMethod|string $caller = null, string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string $responseClass = null, array $context = [], callable $onDeserializeCallable = null, callable $onSuccessCallable = null, array $params = [])
+    public function request($url, ReflectionMethod|string|null $caller = null, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
     {
         if (is_null($caller)) {
             trigger_deprecation('mrgoodbytes8667/response-bundle', '2.0.0', 'Calling request() without the caller argument is deprecated and will cease working in a future version.');
@@ -195,7 +193,7 @@ abstract class AbstractClient
      * @throws TransportExceptionInterface
      * @throws NoTokenException
      */
-    public function jsonRequest($url, ReflectionMethod|string $caller = null, string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string $responseClass = null, array $context = [], callable $onDeserializeCallable = null, callable $onSuccessCallable = null, array $params = [])
+    public function jsonRequest($url, ReflectionMethod|string|null $caller = null, ?string $type = null, array $options = [], $method = 'GET', ClientResponseInterface|string|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
     {
         $options['headers']['Content-Type'] = ContentType::json->value;
 
@@ -207,7 +205,7 @@ abstract class AbstractClient
     /**
      * @throws NoTokenException
      */
-    public function mergeAuth(Auth $auth = null, array $options = [], bool $refresh = false, array $authHeader = null): array
+    public function mergeAuth(?Auth $auth = null, array $options = [], bool $refresh = false, ?array $authHeader = null): array
     {
         $authHeader = $authHeader ?? $this->getAuthenticationOption(auth: $auth ?? new Auth(), refresh: $refresh);
         if (!empty($authHeader) && is_array($authHeader)) {
@@ -232,7 +230,7 @@ abstract class AbstractClient
     /**
      * @throws NoTokenException
      */
-    public function getAuthenticationOption(Auth $auth = null, bool $refresh = false): array
+    public function getAuthenticationOption(?Auth $auth = null, bool $refresh = false): array
     {
         return [];
     }

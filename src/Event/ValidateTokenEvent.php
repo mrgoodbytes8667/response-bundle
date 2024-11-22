@@ -8,18 +8,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class ValidateTokenEvent
  * Fired to specify that a token needs to be validated.
  *
  * @experimental
  */
 class ValidateTokenEvent extends Event
 {
-    private ?\Bytes\ResponseBundle\Token\Interfaces\TokenValidationResponseInterface $validation = null;
+    private ?TokenValidationResponseInterface $validation = null;
 
-    /**
-     * ValidateTokenEvent constructor.
-     */
     public function __construct(private AccessTokenInterface $token, private ?UserInterface $user = null)
     {
         if (empty($user) && method_exists($token, 'getUser')) {
@@ -28,7 +24,7 @@ class ValidateTokenEvent extends Event
         }
     }
 
-    public static function new(AccessTokenInterface $token, UserInterface $user = null): static
+    public static function new(AccessTokenInterface $token, ?UserInterface $user = null): static
     {
         return new static($token, $user);
     }

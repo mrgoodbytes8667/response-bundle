@@ -12,9 +12,6 @@ trait EventTrait
      */
     private $propagationStopped = false;
 
-    /**
-     * {@inheritdoc}
-     */
     public function isPropagationStopped(): bool
     {
         return $this->propagationStopped;

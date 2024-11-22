@@ -39,9 +39,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-/**
- * Class AbstractOAuthTest.
- */
 class AbstractOAuthTest extends TestCase
 {
     use TestFullValidatorTrait;
@@ -90,7 +87,7 @@ class AbstractOAuthTest extends TestCase
         self::assertCount(6, $query);
     }
 
-    public function setupOAuth(array $config = null, bool $setValidator = true): AbstractOAuth
+    public function setupOAuth(?array $config = null, bool $setValidator = true): AbstractOAuth
     {
         if (is_null($config)) {
             $config = [

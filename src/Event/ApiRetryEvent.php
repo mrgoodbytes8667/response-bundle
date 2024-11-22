@@ -7,15 +7,11 @@ use Symfony\Component\HttpClient\Response\AsyncContext;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class ApiRetryEvent
  * Can replace the options in a retry-request.
  * Set shouldRetry to false to prevent a retry.
  */
 class ApiRetryEvent extends Event
 {
-    /**
-     * ApiRetryEvent constructor.
-     */
     public function __construct(private ApiClientInterface $client, private string $method, private string $url, private AsyncContext $context, private array $options = [], private ?string $responseContent = null, private ?int $retryCount = 0, private bool $shouldRetry = true)
     {
         if (empty($retryCount) || $retryCount < 1) {

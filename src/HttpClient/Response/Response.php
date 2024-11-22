@@ -18,13 +18,11 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
- * Class Response.
- *
  * @experimental
  */
 class Response implements ClientResponseInterface
 {
-    private \Symfony\Contracts\HttpClient\ResponseInterface $response;
+    private ResponseInterface $response;
 
     private ?string $type = null;
 
@@ -57,15 +55,12 @@ class Response implements ClientResponseInterface
 
     // region Instantiation
 
-    /**
-     * Response constructor.
-     */
     public function __construct(private readonly SerializerInterface $serializer, private readonly ?EventDispatcherInterface $dispatcher = null, protected bool $throwOnDeserializationWhenContentEmpty = false)
     {
     }
 
     #[Pure]
-    public static function make(SerializerInterface $serializer, EventDispatcherInterface $dispatcher = null): static
+    public static function make(SerializerInterface $serializer, ?EventDispatcherInterface $dispatcher = null): static
     {
         return new static($serializer, $dispatcher);
     }
@@ -90,7 +85,7 @@ class Response implements ClientResponseInterface
      * @param callable(static, mixed)|null $onDeserializeCallable If set, should be triggered by deserialize() on success, modifies/replaces results
      * @param callable(static, mixed)|null $onSuccessCallable     If set, should be triggered by deserialize()/callback() on success
      */
-    public function withResponse(ResponseInterface $response, ?string $type, array $context = [], callable $onDeserializeCallable = null, callable $onSuccessCallable = null): static
+    public function withResponse(ResponseInterface $response, ?string $type, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null): static
     {
         $new = clone $this;
         $new->setResponse($response);
@@ -304,7 +299,7 @@ class Response implements ClientResponseInterface
      * @throws InvalidArgumentException
      * @throws EmptyContentException
      */
-    public function deserialize(bool $throw = true, array $context = [], string $type = null)
+    public function deserialize(bool $throw = true, array $context = [], ?string $type = null)
     {
         if (empty($type)) {
             $type = $type ?? $this->type;

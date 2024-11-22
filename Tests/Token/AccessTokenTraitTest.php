@@ -16,9 +16,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 use TypeError;
 
-/**
- * Class AccessTokenTraitTest.
- */
 class AccessTokenTraitTest extends TestCase
 {
     use TestFakerTrait;

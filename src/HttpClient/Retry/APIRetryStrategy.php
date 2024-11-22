@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
- * Class APIRetryStrategy
  * Similar to the GenericRetryStrategy with some logic from other http client frameworks.
  */
 abstract class APIRetryStrategy implements RetryStrategyInterface

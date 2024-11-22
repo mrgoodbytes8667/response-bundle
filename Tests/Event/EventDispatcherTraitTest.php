@@ -6,9 +6,6 @@ use Bytes\ResponseBundle\Event\EventDispatcherTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-/**
- * Class EventDispatcherTraitTest.
- */
 class EventDispatcherTraitTest extends TestCase
 {
     public function testSetDispatcher()

@@ -8,16 +8,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class RevokeExistingTokensEvent
  * Fired to specify that all existing tokens aside from $token should be revoked.
  *
  * @experimental
  */
 class RevokeExistingTokensEvent extends Event
 {
-    /**
-     * RevokeExistingTokensEvent constructor.
-     */
     public function __construct(private AccessTokenInterface $token, private UserInterface $user, private string $identifier, private TokenSource $tokenSource)
     {
     }

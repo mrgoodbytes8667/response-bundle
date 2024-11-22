@@ -8,14 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class OAuthController
  * A controller that can be repackaged for each OAuth class.
  */
 class OAuthController
 {
-    /**
-     * OAuthController constructor.
-     */
     public function __construct(protected OAuthInterface $oauth, protected UrlGeneratorInterface $urlGenerator, protected string $destinationRoute)
     {
     }

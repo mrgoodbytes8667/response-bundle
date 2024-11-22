@@ -9,15 +9,9 @@ use DateInterval;
 use Exception;
 use PHPUnit\Framework\Constraint\Constraint;
 
-/**
- * Class AccessTokenInterfaceSame.
- */
 class AccessTokenInterfaceSame extends Constraint
 {
-    /**
-     * AccessTokenInterfaceSame constructor.
-     */
-    public function __construct(AccessTokenInterface $token = null, private ?string $accessToken = null, private ?string $refreshToken = null, private ?DateInterval $expiresIn = null, private string|array|null $scope = null, private ?string $tokenType = null, private ?TokenSource $tokenSource = null, private ?string $identifier = null)
+    public function __construct(?AccessTokenInterface $token = null, private ?string $accessToken = null, private ?string $refreshToken = null, private ?DateInterval $expiresIn = null, private string|array|null $scope = null, private ?string $tokenType = null, private ?TokenSource $tokenSource = null, private ?string $identifier = null)
     {
         if (!empty($token)) {
             $this->accessToken = $this->accessToken ?: $token->getAccessToken();
@@ -45,8 +39,6 @@ class AccessTokenInterfaceSame extends Constraint
 
     /**
      * @param AccessTokenInterface $other
-     *
-     * {@inheritdoc}
      */
     protected function matches($other): bool
     {
@@ -65,17 +57,12 @@ class AccessTokenInterfaceSame extends Constraint
 
     /**
      * @param AccessTokenInterface $other
-     *
-     * {@inheritdoc}
      */
     protected function failureDescription($other): string
     {
         return $this->toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function toString(): string
     {
         return 'two objects are equal';

@@ -23,17 +23,11 @@ abstract class AbstractModel extends AbstractOAuth
      */
     protected static $baseAuthorizationCodeGrantURL = '';
 
-    /**
-     * AbstractModel constructor.
-     */
     public function __construct()
     {
         $this->config = [];
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected static function walkHydrateScopes(&$value, $key)
     {
         $value = (string) $value;

@@ -8,9 +8,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\Retry\GenericRetryStrategy;
 
-/**
- * Class AbstractApiClientTest.
- */
 class AbstractApiClientTest extends TestCase
 {
     public function testClient()

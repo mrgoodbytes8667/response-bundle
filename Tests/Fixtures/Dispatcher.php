@@ -16,15 +16,12 @@ class Dispatcher
     use EventDispatcherTrait;
     use DispatcherTrait;
 
-    /**
-     * Dispatcher constructor.
-     */
     public function __construct()
     {
         $this->setDispatcher(new EventDispatcher());
     }
 
-    public function triggerFakeEvent(Event $event, string $name = null)
+    public function triggerFakeEvent(Event $event, ?string $name = null)
     {
         return $this->dispatch($event, $name);
     }
@@ -41,7 +38,7 @@ class Dispatcher
         ];
     }
 
-    public function dispatchObtainValidToken(string $identifier, TokenSource $tokenSource, UserInterface $user = null, array $scopes = [])
+    public function dispatchObtainValidToken(string $identifier, TokenSource $tokenSource, ?UserInterface $user = null, array $scopes = [])
     {
         return $this->dispatchObtainValidTokenEvent($identifier, $tokenSource, $user, $scopes);
     }

@@ -7,7 +7,6 @@ use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class RevokeTokenEventTest
  * Covers all AbstractTokenEvent children.
  */
 class RevokeTokenEventTest extends TestCase

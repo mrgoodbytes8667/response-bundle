@@ -10,7 +10,7 @@ class Client
 {
     use ClientTrait;
 
-    public function __construct(array $values = [], string $identifier = null, TokenSource|string $tokenSource = null)
+    public function __construct(array $values = [], ?string $identifier = null, TokenSource|string|null $tokenSource = null)
     {
         if (isset($values['value'])) {
             $values['identifier'] = $values['value'];
@@ -31,7 +31,7 @@ class Client
     /**
      * @return $this
      */
-    public function set(string $identifier = null, TokenSource|string $tokenSource = null): self
+    public function set(?string $identifier = null, TokenSource|string|null $tokenSource = null): self
     {
         $this->setIdentifier($identifier);
         $this->setTokenSource($tokenSource);

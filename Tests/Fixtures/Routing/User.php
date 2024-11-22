@@ -4,9 +4,6 @@ namespace Bytes\ResponseBundle\Tests\Fixtures\Routing;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * Class User.
- */
 class User implements UserInterface
 {
     /**
@@ -74,9 +71,6 @@ class User implements UserInterface
         // TODO: Implement eraseCredentials() method.
     }
 
-    /**
-     * User constructor.
-     */
     public function __construct(public string $id)
     {
     }

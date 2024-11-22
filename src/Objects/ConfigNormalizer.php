@@ -2,9 +2,6 @@
 
 namespace Bytes\ResponseBundle\Objects;
 
-/**
- * Class ConfigNormalizer.
- */
 class ConfigNormalizer
 {
     /**

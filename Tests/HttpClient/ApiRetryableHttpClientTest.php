@@ -46,7 +46,6 @@ use Symfony\Component\HttpClient\Retry\GenericRetryStrategy;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
- * Class ApiRetryableHttpClientTest
  * Based on RetryableHttpClientTest from https://github.com/symfony/http-client/blob/625caf0b0aa516463f14415e24f12fbe25861dd9/Tests/RetryableHttpClientTest.php.
  */
 class ApiRetryableHttpClientTest extends TestCase

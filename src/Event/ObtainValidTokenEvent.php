@@ -8,14 +8,8 @@ use InvalidArgumentException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-/**
- * Class ObtainValidTokenEvent.
- */
 class ObtainValidTokenEvent extends Event
 {
-    /**
-     * ObtainValidTokenEvent constructor.
-     */
     public function __construct(private string $identifier, private TokenSource $tokenSource, private ?UserInterface $user = null, private array $scopes = [], private ?AccessTokenInterface $token = null)
     {
         if ($tokenSource->equals(TokenSource::user, TokenSource::id) && empty($user)) {
@@ -23,7 +17,7 @@ class ObtainValidTokenEvent extends Event
         }
     }
 
-    public static function new(string $identifier, TokenSource $tokenSource, UserInterface $user = null, array $scopes = []): static
+    public static function new(string $identifier, TokenSource $tokenSource, ?UserInterface $user = null, array $scopes = []): static
     {
         return new static($identifier, $tokenSource, $user, $scopes);
     }

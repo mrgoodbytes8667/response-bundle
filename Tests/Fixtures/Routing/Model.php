@@ -48,9 +48,6 @@ class Model extends \Bytes\ResponseBundle\Routing\AbstractOAuth
      */
     private $faker;
 
-    /**
-     * {@inheritDoc}
-     */
     protected static function walkHydrateScopes(&$value, $key)
     {
         $value = (string) $value;

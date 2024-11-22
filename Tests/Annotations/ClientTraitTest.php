@@ -30,8 +30,6 @@ use Faker\Provider\Uuid;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ClientTraitTest.
- *
  * @property FakerGenerator|MiscProvider|Address|Barcode|Biased|Color|Company|DateTime|File|HtmlLorem|Image|Internet|Lorem|Medical|Miscellaneous|Payment|Person|PhoneNumber|Text|UserAgent|Uuid|FakerEnumProvider $faker
  */
 class ClientTraitTest extends TestCase

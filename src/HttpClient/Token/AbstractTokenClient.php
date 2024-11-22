@@ -29,8 +29,6 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * Class AbstractTokenClient.
- *
  * @experimental
  */
 abstract class AbstractTokenClient extends AbstractClient implements TokenExchangeInterface
@@ -59,10 +57,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      */
     protected $oAuth;
 
-    /**
-     * AbstractTokenClient constructor.
-     */
-    public function __construct(HttpClientInterface $httpClient, EventDispatcherInterface $dispatcher, ?string $userAgent, protected bool $revokeOnRefresh, protected bool $fireRevokeOnRefresh, array $defaultOptionsByRegexp = [], string $defaultRegexp = null, bool $retryAuth = false)
+    public function __construct(HttpClientInterface $httpClient, EventDispatcherInterface $dispatcher, ?string $userAgent, protected bool $revokeOnRefresh, protected bool $fireRevokeOnRefresh, array $defaultOptionsByRegexp = [], ?string $defaultRegexp = null, bool $retryAuth = false)
     {
         parent::__construct($httpClient, $dispatcher, $userAgent, $defaultOptionsByRegexp, $defaultRegexp, $retryAuth);
         $this->setupRevokeOnRefresh($revokeOnRefresh, $fireRevokeOnRefresh);
@@ -95,7 +90,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    protected function tokenExchange(string $code, string $route = null, string|callable $url = null, array $scopes = [], OAuthGrantTypes $grantType = null, ClientTokenResponseInterface|string $responseClass = null, callable $onDeserializeCallable = null, callable $onSuccessCallable = null): ?ClientTokenResponseInterface
+    protected function tokenExchange(string $code, ?string $route = null, string|callable|null $url = null, array $scopes = [], ?OAuthGrantTypes $grantType = null, ClientTokenResponseInterface|string|null $responseClass = null, ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null): ?ClientTokenResponseInterface
     {
         $redirect = '';
         if (!empty($route)) {
@@ -200,12 +195,12 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
         return $this;
     }
 
-    final public function mergeAuth(Auth $auth = null, array $options = [], bool $refresh = false, array $authHeader = null): array
+    final public function mergeAuth(?Auth $auth = null, array $options = [], bool $refresh = false, ?array $authHeader = null): array
     {
         return $options;
     }
 
-    final public function getAuthenticationOption(Auth $auth = null, bool $refresh = false): array
+    final public function getAuthenticationOption(?Auth $auth = null, bool $refresh = false): array
     {
         return [];
     }
@@ -225,7 +220,7 @@ abstract class AbstractTokenClient extends AbstractClient implements TokenExchan
      *
      * @throws TransportExceptionInterface
      */
-    public function request($url, ReflectionMethod|string $caller = null, string $type = null, array $options = [], $method = 'GET', string|ClientResponseInterface $responseClass = null, array $context = [], callable $onDeserializeCallable = null, callable $onSuccessCallable = null, array $params = [])
+    public function request($url, ReflectionMethod|string|null $caller = null, ?string $type = null, array $options = [], $method = 'GET', string|ClientResponseInterface|null $responseClass = null, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null, array $params = [])
     {
         return parent::request($url, $caller ?? __METHOD__, $type, $options, $method, $responseClass, $context, $onDeserializeCallable, $onSuccessCallable, $params);
     }

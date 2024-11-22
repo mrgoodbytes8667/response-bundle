@@ -24,7 +24,7 @@ interface ClientResponseInterface
     /**
      * @return static
      */
-    public static function make(SerializerInterface $serializer, EventDispatcherInterface $dispatcher = null);
+    public static function make(SerializerInterface $serializer, ?EventDispatcherInterface $dispatcher = null);
 
     /**
      * @param ClientResponseInterface $clientResponse
@@ -49,7 +49,7 @@ interface ClientResponseInterface
      *
      * @return static
      */
-    public function withResponse(ResponseInterface $response, ?string $type, array $context = [], callable $onDeserializeCallable = null, callable $onSuccessCallable = null);
+    public function withResponse(ResponseInterface $response, ?string $type, array $context = [], ?callable $onDeserializeCallable = null, ?callable $onSuccessCallable = null);
 
     /**
      * @return $this
@@ -109,7 +109,7 @@ interface ClientResponseInterface
      * @throws InvalidArgumentException
      * @throws EmptyContentException
      */
-    public function deserialize(bool $throw = true, array $context = [], string $type = null);
+    public function deserialize(bool $throw = true, array $context = [], ?string $type = null);
 
     public function isSuccess(): bool;
 

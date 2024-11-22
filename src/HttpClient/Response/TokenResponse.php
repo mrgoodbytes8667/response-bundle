@@ -14,17 +14,11 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-/**
- * Class TokenResponse.
- */
 class TokenResponse extends Response implements ClientTokenResponseInterface
 {
     use ClientTrait;
 
-    /**
-     * TokenResponse constructor.
-     */
-    public function __construct(SerializerInterface $serializer, EventDispatcherInterface $dispatcher = null, bool $throwOnDeserializationWhenContentEmpty = true)
+    public function __construct(SerializerInterface $serializer, ?EventDispatcherInterface $dispatcher = null, bool $throwOnDeserializationWhenContentEmpty = true)
     {
         parent::__construct($serializer, $dispatcher, $throwOnDeserializationWhenContentEmpty);
     }
@@ -39,7 +33,7 @@ class TokenResponse extends Response implements ClientTokenResponseInterface
      * @throws InvalidArgumentException
      * @throws EmptyContentException
      */
-    public function deserialize(bool $throw = true, array $context = [], string $type = null)
+    public function deserialize(bool $throw = true, array $context = [], ?string $type = null)
     {
         $this->prependOnDeserializeCallable(function ($self, $results) {
             if ($results instanceof AccessTokenInterface && method_exists($results, 'setIdentifier') && !empty($this->getIdentifier())) {

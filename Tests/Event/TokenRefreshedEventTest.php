@@ -6,9 +6,6 @@ use Bytes\ResponseBundle\Event\TokenRefreshedEvent;
 use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class TokenRefreshedEventTest.
- */
 class TokenRefreshedEventTest extends TestCase
 {
     public function testGetSetNew()

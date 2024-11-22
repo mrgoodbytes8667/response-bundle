@@ -29,7 +29,7 @@ trait ApiAuthenticationTrait
     /**
      * @throws NoTokenException
      */
-    protected function getToken(Auth $auth = null, bool $reset = false): ?AccessTokenInterface
+    protected function getToken(?Auth $auth = null, bool $reset = false): ?AccessTokenInterface
     {
         if ($reset) {
             $this->resetToken();
@@ -84,7 +84,7 @@ trait ApiAuthenticationTrait
     /**
      * @throws NoTokenException
      */
-    public function getAuthenticationOption(Auth $auth = null, bool $refresh = false): array
+    public function getAuthenticationOption(?Auth $auth = null, bool $refresh = false): array
     {
         if ($refresh) {
             $token = $this->refreshToken();

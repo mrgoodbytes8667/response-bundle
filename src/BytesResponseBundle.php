@@ -7,9 +7,6 @@ use Bytes\ResponseBundle\DependencyInjection\Compiler\OAuthPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * Class BytesResponseBundle.
- */
 class BytesResponseBundle extends Bundle
 {
     /**

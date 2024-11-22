@@ -11,9 +11,6 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
-/**
- * Class BytesResponseExtension.
- */
 class BytesResponseExtension extends Extension implements ExtensionInterface, PrependExtensionInterface
 {
     /**

@@ -6,9 +6,6 @@ use Bytes\ResponseBundle\Event\RevokeTokenEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-/**
- * Class AbstractRevokeTokenSubscriber.
- */
 abstract class AbstractRevokeTokenSubscriber implements EventSubscriberInterface
 {
     /**

@@ -12,5 +12,5 @@ interface TokenRefreshInterface
     /**
      * Refreshes the provided access token.
      */
-    public function refreshToken(AccessTokenInterface $token = null): ?AccessTokenInterface;
+    public function refreshToken(?AccessTokenInterface $token = null): ?AccessTokenInterface;
 }

@@ -9,9 +9,6 @@ use Bytes\ResponseBundle\HttpClient\Token\TokenClientInterface;
 
 use function Symfony\Component\String\u;
 
-/**
- * Class HttpClientLocator.
- */
 class HttpClientLocator extends Locator
 {
     /**

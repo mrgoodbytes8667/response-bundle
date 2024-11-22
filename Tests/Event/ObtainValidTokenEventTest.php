@@ -33,8 +33,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class ObtainValidTokenEventTest.
- *
  * @property FakerGenerator|FakerEnumProvider|MiscProvider|Address|Barcode|Biased|Color|Company|DateTime|File|HtmlLorem|Image|Internet|Lorem|Medical|Miscellaneous|Payment|Person|PhoneNumber|Text|UserAgent|Uuid $faker
  */
 class ObtainValidTokenEventTest extends TestCase

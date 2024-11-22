@@ -8,9 +8,6 @@ use Bytes\ResponseBundle\Token\Interfaces\AccessTokenInterface;
 use DateInterval;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class AccessTokenCreateUpdateFromTraitTest.
- */
 class AccessTokenCreateUpdateFromTraitTest extends TestCase
 {
     use TestFakerTrait;

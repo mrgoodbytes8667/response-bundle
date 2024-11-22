@@ -7,7 +7,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Class OAuthPass
  * Sets the url generator, validator, and security, and csrf token manager dependencies on every service that is
  * tagged "bytes_response.oauth".
  */
