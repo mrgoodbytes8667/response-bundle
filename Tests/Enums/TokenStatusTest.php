@@ -36,10 +36,7 @@ class TokenStatusTest extends TestCase
 
         $output = $serializer->serialize($enum, 'json');
 
-        self::assertEquals(json_encode([
-            'label' => $label,
-            'value' => $value,
-        ]), $output);
+        self::assertEquals(json_encode($value), $output);
     }
 
     /**
