@@ -190,11 +190,16 @@ class ApiRetryableHttpClientTest extends TestCase
         try {
             $response->getHeaders();
         } catch (TransportExceptionInterface $e) {
-            self::assertSame('Could not resolve host "does.not.exists".', $e->getMessage());
+            self::assertContains($e->getMessage(), [
+                'Could not resolve host "does.not.exists".',
+                'dns_get_record(): DNS Query failed',
+            ]);
+
+            $exceptionMessage = $e->getMessage();
         }
 
         self::assertCount(2, $logger->logs);
-        self::assertSame('Try #{count} after {delay}ms: Could not resolve host "does.not.exists".', $logger->logs[0]);
+        self::assertSame('Try #{count} after {delay}ms: '.$exceptionMessage, $logger->logs[0]);
     }
 
     public function testRetryEvent()
