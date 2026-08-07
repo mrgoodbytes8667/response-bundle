@@ -28,6 +28,11 @@ Open a command console, enter your project directory and execute:
 $ composer require mrgoodbytes8667/response-bundle
 ```
 
+Tagged services consumed by the bundle's locators must declare their lookup key
+with Symfony's `#[AsTaggedItem(index: '...')]` attribute. The legacy
+`getDefaultIndexName()` method is retained for source compatibility but is no
+longer used by the tagged locators.
+
 ### Applications that don't use Symfony Flex
 
 #### Step 1: Download the Bundle

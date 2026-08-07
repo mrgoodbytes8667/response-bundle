@@ -23,23 +23,23 @@ return static function (ContainerConfigurator $container) {
 
     // region Locators
     $services->set('bytes_response.locator.http_client', HttpClientLocator::class)
-        ->args([tagged_locator('bytes_response.http_client', 'key', 'getDefaultIndexName')])
+        ->args([tagged_locator('bytes_response.http_client')])
         ->public();
 
     $services->set('bytes_response.locator.http_client.api', HttpClientLocator::class)
-        ->args([tagged_locator('bytes_response.http_client.api', 'key', 'getDefaultIndexName')])
+        ->args([tagged_locator('bytes_response.http_client.api')])
         ->public();
 
     $services->set('bytes_response.locator.http_client.token', HttpClientLocator::class)
-        ->args([tagged_locator('bytes_response.http_client.token', 'key', 'getDefaultIndexName')])
+        ->args([tagged_locator('bytes_response.http_client.token')])
         ->public();
 
     $services->set('bytes_response.locator.oauth', Locator::class)
-        ->args([tagged_locator('bytes_response.oauth', 'key', 'getDefaultIndexName')])
+        ->args([tagged_locator('bytes_response.oauth')])
         ->public();
 
     $services->set('bytes_response.locator.authenticator.oauth', Locator::class)
-        ->args([tagged_locator('bytes_response.authenticator.oauth', 'key', 'getDefaultIndexName')])
+        ->args([tagged_locator('bytes_response.authenticator.oauth')])
         ->public();
 
     $services->alias(Locator::class.' $httpClientLocator', 'bytes_response.locator.http_client');
