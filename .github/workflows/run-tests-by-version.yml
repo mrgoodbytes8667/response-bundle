@@ -55,3 +55,15 @@ jobs:
     with:
       phpUnitVersion: 9.6
       symfony: 7.4
+
+  symfony80:
+    uses: mrgoodbytes8667/workflows/.github/workflows/run-tests-by-version.yml@php8.4-8.5
+    with:
+      phpUnitVersion: 9.6
+      symfony: 8.0
+
+  symfony81:
+    uses: mrgoodbytes8667/workflows/.github/workflows/run-tests-by-version.yml@php8.4-8.5
+    with:
+      phpUnitVersion: 9.6
+      symfony: 8.1
